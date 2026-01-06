@@ -1,0 +1,32 @@
+{
+	"name": "@repo/schemas",
+	"version": "0.0.0",
+	"devDependencies": {
+		"@repo/biome-config": "workspace:*",
+		"@repo/typescript-config": "workspace:*",
+		"typescript": "latest",
+		"rimraf": "^6.0.0",
+		"ts-node": "latest",
+		"@swc/core": "latest",
+		"@swc/cli": "latest"
+	},
+	"exports": {
+		".": {
+			"default": "./dist/index.js",
+			"types": "./dist/index.d.ts"
+		},
+		"./*": {
+			"default": "./dist/*",
+			"types": "./dist/*"
+		}
+	},
+	"private": true,
+	"scripts": {
+		"dev": "tsc -b -w",
+		"build": "tsc -b",
+		"clear": "rimraf ./dist"
+	},
+	"dependencies": {
+		"zod": "^4.3.4"
+	}
+}

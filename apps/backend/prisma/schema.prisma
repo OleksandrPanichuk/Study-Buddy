@@ -1,0 +1,80 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider     = "prisma-client"
+  output       = "../libs/prisma/src/generated"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model File {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now()) @map("created_at")
+  url       String
+  key       String?
+
+  users User[]
+
+  @@map("files")
+}
+
+model User {
+  id            String  @id @default(uuid())
+  email         String  @unique
+  emailVerified Boolean @default(false) @map("email_verified")
+  username      String  @unique
+  hash          String?
+
+  failedLoginAttempts Int       @default(0) @map("failed_login_attempts")
+  lockedUntil         DateTime? @map("locked_until")
+
+  avatarId String? @map("avatar_id")
+  avatar   File?   @relation(references: [id], fields: [avatarId], onDelete: SetNull)
+
+  verificationCodes   VerificationCode[]
+  resetPasswordTokens ResetPasswordToken[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+model VerificationCode {
+  id String @id @default(uuid())
+
+  code String
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @map("user_id")
+
+  resendCount Int      @default(0) @map("resend_count")
+  expiresAt   DateTime @map("expires_at")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@map("verification_codes")
+}
+
+model ResetPasswordToken {
+  id String @id @default(uuid())
+
+  token String @unique
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @map("user_id")
+
+  resendCount Int @default(0) @map("resend_count")
+
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("reset_password_tokens")
+}

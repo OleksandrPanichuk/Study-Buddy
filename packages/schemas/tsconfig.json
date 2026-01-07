@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "module": "CommonJS",
-    "moduleResolution": "node",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,
@@ -11,10 +11,7 @@
     "resolveJsonModule": true,
     "target": "ES2022",
     "sourceMap": true,
-    "outDir": "./dist",
-    "rootDir": "./src",
     "baseUrl": "./",
-    "incremental": true,
     "skipLibCheck": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,

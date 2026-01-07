@@ -9,3 +9,5 @@ export const signUpInputSchema = z.object({
 });
 
 export const signUpResponseSchema = userSchema.omit({ hash: true });
+
+export type SignUpResponse = z.infer<typeof signUpResponseSchema>;

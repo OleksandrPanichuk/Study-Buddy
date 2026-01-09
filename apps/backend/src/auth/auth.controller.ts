@@ -15,11 +15,7 @@ import { AuthService } from "./auth.service";
 import { ApiTags } from "@nestjs/swagger";
 import { Throttle, ThrottlerGuard } from "@nestjs/throttler";
 import { RATE_LIMITS } from "@/shared/constants";
-import {
-  SignInResponse,
-  type SignUpInput,
-  SignUpResponse,
-} from "@/auth/auth.dto";
+import { SignInResponse, SignUpInput, SignUpResponse } from "@/auth/auth.dto";
 import type { TSession } from "@/shared/types";
 import { destroySession, updateSession } from "@/shared/utils/session.utils";
 import { ZodResponse } from "nestjs-zod";

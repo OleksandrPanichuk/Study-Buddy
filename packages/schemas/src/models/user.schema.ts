@@ -2,7 +2,7 @@ import {z} from "zod";
 import {zDate, zObjectId, zUsername} from "../utils";
 
 export const userSchema = z.object({
-	id: zObjectId,
+	id: z.uuidv4(),
 	email: z.email(),
 	emailVerified: z.boolean(),
 	hash: z.string().nullish(),
@@ -14,3 +14,5 @@ export const userSchema = z.object({
 	createdAt: zDate,
 	updatedAt: zDate,
 });
+
+export type TUser = z.infer<typeof userSchema>;

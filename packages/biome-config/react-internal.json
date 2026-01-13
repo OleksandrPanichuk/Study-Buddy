@@ -19,6 +19,11 @@
 		"enabled": true,
 		"domains": {
 			"react": "recommended"
+		},
+		"rules": {
+			"a11y": {
+				"noStaticElementInteractions": "off"
+			}
 		}
 	}
 }

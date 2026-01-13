@@ -36,7 +36,7 @@ export class GithubStrategy extends PassportStrategy(
     const email = emails?.[0]?.value;
     const photo = photos?.[0]?.value;
 
-    if (!email || !photo) {
+    if (!(email && photo)) {
       this.logger.warn(`Github user ${profile.id} has no email or photo`);
       return done(new UnauthorizedException("Incomplete Github profile"), null);
     }

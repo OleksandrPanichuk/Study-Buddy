@@ -1,15 +1,15 @@
-import { BadRequestException, Injectable, Logger } from "@nestjs/common";
-import  { ResetPasswordTokenRepository } from "@/auth/password/reset-password-token.repository";
-import  { MailerService } from "@app/mailer";
-import  { HashingService } from "@app/hashing";
-import type { Env } from "@/shared/config";
-import  { ConfigService } from "@nestjs/config";
 import type {
   ResetPasswordInput,
   SendResetPasswordTokenInput,
   VerifyResetPasswordTokenInput,
 } from "@/auth/password/password.dto";
-import  { UsersRepository } from "@/users/users.repository";
+import { ResetPasswordTokenRepository } from "@/auth/password/reset-password-token.repository";
+import type { Env } from "@/shared/config";
+import { UsersRepository } from "@/users/users.repository";
+import { HashingService } from "@app/hashing";
+import { MailerService } from "@app/mailer";
+import { BadRequestException, Injectable, Logger } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { randomBytes } from "node:crypto";
 
 @Injectable()
@@ -65,9 +65,8 @@ export class PasswordService {
       }
 
       await this.tokenRepository.incrementResendCount(existingToken.id);
-      const clientUrl = this.config.get("WEB_URL");
-      // TODO: link for reset password route must come from frontend
-      const link = `${clientUrl}/reset-password?token=${existingToken.token}`;
+
+      const link = `${dto.resetPageUrl}?token=${existingToken.token}`;
 
       const expiresInMinutes = Math.ceil(
         (existingToken.expiresAt.getTime() - now) / 60000,
@@ -115,7 +114,7 @@ export class PasswordService {
     const token = await this.tokenRepository.findByToken(tokenHash);
 
     if (!token || Date.now() > token.expiresAt.getTime()) {
-      throw new BadRequestException("Invalid or expired token");
+      return { valid: false };
     }
 
     return { valid: true };

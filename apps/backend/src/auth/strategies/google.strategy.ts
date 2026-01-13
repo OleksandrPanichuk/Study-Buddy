@@ -32,7 +32,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, "google") {
     const email = emails?.[0]?.value;
     const photo = photos?.[0]?.value;
 
-    if (!email || !photo) {
+    if (!(email && photo)) {
       this.logger.warn("Missing email or photo in Google profile");
       return done(new UnauthorizedException("Incomplete Google profile"), null);
     }

@@ -1,3 +1,24 @@
+import { SignInResponse, SignUpInput, SignUpResponse } from "@/auth/auth.dto";
+import {
+  ApiGithubOAuth,
+  ApiGithubOAuthCallback,
+  ApiGoogleOAuth,
+  ApiGoogleOAuthCallback,
+  ApiSignIn,
+  ApiSignOut,
+  ApiSignUp,
+} from "@/auth/auth.swagger";
+import type { TOAuthUser } from "@/auth/auth.types";
+import {
+  GithubOAuthGuard,
+  GoogleOAuthGuard,
+  LocalAuthGuard,
+} from "@/auth/guards";
+import type { Env } from "@/shared/config";
+import { RATE_LIMITS } from "@/shared/constants";
+import { AuthenticatedGuard } from "@/shared/guards";
+import type { TSession } from "@/shared/types";
+import { destroySession } from "@/shared/utils/session.utils";
 import {
   Body,
   Controller,
@@ -11,33 +32,12 @@ import {
   UnauthorizedException,
   UseGuards,
 } from "@nestjs/common";
-import { AuthService } from "./auth.service";
+import { ConfigService } from "@nestjs/config";
 import { ApiTags } from "@nestjs/swagger";
 import { Throttle, ThrottlerGuard } from "@nestjs/throttler";
-import { RATE_LIMITS } from "@/shared/constants";
-import { SignInResponse, SignUpInput, SignUpResponse } from "@/auth/auth.dto";
-import type { TSession } from "@/shared/types";
-import { destroySession, updateSession } from "@/shared/utils/session.utils";
-import { ZodResponse } from "nestjs-zod";
 import type { Request, Response } from "express";
-import {
-  GithubOAuthGuard,
-  GoogleOAuthGuard,
-  LocalAuthGuard,
-} from "@/auth/guards";
-import { AuthenticatedGuard } from "@/shared/guards";
-import type { TOAuthUser } from "@/auth/auth.types";
-import { ConfigService } from "@nestjs/config";
-import type { Env } from "@/shared/config";
-import {
-  ApiGithubOAuth,
-  ApiGithubOAuthCallback,
-  ApiGoogleOAuth,
-  ApiGoogleOAuthCallback,
-  ApiSignIn,
-  ApiSignOut,
-  ApiSignUp,
-} from "@/auth/auth.swagger";
+import { ZodResponse } from "nestjs-zod";
+import { AuthService } from "./auth.service";
 
 @ApiTags("Auth")
 @UseGuards(ThrottlerGuard)
@@ -57,14 +57,18 @@ export class AuthController {
   @Post("/sign-up")
   async signUp(
     @Body() dto: SignUpInput,
-    @Session() session: TSession,
+    @Req() req: Request,
   ): Promise<SignUpResponse> {
     const user = await this.authService.signUp(dto);
-    await updateSession(session, {
-      passport: {
-        user: user.id,
-        verified: user.emailVerified,
-      },
+
+    await new Promise<void>((resolve, reject) => {
+      req.logIn(user, (err) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve();
+        }
+      });
     });
 
     return user;
@@ -77,19 +81,12 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @HttpCode(HttpStatus.OK)
   @Post("/sign-in")
-  async signIn(@Req() req: Request, @Session() session: TSession) {
+  async signIn(@Req() req: Request) {
     const user = req.user;
 
     if (!user) {
       throw new UnauthorizedException("Invalid email or password");
     }
-
-    await updateSession(session, {
-      passport: {
-        user: user.id,
-        verified: user.emailVerified,
-      },
-    });
 
     return user;
   }
@@ -124,16 +121,9 @@ export class AuthController {
     req: Request & {
       user?: TOAuthUser;
     },
-    @Session() session: TSession,
     @Res() res: Response,
   ) {
-    const user = await this.authService.oauthSignIn(req?.user);
-    await updateSession(session, {
-      passport: {
-        user: user.id,
-        verified: user.emailVerified,
-      },
-    });
+    await this.authService.oauthSignIn(req?.user);
 
     return res.redirect(this.config.get("WEB_URL") as string);
   }
@@ -146,13 +136,10 @@ export class AuthController {
     req: Request & {
       user?: TOAuthUser;
     },
-    @Session() session: TSession,
     @Res() res: Response,
   ) {
-    const user = await this.authService.oauthSignIn(req?.user);
-    await updateSession(session, {
-      passport: { user: user.id, verified: user.emailVerified },
-    });
+    await this.authService.oauthSignIn(req?.user);
+
     return res.redirect(this.config.get("WEB_URL") as string);
   }
 }

@@ -1,4 +1,4 @@
-import type { VerifyEmailInput } from "@/auth/email-verification/email-verification.dto";
+import { VerifyEmailInput } from "@/auth/email-verification/email-verification.dto";
 import { EmailVerificationService } from "@/auth/email-verification/email-verification.service";
 import {
   ApiSendVerificationCode,
@@ -28,7 +28,7 @@ import type { User } from "@prisma/generated/client";
   description: "Unauthorized",
 })
 @UseGuards(ThrottlerGuard, AuthenticatedGuard)
-@Controller("/auth/verification")
+@Controller("/auth/email-verification")
 export class EmailVerificationController {
   constructor(
     private readonly emailVerificationService: EmailVerificationService,

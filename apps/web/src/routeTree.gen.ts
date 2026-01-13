@@ -9,68 +9,275 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as marketingRouteRouteImport } from './routes/(marketing)/route'
+import { Route as authRouteRouteImport } from './routes/(auth)/route'
 import { Route as marketingIndexRouteImport } from './routes/(marketing)/index'
 import { Route as marketingAboutRouteImport } from './routes/(marketing)/about'
+import { Route as platformDashboardIndexRouteImport } from './routes/(platform)/dashboard/index'
+import { Route as authVerificationIndexRouteImport } from './routes/(auth)/verification/index'
+import { Route as authSignUpIndexRouteImport } from './routes/(auth)/sign-up/index'
+import { Route as authSignInIndexRouteImport } from './routes/(auth)/sign-in/index'
+import { Route as authResetPasswordIndexRouteImport } from './routes/(auth)/reset-password/index'
+import { Route as authForgotPasswordIndexRouteImport } from './routes/(auth)/forgot-password/index'
+import { Route as authResetPasswordInvalidRouteImport } from './routes/(auth)/reset-password/invalid'
 
-const marketingIndexRoute = marketingIndexRouteImport.update({
-  id: '/(marketing)/',
-  path: '/',
+const marketingRouteRoute = marketingRouteRouteImport.update({
+  id: '/(marketing)',
   getParentRoute: () => rootRouteImport,
+} as any)
+const authRouteRoute = authRouteRouteImport.update({
+  id: '/(auth)',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const marketingIndexRoute = marketingIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => marketingRouteRoute,
 } as any)
 const marketingAboutRoute = marketingAboutRouteImport.update({
-  id: '/(marketing)/about',
+  id: '/about',
   path: '/about',
+  getParentRoute: () => marketingRouteRoute,
+} as any)
+const platformDashboardIndexRoute = platformDashboardIndexRouteImport.update({
+  id: '/(platform)/dashboard/',
+  path: '/dashboard/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const authVerificationIndexRoute = authVerificationIndexRouteImport.update({
+  id: '/verification/',
+  path: '/verification/',
+  getParentRoute: () => authRouteRoute,
+} as any)
+const authSignUpIndexRoute = authSignUpIndexRouteImport.update({
+  id: '/sign-up/',
+  path: '/sign-up/',
+  getParentRoute: () => authRouteRoute,
+} as any)
+const authSignInIndexRoute = authSignInIndexRouteImport.update({
+  id: '/sign-in/',
+  path: '/sign-in/',
+  getParentRoute: () => authRouteRoute,
+} as any)
+const authResetPasswordIndexRoute = authResetPasswordIndexRouteImport.update({
+  id: '/reset-password/',
+  path: '/reset-password/',
+  getParentRoute: () => authRouteRoute,
+} as any)
+const authForgotPasswordIndexRoute = authForgotPasswordIndexRouteImport.update({
+  id: '/forgot-password/',
+  path: '/forgot-password/',
+  getParentRoute: () => authRouteRoute,
+} as any)
+const authResetPasswordInvalidRoute =
+  authResetPasswordInvalidRouteImport.update({
+    id: '/reset-password/invalid',
+    path: '/reset-password/invalid',
+    getParentRoute: () => authRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/about': typeof marketingAboutRoute
   '/': typeof marketingIndexRoute
+  '/reset-password/invalid': typeof authResetPasswordInvalidRoute
+  '/forgot-password': typeof authForgotPasswordIndexRoute
+  '/reset-password': typeof authResetPasswordIndexRoute
+  '/sign-in': typeof authSignInIndexRoute
+  '/sign-up': typeof authSignUpIndexRoute
+  '/verification': typeof authVerificationIndexRoute
+  '/dashboard': typeof platformDashboardIndexRoute
 }
 export interface FileRoutesByTo {
   '/about': typeof marketingAboutRoute
   '/': typeof marketingIndexRoute
+  '/reset-password/invalid': typeof authResetPasswordInvalidRoute
+  '/forgot-password': typeof authForgotPasswordIndexRoute
+  '/reset-password': typeof authResetPasswordIndexRoute
+  '/sign-in': typeof authSignInIndexRoute
+  '/sign-up': typeof authSignUpIndexRoute
+  '/verification': typeof authVerificationIndexRoute
+  '/dashboard': typeof platformDashboardIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/(auth)': typeof authRouteRouteWithChildren
+  '/(marketing)': typeof marketingRouteRouteWithChildren
   '/(marketing)/about': typeof marketingAboutRoute
   '/(marketing)/': typeof marketingIndexRoute
+  '/(auth)/reset-password/invalid': typeof authResetPasswordInvalidRoute
+  '/(auth)/forgot-password/': typeof authForgotPasswordIndexRoute
+  '/(auth)/reset-password/': typeof authResetPasswordIndexRoute
+  '/(auth)/sign-in/': typeof authSignInIndexRoute
+  '/(auth)/sign-up/': typeof authSignUpIndexRoute
+  '/(auth)/verification/': typeof authVerificationIndexRoute
+  '/(platform)/dashboard/': typeof platformDashboardIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/about' | '/'
+  fullPaths:
+    | '/about'
+    | '/'
+    | '/reset-password/invalid'
+    | '/forgot-password'
+    | '/reset-password'
+    | '/sign-in'
+    | '/sign-up'
+    | '/verification'
+    | '/dashboard'
   fileRoutesByTo: FileRoutesByTo
-  to: '/about' | '/'
-  id: '__root__' | '/(marketing)/about' | '/(marketing)/'
+  to:
+    | '/about'
+    | '/'
+    | '/reset-password/invalid'
+    | '/forgot-password'
+    | '/reset-password'
+    | '/sign-in'
+    | '/sign-up'
+    | '/verification'
+    | '/dashboard'
+  id:
+    | '__root__'
+    | '/(auth)'
+    | '/(marketing)'
+    | '/(marketing)/about'
+    | '/(marketing)/'
+    | '/(auth)/reset-password/invalid'
+    | '/(auth)/forgot-password/'
+    | '/(auth)/reset-password/'
+    | '/(auth)/sign-in/'
+    | '/(auth)/sign-up/'
+    | '/(auth)/verification/'
+    | '/(platform)/dashboard/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  marketingAboutRoute: typeof marketingAboutRoute
-  marketingIndexRoute: typeof marketingIndexRoute
+  authRouteRoute: typeof authRouteRouteWithChildren
+  marketingRouteRoute: typeof marketingRouteRouteWithChildren
+  platformDashboardIndexRoute: typeof platformDashboardIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/(marketing)': {
+      id: '/(marketing)'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof marketingRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(auth)': {
+      id: '/(auth)'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof authRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/(marketing)/': {
       id: '/(marketing)/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof marketingIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof marketingRouteRoute
     }
     '/(marketing)/about': {
       id: '/(marketing)/about'
       path: '/about'
       fullPath: '/about'
       preLoaderRoute: typeof marketingAboutRouteImport
+      parentRoute: typeof marketingRouteRoute
+    }
+    '/(platform)/dashboard/': {
+      id: '/(platform)/dashboard/'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof platformDashboardIndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/(auth)/verification/': {
+      id: '/(auth)/verification/'
+      path: '/verification'
+      fullPath: '/verification'
+      preLoaderRoute: typeof authVerificationIndexRouteImport
+      parentRoute: typeof authRouteRoute
+    }
+    '/(auth)/sign-up/': {
+      id: '/(auth)/sign-up/'
+      path: '/sign-up'
+      fullPath: '/sign-up'
+      preLoaderRoute: typeof authSignUpIndexRouteImport
+      parentRoute: typeof authRouteRoute
+    }
+    '/(auth)/sign-in/': {
+      id: '/(auth)/sign-in/'
+      path: '/sign-in'
+      fullPath: '/sign-in'
+      preLoaderRoute: typeof authSignInIndexRouteImport
+      parentRoute: typeof authRouteRoute
+    }
+    '/(auth)/reset-password/': {
+      id: '/(auth)/reset-password/'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof authResetPasswordIndexRouteImport
+      parentRoute: typeof authRouteRoute
+    }
+    '/(auth)/forgot-password/': {
+      id: '/(auth)/forgot-password/'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof authForgotPasswordIndexRouteImport
+      parentRoute: typeof authRouteRoute
+    }
+    '/(auth)/reset-password/invalid': {
+      id: '/(auth)/reset-password/invalid'
+      path: '/reset-password/invalid'
+      fullPath: '/reset-password/invalid'
+      preLoaderRoute: typeof authResetPasswordInvalidRouteImport
+      parentRoute: typeof authRouteRoute
     }
   }
 }
 
-const rootRouteChildren: RootRouteChildren = {
+interface authRouteRouteChildren {
+  authResetPasswordInvalidRoute: typeof authResetPasswordInvalidRoute
+  authForgotPasswordIndexRoute: typeof authForgotPasswordIndexRoute
+  authResetPasswordIndexRoute: typeof authResetPasswordIndexRoute
+  authSignInIndexRoute: typeof authSignInIndexRoute
+  authSignUpIndexRoute: typeof authSignUpIndexRoute
+  authVerificationIndexRoute: typeof authVerificationIndexRoute
+}
+
+const authRouteRouteChildren: authRouteRouteChildren = {
+  authResetPasswordInvalidRoute: authResetPasswordInvalidRoute,
+  authForgotPasswordIndexRoute: authForgotPasswordIndexRoute,
+  authResetPasswordIndexRoute: authResetPasswordIndexRoute,
+  authSignInIndexRoute: authSignInIndexRoute,
+  authSignUpIndexRoute: authSignUpIndexRoute,
+  authVerificationIndexRoute: authVerificationIndexRoute,
+}
+
+const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
+  authRouteRouteChildren,
+)
+
+interface marketingRouteRouteChildren {
+  marketingAboutRoute: typeof marketingAboutRoute
+  marketingIndexRoute: typeof marketingIndexRoute
+}
+
+const marketingRouteRouteChildren: marketingRouteRouteChildren = {
   marketingAboutRoute: marketingAboutRoute,
   marketingIndexRoute: marketingIndexRoute,
+}
+
+const marketingRouteRouteWithChildren = marketingRouteRoute._addFileChildren(
+  marketingRouteRouteChildren,
+)
+
+const rootRouteChildren: RootRouteChildren = {
+  authRouteRoute: authRouteRouteWithChildren,
+  marketingRouteRoute: marketingRouteRouteWithChildren,
+  platformDashboardIndexRoute: platformDashboardIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

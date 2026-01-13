@@ -1,5 +1,11 @@
 {
 	"$schema": "https://biomejs.dev/schemas/2.3.10/schema.json",
-	"root": false,
-	"extends": ["@repo/biome-config/base", "@repo/biome-config/react-internal"]
+	"extends": ["@repo/biome-config/base", "@repo/biome-config/react-internal"],
+	"linter": {
+		"rules": {
+			"a11y": {
+				"noStaticElementInteractions": "off"
+			}
+		}
+	}
 }

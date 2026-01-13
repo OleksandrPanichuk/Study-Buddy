@@ -1,2 +1,4 @@
 export * from "./Footer";
-export * from "./Header.tsx";
+export * from "./Header";
+export * from "./MarketingLayout";
+

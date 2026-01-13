@@ -1,8 +1,15 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.3.10/schema.json",
-  "javascript": {
-    "parser" : {
-      "unsafeParameterDecoratorsEnabled": true
-    }
-  }
+	"$schema": "https://biomejs.dev/schemas/2.3.10/schema.json",
+	"javascript": {
+		"parser": {
+			"unsafeParameterDecoratorsEnabled": true
+		}
+	},
+	"linter": {
+		"rules": {
+			"style": {
+				"useImportType": "off"
+			}
+		}
+	}
 }

@@ -7,7 +7,9 @@ import {createRootRouteWithContext, HeadContent, Outlet, Scripts, useRouter} fro
 import {TanStackRouterDevtoolsPanel} from "@tanstack/react-router-devtools";
 import type {PropsWithChildren} from "react";
 import {Toaster} from "sonner";
-import {AuthProvider} from "@/features/auth/providers";
+import {AuthProvider} from "@/features/auth";
+import { getCurrentUserFn } from "@/features/profile";
+import { tryCatch } from "@/lib";
 
 export const Route = createRootRouteWithContext<TRouterContext>()({
 	head: () => ({
@@ -34,16 +36,18 @@ export const Route = createRootRouteWithContext<TRouterContext>()({
 	shellComponent: RootDocument,
 	component: RootLayout,
 	loader: async () => {
-		// 	TODO: fetch current user info
+    const [currentUser] = await tryCatch(getCurrentUserFn())
+    return currentUser
 	}
 });
 
 function RootLayout() {
-	// TODO: get initialUser from Route loader
-	const router = useRouter();
+  const currentUser = Route.useLoaderData()
+  const router = useRouter();
+
 	return (
 		<QueryClientProvider client={router.options.context.queryClient}>
-			<AuthProvider initialUser={null}>
+			<AuthProvider initialUser={currentUser}>
 				<Outlet />
 			</AuthProvider>
 		</QueryClientProvider>

@@ -17,6 +17,8 @@ function parseCookieAttributes(attributes: string[]): CookieOptions {
 		else if (lowerAttrName === "samesite") options.sameSite = attrValue?.toLowerCase() as "strict" | "lax" | "none";
 	}
 
+
+
 	return options;
 }
 
@@ -82,7 +84,7 @@ async function handleErrorResponse(response: Response): Promise<void> {
 		errorData = await response.json();
 	} catch {
 		errorData = await response.text();
-	}
+  }
 
 	let message: string;
 

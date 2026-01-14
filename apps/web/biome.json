@@ -1,6 +1,7 @@
 {
 	"$schema": "https://biomejs.dev/schemas/2.3.10/schema.json",
 	"extends": ["@repo/biome-config/base", "@repo/biome-config/react-internal"],
+	"root": false,
 	"linter": {
 		"rules": {
 			"a11y": {

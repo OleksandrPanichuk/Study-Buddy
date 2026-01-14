@@ -43,7 +43,7 @@ model User {
   resetPasswordTokens ResetPasswordToken[]
 
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
 
   @@map("users")
 }

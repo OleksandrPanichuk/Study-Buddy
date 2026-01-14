@@ -1,19 +1,18 @@
-import type {TUser} from "@repo/schemas";
+import type {TUser} from "@/types";
 import {createStore, type StoreApi, useStore} from "zustand";
 import {createContext, type PropsWithChildren, useState} from "react";
 import {useSafeContext} from "@/hooks";
 
-export type TUserWithoutHash = Omit<TUser, "hash">;
 
 export interface IAuthStore {
-	user: TUserWithoutHash | null;
-	setUser: (user: TUserWithoutHash | null) => void;
+	user: TUser | null;
+	setUser: (user: TUser | null) => void;
 }
 
 type TAuthContext = StoreApi<IAuthStore>;
 
 interface IAuthProviderProps extends PropsWithChildren {
-	initialUser: TUserWithoutHash | null;
+	initialUser: TUser | null;
 }
 
 const AuthContext = createContext<TAuthContext>({} as TAuthContext);

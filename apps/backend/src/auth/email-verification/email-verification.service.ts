@@ -1,8 +1,8 @@
 import { BadRequestException, Injectable, Logger } from "@nestjs/common";
-import  { VerificationCodeRepository } from "@/auth/email-verification/verification-code.repository";
-import  { UsersRepository } from "@/users/users.repository";
-import  { MailerService } from "@app/mailer";
-import  { HashingService } from "@app/hashing";
+import { VerificationCodeRepository } from "@/auth/email-verification/verification-code.repository";
+import { UsersRepository } from "@/users/users.repository";
+import { MailerService } from "@app/mailer";
+import { HashingService } from "@app/hashing";
 import type { User } from "@prisma/generated/client";
 import { randomInt } from "node:crypto";
 import { VerifyEmailInput } from "@/auth/email-verification/email-verification.dto";
@@ -71,6 +71,10 @@ export class EmailVerificationService {
     }
 
     try {
+      // TODO: check on this
+      console.log({
+        plainCode,
+      });
       await this.mailerService.sendEmailVerification(
         user.email,
         user.username,

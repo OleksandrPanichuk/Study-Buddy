@@ -1,5 +1,5 @@
 import {AUTH_API_ROUTES} from "@/features/auth";
-import {fetcher} from "@/lib";
+import {fetcher} from "@/lib/fetcher";
 import {
 	resetPasswordInputSchema,
 	sendResetPasswordTokenInputSchema,

@@ -1,5 +1,5 @@
-import {z} from "zod";
-import {zDate, zObjectId, zUsername} from "../utils";
+import { z } from "zod";
+import { zDate, zUsername } from "../utils";
 
 export const userSchema = z.object({
 	id: z.uuidv4(),
@@ -9,10 +9,10 @@ export const userSchema = z.object({
 	username: zUsername,
 	failedLoginAttempts: z.number().nonnegative(),
 	lockedUntil: zDate.nullish(),
-	avatarId: zObjectId.nullish(),
+	avatarId: z.uuidv4().nullish(),
 
 	createdAt: zDate,
-	updatedAt: zDate,
+	updatedAt: zDate
 });
 
 export type TUser = z.infer<typeof userSchema>;

@@ -1,16 +1,27 @@
-import { Outlet } from "@tanstack/react-router";
+import { Outlet, redirect } from "@tanstack/react-router";
 import { motion, useMotionTemplate, useSpring } from "motion/react";
 import type { MouseEvent } from "react";
+import { useAuth } from "@/features/auth";
 
 export const AuthLayout = () => {
+	const user = useAuth((state) => state.user);
+
 	const mouseX = useSpring(0, { stiffness: 150, damping: 25 });
 	const mouseY = useSpring(0, { stiffness: 150, damping: 25 });
 
 	function handleMouseMove({ currentTarget, clientX, clientY }: MouseEvent) {
 		const { left, top } = currentTarget.getBoundingClientRect();
+
 		mouseX.set(clientX - left);
 		mouseY.set(clientY - top);
-	}
+  }
+	
+  
+  if (user) {
+    return redirect({
+      to: "/"
+    })
+  }
 
 	return (
 		<div

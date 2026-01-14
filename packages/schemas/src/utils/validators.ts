@@ -1,4 +1,4 @@
-import {z} from "zod";
+import { z } from "zod";
 
 export const zPassword = z
 	.string()
@@ -7,19 +7,9 @@ export const zPassword = z
 	.regex(/[A-Z]/, "Password must contain at least one uppercase letter")
 	.regex(/[a-z]/, "Password must contain at least one lowercase letter")
 	.regex(/[0-9]/, "Password must contain at least one number")
-	.regex(
-		/[!@#$%^&*()_+={}\[\]:;"'<>,.?\/\\-]/,
-		"Password must contain at least one special character",
-	);
+	.regex(/[!@#$%^&*()_+={}\[\]:;"'<>,.?\/\\-]/, "Password must contain at least one special character");
 
-export const zObjectId = z
-	.string()
-	.regex(/^[0-9a-fA-F]{24}$/, "Invalid ObjectId format");
-
-export const zUsername = z
-	.string()
-	.trim()
-	.min(3, "Username must be at least 3 characters long");
+export const zUsername = z.string().trim().min(3, "Username must be at least 3 characters long");
 
 export const zDate = z.preprocess((val) => {
 	if (val instanceof Date) return val.toISOString();

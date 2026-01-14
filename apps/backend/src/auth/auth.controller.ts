@@ -122,8 +122,14 @@ export class AuthController {
       user?: TOAuthUser;
     },
     @Res() res: Response,
+    @Session() session: TSession
   ) {
-    await this.authService.oauthSignIn(req?.user);
+    const user = await this.authService.oauthSignIn(req?.user);
+
+    session.passport = {
+      user: user.id,
+      verified: user.emailVerified
+    }
 
     return res.redirect(this.config.get("WEB_URL") as string);
   }
@@ -137,9 +143,15 @@ export class AuthController {
       user?: TOAuthUser;
     },
     @Res() res: Response,
+    @Session() session: TSession
   ) {
-    await this.authService.oauthSignIn(req?.user);
+    const user = await this.authService.oauthSignIn(req?.user);
 
+    session.passport = {
+      user: user.id,
+      verified: user.emailVerified
+    }
+    
     return res.redirect(this.config.get("WEB_URL") as string);
   }
 }

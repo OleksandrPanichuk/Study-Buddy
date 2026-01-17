@@ -1,6 +1,8 @@
 import {useEffect, useEffectEvent, useRef} from "react";
 
-export const useRipple = <T extends HTMLElement = HTMLButtonElement>() => {
+export const useRipple = <T extends HTMLElement = HTMLButtonElement>(
+	background = "rgba(255,255,255,0.6)",
+) => {
 	const ref = useRef<T>(null);
 
 	const handleClick = useEffectEvent((event: PointerEvent) => {
@@ -20,7 +22,7 @@ export const useRipple = <T extends HTMLElement = HTMLButtonElement>() => {
 		ripple.style.width = "0";
 		ripple.style.height = "0";
 		ripple.style.borderRadius = "50%";
-		ripple.style.backgroundColor = "rgba(255, 255, 255, 0.6)";
+		ripple.style.backgroundColor = background;
 		ripple.style.pointerEvents = "none";
 		ripple.style.animation = "ripple-effect 1s ease-out";
 

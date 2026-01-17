@@ -7,12 +7,12 @@ import viteTsConfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
 	plugins: [
-		devtools(),
 		viteTsConfigPaths({
 			projects: ["./tsconfig.json", "../../packages/ui/tsconfig.json"],
 		}),
-		tailwindcss(),
 		tanstackStart(),
+		tailwindcss(),
+		devtools(),
 		viteReact(),
 	],
 });

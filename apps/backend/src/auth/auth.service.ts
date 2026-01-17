@@ -1,6 +1,6 @@
 import type { TOAuthUser } from "@/auth/auth.types";
 import { UsersRepository } from "@/users/users.repository";
-import  { HashingService } from "@app/hashing";
+import { HashingService } from "@app/hashing";
 import {
   BadRequestException,
   ConflictException,
@@ -75,7 +75,6 @@ export class AuthService {
 
   public async singIn(dto: SignInInput): Promise<User> {
     const user = await this.usersRepository.findByEmail(dto.email);
-
     if (!user) {
       throw new BadRequestException("Invalid email or password");
     }

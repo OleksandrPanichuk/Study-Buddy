@@ -3,12 +3,7 @@ import { STRATEGIES } from "@/auth/auth.constants";
 import { PassportStrategy } from "@nestjs/passport";
 import { Strategy } from "passport-local";
 import { signInInputSchema } from "@repo/schemas";
-import {
-  ConflictException,
-  Injectable,
-  Logger,
-  UnauthorizedException,
-} from "@nestjs/common";
+import { Injectable, Logger, UnauthorizedException } from "@nestjs/common";
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(
@@ -37,11 +32,8 @@ export class LocalStrategy extends PassportStrategy(
       this.logger.debug(`Successfully authenticated user: ${email}`);
       return user;
     } catch (error) {
-      if (error instanceof ConflictException) {
-        throw error;
-      }
       this.logger.warn(`Authentication failed for user: ${email}`);
-      throw new UnauthorizedException("Invalid credentials");
+      throw error;
     }
   }
 }

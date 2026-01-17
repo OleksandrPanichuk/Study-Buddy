@@ -1,4 +1,5 @@
 import { Module } from "@nestjs/common";
+import { PassportModule } from "@nestjs/passport";
 import { AuthService } from "./auth.service";
 import { AuthController } from "./auth.controller";
 import { UsersModule } from "@/users/users.module";
@@ -22,6 +23,7 @@ import { EmailVerificationModule } from "@/auth/email-verification/email-verific
     LocalStrategy,
   ],
   imports: [
+    PassportModule.register({ session: true }),
     UsersModule,
     HashingModule,
     PasswordModule,

@@ -15,10 +15,27 @@
 		"includes": ["**", "!dist", "!build"]
 	},
 
+	"assist": {
+		"actions": {
+			"source": {
+				"organizeImports": "on"
+			}
+		}
+	},
+
 	"linter": {
 		"enabled": true,
 		"domains": {
 			"react": "recommended"
+		},
+		"rules": {
+			"correctness": {
+				"noUnusedImports": "error"
+			},
+			"a11y": {
+				"noStaticElementInteractions": "off",
+				"useKeyWithClickEvents": "off"
+			}
 		}
 	}
 }

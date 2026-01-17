@@ -1,157 +1,140 @@
-import { BadRequestException, Injectable, Logger } from "@nestjs/common";
-import  { ResetPasswordTokenRepository } from "@/auth/password/reset-password-token.repository";
-import  { MailerService } from "@app/mailer";
-import  { HashingService } from "@app/hashing";
-import type { Env } from "@/shared/config";
-import  { ConfigService } from "@nestjs/config";
-import type {
-  ResetPasswordInput,
-  SendResetPasswordTokenInput,
-  VerifyResetPasswordTokenInput,
-} from "@/auth/password/password.dto";
-import  { UsersRepository } from "@/users/users.repository";
 import { randomBytes } from "node:crypto";
+import { HashingService } from "@app/hashing";
+import { MailerService } from "@app/mailer";
+import { BadRequestException, Injectable, Logger } from "@nestjs/common";
+import type {
+	ResetPasswordInput,
+	SendResetPasswordTokenInput,
+	VerifyResetPasswordTokenInput
+} from "@/auth/password/password.dto";
+import { ResetPasswordTokenRepository } from "@/auth/password/reset-password-token.repository";
+import { UsersRepository } from "@/users/users.repository";
 
 @Injectable()
 export class PasswordService {
-  private readonly logger = new Logger(PasswordService.name);
-  private readonly TOKEN_LENGTH = 32;
-  private readonly TOKEN_EXPIRATION_MS = 15 * 60 * 1000;
-  private readonly RESEND_COOLDOWN_MS = 2 * 60 * 1000;
-  private readonly MAX_RESEND_ATTEMPTS = 5;
+	private readonly logger = new Logger(PasswordService.name);
+	private readonly TOKEN_LENGTH = 32;
+	private readonly TOKEN_EXPIRATION_MS = 15 * 60 * 1000;
+	private readonly RESEND_COOLDOWN_MS = 2 * 60 * 1000;
+	private readonly MAX_RESEND_ATTEMPTS = 5;
 
-  constructor(
-    private readonly tokenRepository: ResetPasswordTokenRepository,
-    private readonly usersRepository: UsersRepository,
-    private readonly mailerService: MailerService,
-    private readonly hashingService: HashingService,
-    private readonly config: ConfigService<Env>,
-  ) {}
+	constructor(
+		private readonly tokenRepository: ResetPasswordTokenRepository,
+		private readonly usersRepository: UsersRepository,
+		private readonly mailerService: MailerService,
+		private readonly hashingService: HashingService
+	) {}
 
-  public async sendResetPasswordToken(dto: SendResetPasswordTokenInput) {
-    const user = await this.usersRepository.findByEmail(dto.email);
+	public async sendResetPasswordToken(dto: SendResetPasswordTokenInput) {
+		const user = await this.usersRepository.findByEmail(dto.email);
 
-    if (!user) {
-      this.logger.warn(
-        `Password reset attempted for non-existing email: ${dto.email}`,
-      );
-      await this.simulateDelay();
-      return {
-        message:
-          "If an account with that email exists, a reset password link has been sent.",
-      };
-    }
+		if (!user) {
+			this.logger.warn(`Password reset attempted for non-existing email: ${dto.email}`);
+			await this.simulateDelay();
+			return {
+				message: "If an account with that email exists, a reset password link has been sent."
+			};
+		}
 
-    const existingToken = await this.tokenRepository.findByUserId(user.id);
+		const existingToken = await this.tokenRepository.findByUserEmail(user.email);
 
-    if (existingToken) {
-      const now = Date.now();
-      const timeSinceCreation = now - existingToken.createdAt.getTime();
+		if (existingToken) {
+			const now = Date.now();
 
-      if (timeSinceCreation < this.RESEND_COOLDOWN_MS) {
-        const remainingSeconds = Math.ceil(
-          (this.RESEND_COOLDOWN_MS - timeSinceCreation) / 1000,
-        );
+			const timeSinceLastSent = now - existingToken.lastSentAt.getTime();
 
-        throw new BadRequestException(
-          `Please wait ${remainingSeconds} seconds before requesting a new token.`,
-        );
-      }
+			if (timeSinceLastSent < this.RESEND_COOLDOWN_MS) {
+				const remainingSeconds = Math.ceil((this.RESEND_COOLDOWN_MS - timeSinceLastSent) / 1000);
 
-      if (existingToken.resendCount >= this.MAX_RESEND_ATTEMPTS) {
-        throw new BadRequestException(
-          "Maximum resend attempts reached. Please try again later",
-        );
-      }
+				throw new BadRequestException(`Please wait ${remainingSeconds} seconds before requesting a new token.`);
+			}
 
-      await this.tokenRepository.incrementResendCount(existingToken.id);
-      const clientUrl = this.config.get("WEB_URL");
-      // TODO: link for reset password route must come from frontend
-      const link = `${clientUrl}/reset-password?token=${existingToken.token}`;
+			if (existingToken.resendCount >= this.MAX_RESEND_ATTEMPTS) {
+				throw new BadRequestException("Maximum resend attempts reached. Please try again later");
+			}
 
-      const expiresInMinutes = Math.ceil(
-        (existingToken.expiresAt.getTime() - now) / 60000,
-      );
+			const token = this.generateToken();
+			const hashedToken = await this.hashingService.hash(token);
 
-      await this.mailerService.sendPasswordResetEmail(
-        user.email,
-        link,
-        user.username,
-        expiresInMinutes,
-      );
+			await this.tokenRepository.updateTokenAndIncrementResendCount(existingToken.id, hashedToken);
 
-      return { message: "If the email exists, a reset link has been sent" };
-    }
-    await this.tokenRepository.deleteByUserId(user.id);
+			const link = `${dto.resetPageUrl}?token=${token}&email=${encodeURIComponent(user.email)}`;
 
-    const token = this.generateToken();
+			const expiresInMinutes = Math.ceil((existingToken.expiresAt.getTime() - now) / 60000);
 
-    const tokenHash = await this.hashingService.hash(token);
+			await this.mailerService.sendPasswordResetEmail(user.email, link, user.username, expiresInMinutes);
 
-    const expiresAt = new Date(Date.now() + this.TOKEN_EXPIRATION_MS);
-    const expiresInMinutes = Math.floor(this.TOKEN_EXPIRATION_MS / 60000);
+			return { message: "If the email exists, a reset link has been sent" };
+		}
 
-    await this.tokenRepository.create({
-      userId: user.id,
-      expiresAt,
-      token: tokenHash,
-    });
+		await this.tokenRepository.deleteByUserId(user.id);
 
-    const clientUrl = this.config.get("WEB_URL");
-    const link = `${clientUrl}/reset-password?token=${token}`;
+		const token = this.generateToken();
+		const tokenHash = await this.hashingService.hash(token);
 
-    await this.mailerService.sendPasswordResetEmail(
-      user.email,
-      link,
-      user.username,
-      expiresInMinutes,
-    );
+		const expiresAt = new Date(Date.now() + this.TOKEN_EXPIRATION_MS);
+		const expiresInMinutes = Math.floor(this.TOKEN_EXPIRATION_MS / 60000);
 
-    return { message: "If the email exists, a reset link has been sent" };
-  }
+		await this.tokenRepository.create({
+			userId: user.id,
+			expiresAt,
+			token: tokenHash
+		});
 
-  public async verifyToken(dto: VerifyResetPasswordTokenInput) {
-    const tokenHash = await this.hashingService.hash(dto.token);
-    const token = await this.tokenRepository.findByToken(tokenHash);
+		const link = `${dto.resetPageUrl}?token=${token}&email=${encodeURIComponent(user.email)}`;
 
-    if (!token || Date.now() > token.expiresAt.getTime()) {
-      throw new BadRequestException("Invalid or expired token");
-    }
+		await this.mailerService.sendPasswordResetEmail(user.email, link, user.username, expiresInMinutes);
 
-    return { valid: true };
-  }
+		return { message: "If the email exists, a reset link has been sent" };
+	}
 
-  public async resetPassword(dto: ResetPasswordInput) {
-    const tokenHash = await this.hashingService.hash(dto.token);
-    const token = await this.tokenRepository.findByToken(tokenHash);
+	public async verifyToken(dto: VerifyResetPasswordTokenInput) {
+		const result = await this.tokenRepository.findByUserEmail(dto.email);
 
-    if (!token || Date.now() > token.expiresAt.getTime()) {
-      throw new BadRequestException("Invalid or expired token");
-    }
+		if (!result || Date.now() > result.expiresAt.getTime()) {
+			return { valid: false };
+		}
 
-    const passwordHash = await this.hashingService.hash(dto.password);
+		const isValid = await this.hashingService.verify(result.token, dto.token);
+		return { valid: isValid };
+	}
 
-    await this.usersRepository.updatePassword(token.userId, passwordHash);
+	public async resetPassword(dto: ResetPasswordInput) {
+		const result = await this.tokenRepository.findByUserEmail(dto.email);
 
-    await this.tokenRepository.deleteByUserId(token.userId);
+		if (!result || Date.now() > result.expiresAt.getTime()) {
+			throw new BadRequestException("Invalid or expired token");
+		}
 
-    this.logger.log(`Password reset successful for user: ${token.userId}`);
+		const isValid = await this.hashingService.verify(result.token, dto.token);
 
-    return { message: "Password reset successfully" };
-  }
+		if (!isValid) {
+			throw new BadRequestException("Invalid or expired token");
+		}
 
-  public async cleanupExpiredTokens() {
-    const result = await this.tokenRepository.deleteExpired();
-    this.logger.log(`Cleaned up ${result.count} expired reset tokens`);
-    return result.count;
-  }
+		const passwordHash = await this.hashingService.hash(dto.password);
 
-  private generateToken(): string {
-    return randomBytes(this.TOKEN_LENGTH).toString("hex");
-  }
+		await this.usersRepository.updatePassword(result.userId, passwordHash);
 
-  private async simulateDelay() {
-    const delay = Math.random() * 200;
-    return new Promise((resolve) => setTimeout(resolve, delay));
-  }
+		await this.tokenRepository.deleteByUserId(result.userId);
+
+		this.logger.log(`Password reset successful for user: ${result.userId}`);
+
+		return { message: "Password reset successfully" };
+	}
+
+	public async cleanupExpiredTokens() {
+		const result = await this.tokenRepository.deleteExpired();
+		this.logger.log(`Cleaned up ${result.count} expired reset tokens`);
+		return result.count;
+	}
+
+	private generateToken(): string {
+		return randomBytes(this.TOKEN_LENGTH).toString("hex");
+	}
+
+	private async simulateDelay() {
+		const delay = Math.random() * 200;
+		return new Promise((resolve) => setTimeout(resolve, delay));
+	}
 }

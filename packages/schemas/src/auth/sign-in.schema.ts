@@ -8,3 +8,6 @@ export const signInInputSchema = z.object({
 });
 
 export const signInResponseSchema = userSchema.omit({ hash: true });
+
+export type TSignInInput = z.infer<typeof signInInputSchema>;
+export type TSignInResponse = z.infer<typeof signInResponseSchema>;

@@ -1,123 +1,123 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.3.10/schema.json",
-  "assist": {
-    "actions": {
-      "source": {
-        "organizeImports": "off"
-      }
-    }
-  },
-  "formatter": {
-    "enabled": true,
-    "indentWidth": 2,
-    "indentStyle": "tab",
-    "lineEnding": "lf",
-    "lineWidth": 120
-  },
-  "css" : {
-    "parser": {
-      "tailwindDirectives": true
-    }
-  },
-  "javascript": {
-    "formatter": {
-      "enabled": true,
-      "semicolons": "always",
-      "quoteStyle": "double",
-      "quoteProperties": "asNeeded",
-      "trailingCommas": "none",
-      "arrowParentheses": "always",
-      "lineWidth": 120,
-      "bracketSameLine": true,
-      "bracketSpacing": true,
-      "indentStyle": "tab",
-      "lineEnding": "lf"
-    }
-  },
-  "json": {
-    "formatter": {
-      "enabled": true,
-      "indentWidth": 2,
-      "indentStyle": "tab",
-      "lineEnding": "lf",
-      "lineWidth": 120,
-      "trailingCommas": "none"
-    }
-  },
-  "linter": {
-    "enabled": true,
-    "rules": {
-      "complexity": {
-        "noEmptyTypeParameters": "error",
-        "noExcessiveCognitiveComplexity": "error",
-        "noForEach": "error",
-        "noUselessCatch": "error",
-        "noUselessConstructor": "error",
-        "noUselessEmptyExport": "error",
-        "noUselessSwitchCase": "error",
-        "noVoid": "off",
-        "useArrowFunction": "error",
-        "useLiteralKeys": "off",
-        "useOptionalChain": "error",
-        "useRegexLiterals": "error",
-        "useSimplifiedLogicExpression": "error"
-      },
-      "correctness": {
-        "noConstAssign": "error",
-        "noConstantCondition": "error",
-        "noEmptyCharacterClassInRegex": "error",
-        "noEmptyPattern": "error",
-        "noGlobalObjectCalls": "error",
-        "noInnerDeclarations": "off",
-        "noInvalidConstructorSuper": "error",
-        "noSwitchDeclarations": "off",
-        "noInvalidBuiltinInstantiation": "error"
-      },
-      "style": {
-        "noDefaultExport": "error",
-        "noUselessElse": "error",
-        "noNonNullAssertion": "off",
-        "useAsConstAssertion": "warn",
-        "useConst": "error",
-        "useNodejsImportProtocol": "error",
-        "useSingleVarDeclarator": "error",
-        "useExportType": {
-          "options": {},
-          "level": "info",
-          "fix": "none"
-        },
-        "useImportType": {
-          "options": {},
-          "level": "info",
-          "fix": "none"
-        },
-        "noParameterAssign": "error",
-        "useDefaultParameterLast": "error",
-        "useEnumInitializers": "error",
-        "useSelfClosingElements": "error",
-        "noUnusedTemplateLiteral": "error",
-        "useNumberNamespace": "error",
-        "noInferrableTypes": "error",
-        "useConsistentArrayType": {
-          "level": "error",
-          "options": {
-            "syntax": "shorthand"
-          }
-        }
-      },
-      "suspicious": {
-        "noApproximativeNumericConstant": "error",
-        "noCatchAssign": "error",
-        "noConfusingVoidType": "error",
-        "noDoubleEquals": "error",
-        "noDuplicateCase": "error",
-        "noDuplicateObjectKeys": "error",
-        "noDuplicateParameters": "error",
-        "noEmptyBlockStatements": "error",
-        "noEmptyInterface": "error",
-        "noExplicitAny": "error",
-        "noVar": "error"
-      }
-    }
-  }
+	"$schema": "https://biomejs.dev/schemas/2.3.10/schema.json",
+	"assist": {
+		"actions": {
+			"source": {
+				"organizeImports": "on"
+			}
+		}
+	},
+	"formatter": {
+		"enabled": true,
+		"indentWidth": 2,
+		"indentStyle": "tab",
+		"lineEnding": "lf",
+		"lineWidth": 120
+	},
+	"css": {
+		"parser": {
+			"tailwindDirectives": true
+		}
+	},
+	"javascript": {
+		"formatter": {
+			"enabled": true,
+			"semicolons": "always",
+			"quoteStyle": "double",
+			"quoteProperties": "asNeeded",
+			"trailingCommas": "none",
+			"arrowParentheses": "always",
+			"lineWidth": 120,
+			"bracketSameLine": true,
+			"bracketSpacing": true,
+			"indentStyle": "tab",
+			"lineEnding": "lf"
+		}
+	},
+	"json": {
+		"formatter": {
+			"enabled": true,
+			"indentWidth": 2,
+			"indentStyle": "tab",
+			"lineEnding": "lf",
+			"lineWidth": 120,
+			"trailingCommas": "none"
+		}
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"complexity": {
+				"noEmptyTypeParameters": "error",
+				"noExcessiveCognitiveComplexity": "error",
+				"noForEach": "error",
+				"noUselessCatch": "error",
+				"noUselessConstructor": "error",
+				"noUselessEmptyExport": "error",
+				"noUselessSwitchCase": "error",
+				"noVoid": "off",
+				"useArrowFunction": "error",
+				"useLiteralKeys": "off",
+				"useOptionalChain": "error",
+				"useRegexLiterals": "error",
+				"useSimplifiedLogicExpression": "error"
+			},
+			"correctness": {
+				"noConstAssign": "error",
+				"noConstantCondition": "error",
+				"noEmptyCharacterClassInRegex": "error",
+				"noEmptyPattern": "error",
+				"noGlobalObjectCalls": "error",
+				"noInnerDeclarations": "off",
+				"noInvalidConstructorSuper": "error",
+				"noSwitchDeclarations": "off",
+				"noInvalidBuiltinInstantiation": "error"
+			},
+			"style": {
+				"noDefaultExport": "error",
+				"noUselessElse": "error",
+				"noNonNullAssertion": "off",
+				"useAsConstAssertion": "warn",
+				"useConst": "error",
+				"useNodejsImportProtocol": "error",
+				"useSingleVarDeclarator": "error",
+				"useExportType": {
+					"options": {},
+					"level": "info",
+					"fix": "none"
+				},
+				"useImportType": {
+					"options": {},
+					"level": "info",
+					"fix": "none"
+				},
+				"noParameterAssign": "error",
+				"useDefaultParameterLast": "error",
+				"useEnumInitializers": "error",
+				"useSelfClosingElements": "error",
+				"noUnusedTemplateLiteral": "error",
+				"useNumberNamespace": "error",
+				"noInferrableTypes": "error",
+				"useConsistentArrayType": {
+					"level": "error",
+					"options": {
+						"syntax": "shorthand"
+					}
+				}
+			},
+			"suspicious": {
+				"noApproximativeNumericConstant": "error",
+				"noCatchAssign": "error",
+				"noConfusingVoidType": "error",
+				"noDoubleEquals": "error",
+				"noDuplicateCase": "error",
+				"noDuplicateObjectKeys": "error",
+				"noDuplicateParameters": "error",
+				"noEmptyBlockStatements": "error",
+				"noEmptyInterface": "error",
+				"noExplicitAny": "error",
+				"noVar": "error"
+			}
+		}
+	}
 }

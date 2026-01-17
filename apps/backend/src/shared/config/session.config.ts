@@ -22,13 +22,11 @@ export const getSessionConfig = (
       httpOnly: true,
       secure: config.get("NODE_ENV") === "production",
       maxAge: SESSION_MAX_AGE,
-      sameSite: "strict",
     },
     name: SESSION_COOKIE_NAME,
     store: new RedisStore({
       client: redis,
       ttl: SESSION_MAX_AGE / 1000,
-      disableTouch: true,
       prefix: SESSION_REDIS_PREFIX,
     }),
     rolling: true,

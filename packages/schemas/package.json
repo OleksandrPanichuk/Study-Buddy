@@ -12,18 +12,28 @@
 	},
 	"exports": {
 		".": {
-			"default": "./dist/index.js",
-			"types": "./dist/index.d.ts"
+			"types": "./dist/esm/index.d.ts",
+			"import": "./dist/esm/index.js",
+			"require": "./dist/cjs/index.js",
+			"default": "./dist/esm/index.js"
 		},
 		"./*": {
-			"default": "./dist/*",
-			"types": "./dist/*"
+			"types": "./dist/esm/*",
+			"import": "./dist/esm/*",
+			"require": "./dist/cjs/*",
+			"default": "./dist/esm/*"
 		}
 	},
+	"main": "./dist/cjs/index.js",
+	"module": "./dist/esm/index.js",
+	"types": "./dist/esm/index.d.ts",
 	"private": true,
 	"scripts": {
-		"dev": "tsc -b -w",
-		"build": "tsc -b",
+		"dev": "bun run build:esm -- -w",
+		"build": "bun run clear && bun run build:cjs && bun run build:esm && bun run postbuild",
+		"build:cjs": "bun x tsc -p tsconfig.cjs.json",
+		"build:esm": "bun x tsc -p tsconfig.esm.json",
+		"postbuild": "echo '{\"type\":\"commonjs\"}' > dist/cjs/package.json",
 		"clear": "rimraf ./dist"
 	},
 	"dependencies": {

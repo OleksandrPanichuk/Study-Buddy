@@ -43,7 +43,7 @@ model User {
   resetPasswordTokens ResetPasswordToken[]
 
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
 
   @@map("users")
 }
@@ -73,8 +73,9 @@ model ResetPasswordToken {
 
   resendCount Int @default(0) @map("resend_count")
 
-  expiresAt DateTime @map("expires_at")
-  createdAt DateTime @default(now()) @map("created_at")
+  expiresAt  DateTime @map("expires_at")
+  createdAt  DateTime @default(now()) @map("created_at")
+  lastSentAt DateTime @default(now()) @map("last_sent_at")
 
   @@map("reset_password_tokens")
 }

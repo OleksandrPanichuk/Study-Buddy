@@ -52,8 +52,12 @@ function Button({
 	ref,
 	...props
 }: IButtonProps) {
-	const rippleRef = useRipple();
-	
+	const rippleRef = useRipple(
+		variant === "default" || variant === "destructive"
+			? "rgba(255,255,255,0.6)"
+			: "rgba(0,0,0,0.2)",
+	);
+
 	const Comp = asChild ? Slot : "button";
 
 	return (

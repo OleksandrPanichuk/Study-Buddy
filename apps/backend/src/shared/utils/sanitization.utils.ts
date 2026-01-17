@@ -21,17 +21,22 @@ export class SanitizationUtil {
 			return input;
 		}
 
-		return filterXSS(input, this.xssOptions);
+		return filterXSS(input, SanitizationUtil.xssOptions);
 	}
 
 	static sanitizeArray<T = unknown>(arr: T[]): T[] {
 		return arr.map((item) => {
 			if (typeof item === "string") {
-				return this.sanitizeInput(item) as T;
-			} else if (Array.isArray(item)) {
-				return this.sanitizeArray(item) as T;
-			} else if (item && typeof item === "object") {
-				return this.sanitizeObject(item as Record<string, unknown>) as T;
+				return SanitizationUtil.sanitizeInput(item) as T;
+			}
+			if (item instanceof Date) {
+				return item;
+			}
+			if (Array.isArray(item)) {
+				return SanitizationUtil.sanitizeArray(item) as T;
+			}
+			if (item && typeof item === "object") {
+				return SanitizationUtil.sanitizeObject(item as Record<string, unknown>) as T;
 			}
 			return item;
 		});
@@ -44,11 +49,11 @@ export class SanitizationUtil {
 			if (value instanceof Date) {
 				sanitized[key] = value;
 			} else if (typeof value === "string") {
-				sanitized[key] = this.sanitizeInput(value);
+				sanitized[key] = SanitizationUtil.sanitizeInput(value);
 			} else if (Array.isArray(value)) {
-				sanitized[key] = this.sanitizeArray(value);
+				sanitized[key] = SanitizationUtil.sanitizeArray(value);
 			} else if (value && typeof value === "object") {
-				sanitized[key] = this.sanitizeObject(value as Record<string, unknown>);
+				sanitized[key] = SanitizationUtil.sanitizeObject(value as Record<string, unknown>);
 			} else {
 				sanitized[key] = value;
 			}

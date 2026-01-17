@@ -2,14 +2,12 @@ import { randomBytes } from "node:crypto";
 import { HashingService } from "@app/hashing";
 import { MailerService } from "@app/mailer";
 import { BadRequestException, Injectable, Logger } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
 import type {
 	ResetPasswordInput,
 	SendResetPasswordTokenInput,
 	VerifyResetPasswordTokenInput
 } from "@/auth/password/password.dto";
 import { ResetPasswordTokenRepository } from "@/auth/password/reset-password-token.repository";
-import type { Env } from "@/shared/config";
 import { UsersRepository } from "@/users/users.repository";
 
 @Injectable()
@@ -24,8 +22,7 @@ export class PasswordService {
 		private readonly tokenRepository: ResetPasswordTokenRepository,
 		private readonly usersRepository: UsersRepository,
 		private readonly mailerService: MailerService,
-		private readonly hashingService: HashingService,
-		private readonly config: ConfigService<Env>
+		private readonly hashingService: HashingService
 	) {}
 
 	public async sendResetPasswordToken(dto: SendResetPasswordTokenInput) {
@@ -43,10 +40,11 @@ export class PasswordService {
 
 		if (existingToken) {
 			const now = Date.now();
-			const timeSinceCreation = now - existingToken.createdAt.getTime();
 
-			if (timeSinceCreation < this.RESEND_COOLDOWN_MS) {
-				const remainingSeconds = Math.ceil((this.RESEND_COOLDOWN_MS - timeSinceCreation) / 1000);
+			const timeSinceLastSent = now - existingToken.lastSentAt.getTime();
+
+			if (timeSinceLastSent < this.RESEND_COOLDOWN_MS) {
+				const remainingSeconds = Math.ceil((this.RESEND_COOLDOWN_MS - timeSinceLastSent) / 1000);
 
 				throw new BadRequestException(`Please wait ${remainingSeconds} seconds before requesting a new token.`);
 			}
@@ -68,10 +66,10 @@ export class PasswordService {
 
 			return { message: "If the email exists, a reset link has been sent" };
 		}
+
 		await this.tokenRepository.deleteByUserId(user.id);
 
 		const token = this.generateToken();
-
 		const tokenHash = await this.hashingService.hash(token);
 
 		const expiresAt = new Date(Date.now() + this.TOKEN_EXPIRATION_MS);
@@ -83,8 +81,7 @@ export class PasswordService {
 			token: tokenHash
 		});
 
-		const clientUrl = this.config.get("WEB_URL");
-		const link = `${clientUrl}/reset-password?token=${token}&email=${encodeURIComponent(user.email)}`;
+		const link = `${dto.resetPageUrl}?token=${token}&email=${encodeURIComponent(user.email)}`;
 
 		await this.mailerService.sendPasswordResetEmail(user.email, link, user.username, expiresInMinutes);
 

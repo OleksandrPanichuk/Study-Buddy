@@ -117,7 +117,8 @@ export const ResetPasswordTokenScalarFieldEnum = {
   userId: 'userId',
   resendCount: 'resendCount',
   expiresAt: 'expiresAt',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  lastSentAt: 'lastSentAt'
 } as const
 
 export type ResetPasswordTokenScalarFieldEnum = (typeof ResetPasswordTokenScalarFieldEnum)[keyof typeof ResetPasswordTokenScalarFieldEnum]

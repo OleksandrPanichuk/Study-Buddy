@@ -39,7 +39,8 @@ export class ResetPasswordTokenRepository {
 				token,
 				resendCount: {
 					increment: 1
-				}
+				},
+				lastSentAt: new Date()
 			}
 		});
 	}

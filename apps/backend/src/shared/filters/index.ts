@@ -1,1 +1,1 @@
-export * from "./throtller-exception.filter";
+export * from "./throttler-exception.filter";

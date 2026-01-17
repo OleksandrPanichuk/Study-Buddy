@@ -116,7 +116,7 @@ export class EmailVerificationService {
 
 	private generateVerificationCode(): string {
 		const min = 10 ** (this.CODE_LENGTH - 1);
-		const max = 10 ** this.CODE_LENGTH - 1;
+		const max = 10 ** this.CODE_LENGTH;
 		return randomInt(min, max).toString();
 	}
 }

@@ -9,7 +9,7 @@ import {
 	type TSignInResponse,
 	type TSignUpInput,
 	type TSignUpResponse,
-	TVerifyEmailInput,
+	type TVerifyEmailInput,
 	type TVerifyResetPasswordTokenInput,
 	type TVerifyResetPasswordTokenResponse,
 	verifyEmailSchema,

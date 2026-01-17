@@ -1,4 +1,4 @@
-import {resetPasswordInputSchema, type TResetPasswordInput} from "@repo/schemas";
+import { resetPasswordInputSchema, type TResetPasswordInput } from "@repo/schemas";
 import {
 	Button,
 	Card,
@@ -13,17 +13,18 @@ import {
 	FieldLabel,
 	Input
 } from "@repo/ui";
-import {useForm} from "@tanstack/react-form";
-import {useMutation} from "@tanstack/react-query";
-import {Link, useNavigate} from "@tanstack/react-router";
-import {toast} from "sonner";
-import {getResetPasswordMutationOptions} from "@/features/auth";
+import { useForm } from "@tanstack/react-form";
+import { useMutation } from "@tanstack/react-query";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { toast } from "sonner";
+import { getResetPasswordMutationOptions } from "@/features/auth";
 
 interface IResetPasswordViewProps {
 	token: string;
+	email: string;
 }
 
-export const ResetPasswordView = ({ token }: IResetPasswordViewProps) => {
+export const ResetPasswordView = ({ token, email }: IResetPasswordViewProps) => {
 	const navigate = useNavigate();
 
 	const { mutateAsync: resetPassword } = useMutation(getResetPasswordMutationOptions());
@@ -31,8 +32,8 @@ export const ResetPasswordView = ({ token }: IResetPasswordViewProps) => {
 	const form = useForm({
 		defaultValues: {
 			password: "",
-
-			token
+			token,
+			email
 		} as TResetPasswordInput,
 		validators: {
 			onBlur: resetPasswordInputSchema,

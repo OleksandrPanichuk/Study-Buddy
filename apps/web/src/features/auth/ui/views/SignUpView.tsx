@@ -1,9 +1,3 @@
-import {
-	AUTH_API_ROUTES,
-	getSendVerificationCodeMutationOptions,
-	getSignUpMutationOptions,
-	useAuth
-} from "@/features/auth";
 import { signUpInputSchema, type TSignUpInput } from "@repo/schemas";
 import {
 	Button,
@@ -24,13 +18,12 @@ import { useForm } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
+import { AUTH_API_ROUTES, getSendVerificationCodeMutationOptions, getSignUpMutationOptions } from "@/features/auth";
 
 export const SignUpView = () => {
 	const navigate = useNavigate();
 
-	const setUser = useAuth((state) => state.setUser);
-
-	const { mutateAsync: signUp } = useMutation(getSignUpMutationOptions(setUser));
+	const { mutateAsync: signUp } = useMutation(getSignUpMutationOptions());
 	const { mutateAsync: sendVerificationEmail } = useMutation(getSendVerificationCodeMutationOptions());
 
 	const form = useForm({

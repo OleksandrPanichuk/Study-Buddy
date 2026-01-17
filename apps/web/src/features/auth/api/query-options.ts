@@ -8,7 +8,6 @@ import type {
 import { mutationOptions } from "@tanstack/react-query";
 import {
 	forgotPasswordFn,
-	type IAuthStore,
 	resetPasswordFn,
 	sendVerificationCodeFn,
 	signInFn,
@@ -16,28 +15,29 @@ import {
 	signUpFn,
 	verifyEmailFn
 } from "@/features/auth";
+import { PROFILE_QUERY_KEYS } from "@/features/profile";
 
-export const getSignInMutationOptions = (setUser: IAuthStore["setUser"]) =>
+export const getSignInMutationOptions = () =>
 	mutationOptions({
 		mutationFn: (data: TSignInInput) => signInFn({ data }),
-		onSuccess: (user) => {
-			setUser(user);
+		onSuccess: (user, _variables, _onMutationResult, { client }) => {
+			client.setQueryData(PROFILE_QUERY_KEYS.currentUser(), user);
 		}
 	});
 
-export const getSignUpMutationOptions = (setUser: IAuthStore["setUser"]) =>
+export const getSignUpMutationOptions = () =>
 	mutationOptions({
 		mutationFn: (data: TSignUpInput) => signUpFn({ data }),
-		onSuccess: (user) => {
-			setUser(user);
+		onSuccess: (user, _variables, _onMutationResult, { client }) => {
+			client.setQueryData(PROFILE_QUERY_KEYS.currentUser(), user);
 		}
 	});
 
-export const getSignOutMutationOptions = (setUser: IAuthStore["setUser"]) =>
+export const getSignOutMutationOptions = () =>
 	mutationOptions({
 		mutationFn: () => signOutFn(),
-		onSuccess: () => {
-			setUser(null);
+		onSuccess: (_data, _variables, _onMutationResult, { client }) => {
+			client.setQueryData(PROFILE_QUERY_KEYS.currentUser(), null);
 		}
 	});
 

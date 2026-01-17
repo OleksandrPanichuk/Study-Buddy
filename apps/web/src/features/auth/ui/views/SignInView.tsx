@@ -1,10 +1,4 @@
-import {
-	AUTH_API_ROUTES,
-	getSendVerificationCodeMutationOptions,
-	getSignInMutationOptions,
-	useAuth
-} from "@/features/auth";
-import {signInInputSchema, type TSignInInput} from "@repo/schemas";
+import { signInInputSchema, type TSignInInput } from "@repo/schemas";
 import {
 	Button,
 	Card,
@@ -20,17 +14,16 @@ import {
 	Input,
 	Separator
 } from "@repo/ui";
-import {useForm} from "@tanstack/react-form";
-import {useMutation} from "@tanstack/react-query";
-import {Link, useNavigate} from "@tanstack/react-router";
-import {toast} from "sonner";
+import { useForm } from "@tanstack/react-form";
+import { useMutation } from "@tanstack/react-query";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { toast } from "sonner";
+import { AUTH_API_ROUTES, getSendVerificationCodeMutationOptions, getSignInMutationOptions } from "@/features/auth";
 
 export const SignInView = () => {
 	const navigate = useNavigate();
 
-	const setUser = useAuth((state) => state.setUser);
-
-	const { mutateAsync: signIn } = useMutation(getSignInMutationOptions(setUser));
+	const { mutateAsync: signIn } = useMutation(getSignInMutationOptions());
 	const { mutate: sendVerificationEmail } = useMutation(getSendVerificationCodeMutationOptions());
 
 	const form = useForm({
@@ -50,7 +43,7 @@ export const SignInView = () => {
 
 				if (user.emailVerified) {
 					await navigate({
-						to: "/dashboard"
+						to: "/"
 					});
 				} else {
 					sendVerificationEmail();

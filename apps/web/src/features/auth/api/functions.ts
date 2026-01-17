@@ -1,5 +1,3 @@
-import {AUTH_API_ROUTES} from "@/features/auth";
-import {fetcher} from "@/lib/fetcher";
 import {
 	resetPasswordInputSchema,
 	sendResetPasswordTokenInputSchema,
@@ -17,7 +15,9 @@ import {
 	verifyEmailSchema,
 	verifyResetPasswordTokenInputSchema
 } from "@repo/schemas";
-import {createServerFn} from "@tanstack/react-start";
+import { createServerFn } from "@tanstack/react-start";
+import { AUTH_API_ROUTES } from "@/features/auth";
+import { fetcher } from "@/lib/fetcher";
 
 export const signInFn = createServerFn({ method: "POST" })
 	.inputValidator((data: TSignInInput) => signInInputSchema.parse(data))
@@ -54,7 +54,7 @@ export const forgotPasswordFn = createServerFn({ method: "POST" })
 export const resetPasswordFn = createServerFn({ method: "POST" })
 	.inputValidator((data: TResetPasswordInput) => resetPasswordInputSchema.parse(data))
 	.handler(async (ctx) => {
-		await fetcher.post(AUTH_API_ROUTES.resetPassword, {
+		await fetcher.patch(AUTH_API_ROUTES.resetPassword, {
 			json: ctx.data
 		});
 	});

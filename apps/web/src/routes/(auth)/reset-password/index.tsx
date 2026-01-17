@@ -7,7 +7,7 @@ export const Route = createFileRoute("/(auth)/reset-password/")({
 	errorComponent: ErrorComponent,
 	validateSearch: verifyResetPasswordTokenInputSchema,
 	beforeLoad: async ({ search }) => {
-		const result = await verifyResetTokenFn({ data: { token: search.token } });
+		const result = await verifyResetTokenFn({ data: { token: search.token, email: search.email } });
 
 		if (!result.valid) {
 			throw new Error("Invalid reset token");
@@ -16,8 +16,8 @@ export const Route = createFileRoute("/(auth)/reset-password/")({
 });
 
 function RouteComponent() {
-	const { token } = Route.useSearch();
-	return <ResetPasswordView token={token} />;
+	const { token, email } = Route.useSearch();
+	return <ResetPasswordView token={token} email={email} />;
 }
 
 function ErrorComponent() {

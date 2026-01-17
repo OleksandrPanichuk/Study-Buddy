@@ -1,15 +1,12 @@
-import type {TRouterContext} from "@/router";
 import appCss from "@repo/ui/globals.css?url";
-import {TanStackDevtools} from "@tanstack/react-devtools";
-import {QueryClientProvider} from "@tanstack/react-query";
-import {ReactQueryDevtoolsPanel} from "@tanstack/react-query-devtools";
-import {createRootRouteWithContext, HeadContent, Outlet, Scripts, useRouter} from "@tanstack/react-router";
-import {TanStackRouterDevtoolsPanel} from "@tanstack/react-router-devtools";
-import type {PropsWithChildren} from "react";
-import {Toaster} from "sonner";
-import {AuthProvider} from "@/features/auth";
-import { getCurrentUserFn } from "@/features/profile";
-import { tryCatch } from "@/lib";
+import { TanStackDevtools } from "@tanstack/react-devtools";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtoolsPanel } from "@tanstack/react-query-devtools";
+import { createRootRouteWithContext, HeadContent, Outlet, Scripts, useRouter } from "@tanstack/react-router";
+import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
+import type { PropsWithChildren } from "react";
+import { Toaster } from "sonner";
+import type { TRouterContext } from "@/router";
 
 export const Route = createRootRouteWithContext<TRouterContext>()({
 	head: () => ({
@@ -34,22 +31,15 @@ export const Route = createRootRouteWithContext<TRouterContext>()({
 	}),
 
 	shellComponent: RootDocument,
-	component: RootLayout,
-	loader: async () => {
-    const [currentUser] = await tryCatch(getCurrentUserFn())
-    return currentUser
-	}
+	component: RootLayout
 });
 
 function RootLayout() {
-  const currentUser = Route.useLoaderData()
-  const router = useRouter();
+	const router = useRouter();
 
 	return (
 		<QueryClientProvider client={router.options.context.queryClient}>
-			<AuthProvider initialUser={currentUser}>
-				<Outlet />
-			</AuthProvider>
+			<Outlet />
 		</QueryClientProvider>
 	);
 }

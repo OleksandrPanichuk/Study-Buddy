@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as platformRouteRouteImport } from './routes/(platform)/route'
 import { Route as marketingRouteRouteImport } from './routes/(marketing)/route'
 import { Route as authRouteRouteImport } from './routes/(auth)/route'
 import { Route as marketingIndexRouteImport } from './routes/(marketing)/index'
@@ -20,6 +21,10 @@ import { Route as authSignInIndexRouteImport } from './routes/(auth)/sign-in/ind
 import { Route as authResetPasswordIndexRouteImport } from './routes/(auth)/reset-password/index'
 import { Route as authForgotPasswordIndexRouteImport } from './routes/(auth)/forgot-password/index'
 
+const platformRouteRoute = platformRouteRouteImport.update({
+  id: '/(platform)',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const marketingRouteRoute = marketingRouteRouteImport.update({
   id: '/(marketing)',
   getParentRoute: () => rootRouteImport,
@@ -39,9 +44,9 @@ const marketingAboutRoute = marketingAboutRouteImport.update({
   getParentRoute: () => marketingRouteRoute,
 } as any)
 const platformDashboardIndexRoute = platformDashboardIndexRouteImport.update({
-  id: '/(platform)/dashboard/',
+  id: '/dashboard/',
   path: '/dashboard/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => platformRouteRoute,
 } as any)
 const authVerificationIndexRoute = authVerificationIndexRouteImport.update({
   id: '/verification/',
@@ -93,6 +98,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/(auth)': typeof authRouteRouteWithChildren
   '/(marketing)': typeof marketingRouteRouteWithChildren
+  '/(platform)': typeof platformRouteRouteWithChildren
   '/(marketing)/about': typeof marketingAboutRoute
   '/(marketing)/': typeof marketingIndexRoute
   '/(auth)/forgot-password/': typeof authForgotPasswordIndexRoute
@@ -127,6 +133,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/(auth)'
     | '/(marketing)'
+    | '/(platform)'
     | '/(marketing)/about'
     | '/(marketing)/'
     | '/(auth)/forgot-password/'
@@ -140,11 +147,18 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   authRouteRoute: typeof authRouteRouteWithChildren
   marketingRouteRoute: typeof marketingRouteRouteWithChildren
-  platformDashboardIndexRoute: typeof platformDashboardIndexRoute
+  platformRouteRoute: typeof platformRouteRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/(platform)': {
+      id: '/(platform)'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof platformRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/(marketing)': {
       id: '/(marketing)'
       path: ''
@@ -178,7 +192,7 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof platformDashboardIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof platformRouteRoute
     }
     '/(auth)/verification/': {
       id: '/(auth)/verification/'
@@ -252,10 +266,22 @@ const marketingRouteRouteWithChildren = marketingRouteRoute._addFileChildren(
   marketingRouteRouteChildren,
 )
 
+interface platformRouteRouteChildren {
+  platformDashboardIndexRoute: typeof platformDashboardIndexRoute
+}
+
+const platformRouteRouteChildren: platformRouteRouteChildren = {
+  platformDashboardIndexRoute: platformDashboardIndexRoute,
+}
+
+const platformRouteRouteWithChildren = platformRouteRoute._addFileChildren(
+  platformRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   authRouteRoute: authRouteRouteWithChildren,
   marketingRouteRoute: marketingRouteRouteWithChildren,
-  platformDashboardIndexRoute: platformDashboardIndexRoute,
+  platformRouteRoute: platformRouteRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

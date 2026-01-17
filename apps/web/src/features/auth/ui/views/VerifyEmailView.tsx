@@ -14,13 +14,20 @@ import {
 	Input
 } from "@repo/ui";
 import { useForm } from "@tanstack/react-form";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { getSendVerificationCodeMutationOptions, getVerifyEmailMutationOptions } from "@/features/auth";
+import { PROFILE_QUERY_KEYS } from "@/features/profile";
 
-export const VerifyEmailView = () => {
+interface IVerifyEmailViewProps {
+	redirectUrl?: string;
+}
+
+export const VerifyEmailView = ({ redirectUrl }: IVerifyEmailViewProps) => {
 	const navigate = useNavigate();
+	const queryClient = useQueryClient();
+
 	const { mutateAsync: verifyEmail } = useMutation(getVerifyEmailMutationOptions());
 	const { mutateAsync: sendVerificationEmail } = useMutation(getSendVerificationCodeMutationOptions());
 
@@ -35,9 +42,25 @@ export const VerifyEmailView = () => {
 		onSubmit: async ({ value }) => {
 			try {
 				await verifyEmail(value);
-				await navigate({
-					to: "/"
+
+				queryClient.setQueryData(PROFILE_QUERY_KEYS.currentUser(), (oldData) => {
+					if (!oldData) return oldData;
+
+					return {
+						...oldData,
+						emailVerified: true
+					};
 				});
+
+				if (redirectUrl) {
+					navigate({
+						href: redirectUrl
+					});
+				} else {
+					navigate({
+						to: "/"
+					});
+				}
 			} catch (error) {
 				if (error instanceof Error) {
 					toast.error(error.message);

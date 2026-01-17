@@ -1,12 +1,12 @@
 import { Button } from "@repo/ui";
 import { useMutation } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
-import { getSignOutMutationOptions, useAuth } from "@/features/auth";
+import { getSignOutMutationOptions } from "@/features/auth";
+import { useUser } from "@/hooks/use-user";
 
 export const Header = () => {
-	const user = useAuth((state) => state.user);
-	const setUser = useAuth((state) => state.setUser);
-	const { mutate: signOut } = useMutation(getSignOutMutationOptions(setUser));
+	const user = useUser();
+	const { mutate: signOut } = useMutation(getSignOutMutationOptions());
 	return (
 		<header className="p-4 flex items-center gap-2 justify-between border-b">
 			<h1>Header</h1>

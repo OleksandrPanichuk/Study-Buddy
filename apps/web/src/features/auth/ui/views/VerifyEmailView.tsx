@@ -1,4 +1,4 @@
-import {type TVerifyEmailInput, verifyEmailSchema} from "@repo/schemas";
+import { type TVerifyEmailInput, verifyEmailSchema } from "@repo/schemas";
 import {
 	Button,
 	Card,
@@ -11,15 +11,16 @@ import {
 	FieldError,
 	FieldGroup,
 	FieldLabel,
-	Input,
+	Input
 } from "@repo/ui";
-import {useForm} from "@tanstack/react-form";
-import {Link} from "@tanstack/react-router";
-import {useMutation} from "@tanstack/react-query";
-import {getSendVerificationCodeMutationOptions, getVerifyEmailMutationOptions} from "@/features/auth";
-import {toast} from "sonner";
+import { useForm } from "@tanstack/react-form";
+import { useMutation } from "@tanstack/react-query";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { toast } from "sonner";
+import { getSendVerificationCodeMutationOptions, getVerifyEmailMutationOptions } from "@/features/auth";
 
 export const VerifyEmailView = () => {
+	const navigate = useNavigate();
 	const { mutateAsync: verifyEmail } = useMutation(getVerifyEmailMutationOptions());
 	const { mutateAsync: sendVerificationEmail } = useMutation(getSendVerificationCodeMutationOptions());
 
@@ -34,6 +35,9 @@ export const VerifyEmailView = () => {
 		onSubmit: async ({ value }) => {
 			try {
 				await verifyEmail(value);
+				await navigate({
+					to: "/"
+				});
 			} catch (error) {
 				if (error instanceof Error) {
 					toast.error(error.message);

@@ -5,7 +5,7 @@ import type {
 	TSignUpInput,
 	TVerifyEmailInput
 } from "@repo/schemas/auth";
-import {mutationOptions} from "@tanstack/react-query";
+import { mutationOptions } from "@tanstack/react-query";
 import {
 	forgotPasswordFn,
 	type IAuthStore,
@@ -33,9 +33,12 @@ export const getSignUpMutationOptions = (setUser: IAuthStore["setUser"]) =>
 		}
 	});
 
-export const getSignOutMutationOptions = () =>
+export const getSignOutMutationOptions = (setUser: IAuthStore["setUser"]) =>
 	mutationOptions({
-		mutationFn: () => signOutFn()
+		mutationFn: () => signOutFn(),
+		onSuccess: () => {
+			setUser(null);
+		}
 	});
 
 export const getForgotPasswordMutationOptions = () =>

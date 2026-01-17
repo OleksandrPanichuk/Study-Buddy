@@ -1,9 +1,10 @@
-import { Outlet, redirect } from "@tanstack/react-router";
+import { Outlet, redirect, useNavigate } from "@tanstack/react-router";
 import { motion, useMotionTemplate, useSpring } from "motion/react";
 import type { MouseEvent } from "react";
 import { useAuth } from "@/features/auth";
 
 export const AuthLayout = () => {
+	const navigate = useNavigate();
 	const user = useAuth((state) => state.user);
 
 	const mouseX = useSpring(0, { stiffness: 150, damping: 25 });
@@ -14,14 +15,13 @@ export const AuthLayout = () => {
 
 		mouseX.set(clientX - left);
 		mouseY.set(clientY - top);
-  }
-	
-  
-  if (user) {
-    return redirect({
-      to: "/"
-    })
-  }
+	}
+
+	if (user?.emailVerified) {
+		navigate({
+			to: "/"
+		});
+	}
 
 	return (
 		<div

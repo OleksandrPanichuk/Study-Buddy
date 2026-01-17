@@ -4,7 +4,7 @@ import {
 	getSignUpMutationOptions,
 	useAuth
 } from "@/features/auth";
-import {signUpInputSchema, type TSignUpInput} from "@repo/schemas";
+import { signUpInputSchema, type TSignUpInput } from "@repo/schemas";
 import {
 	Button,
 	Card,
@@ -20,10 +20,10 @@ import {
 	Input,
 	Separator
 } from "@repo/ui";
-import {useForm} from "@tanstack/react-form";
-import {useMutation} from "@tanstack/react-query";
-import {Link, useNavigate} from "@tanstack/react-router";
-import {toast} from "sonner";
+import { useForm } from "@tanstack/react-form";
+import { useMutation } from "@tanstack/react-query";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { toast } from "sonner";
 
 export const SignUpView = () => {
 	const navigate = useNavigate();
@@ -49,7 +49,7 @@ export const SignUpView = () => {
 
 				toast.success("Account created successfully");
 
-				await sendVerificationEmail();
+				sendVerificationEmail();
 
 				await navigate({
 					to: "/verification"

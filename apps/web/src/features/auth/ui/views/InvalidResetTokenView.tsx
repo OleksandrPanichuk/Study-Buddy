@@ -1,6 +1,6 @@
-import {Button, Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@repo/ui";
-import {Link} from "@tanstack/react-router";
-import {AlertCircleIcon} from "lucide-react";
+import { Button, Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@repo/ui";
+import { Link } from "@tanstack/react-router";
+import { AlertCircleIcon } from "lucide-react";
 
 export const InvalidResetTokenView = () => {
 	return (

@@ -19,7 +19,6 @@ import { Route as authSignUpIndexRouteImport } from './routes/(auth)/sign-up/ind
 import { Route as authSignInIndexRouteImport } from './routes/(auth)/sign-in/index'
 import { Route as authResetPasswordIndexRouteImport } from './routes/(auth)/reset-password/index'
 import { Route as authForgotPasswordIndexRouteImport } from './routes/(auth)/forgot-password/index'
-import { Route as authResetPasswordInvalidRouteImport } from './routes/(auth)/reset-password/invalid'
 
 const marketingRouteRoute = marketingRouteRouteImport.update({
   id: '/(marketing)',
@@ -69,17 +68,10 @@ const authForgotPasswordIndexRoute = authForgotPasswordIndexRouteImport.update({
   path: '/forgot-password/',
   getParentRoute: () => authRouteRoute,
 } as any)
-const authResetPasswordInvalidRoute =
-  authResetPasswordInvalidRouteImport.update({
-    id: '/reset-password/invalid',
-    path: '/reset-password/invalid',
-    getParentRoute: () => authRouteRoute,
-  } as any)
 
 export interface FileRoutesByFullPath {
   '/about': typeof marketingAboutRoute
   '/': typeof marketingIndexRoute
-  '/reset-password/invalid': typeof authResetPasswordInvalidRoute
   '/forgot-password': typeof authForgotPasswordIndexRoute
   '/reset-password': typeof authResetPasswordIndexRoute
   '/sign-in': typeof authSignInIndexRoute
@@ -90,7 +82,6 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/about': typeof marketingAboutRoute
   '/': typeof marketingIndexRoute
-  '/reset-password/invalid': typeof authResetPasswordInvalidRoute
   '/forgot-password': typeof authForgotPasswordIndexRoute
   '/reset-password': typeof authResetPasswordIndexRoute
   '/sign-in': typeof authSignInIndexRoute
@@ -104,7 +95,6 @@ export interface FileRoutesById {
   '/(marketing)': typeof marketingRouteRouteWithChildren
   '/(marketing)/about': typeof marketingAboutRoute
   '/(marketing)/': typeof marketingIndexRoute
-  '/(auth)/reset-password/invalid': typeof authResetPasswordInvalidRoute
   '/(auth)/forgot-password/': typeof authForgotPasswordIndexRoute
   '/(auth)/reset-password/': typeof authResetPasswordIndexRoute
   '/(auth)/sign-in/': typeof authSignInIndexRoute
@@ -117,7 +107,6 @@ export interface FileRouteTypes {
   fullPaths:
     | '/about'
     | '/'
-    | '/reset-password/invalid'
     | '/forgot-password'
     | '/reset-password'
     | '/sign-in'
@@ -128,7 +117,6 @@ export interface FileRouteTypes {
   to:
     | '/about'
     | '/'
-    | '/reset-password/invalid'
     | '/forgot-password'
     | '/reset-password'
     | '/sign-in'
@@ -141,7 +129,6 @@ export interface FileRouteTypes {
     | '/(marketing)'
     | '/(marketing)/about'
     | '/(marketing)/'
-    | '/(auth)/reset-password/invalid'
     | '/(auth)/forgot-password/'
     | '/(auth)/reset-password/'
     | '/(auth)/sign-in/'
@@ -228,18 +215,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authForgotPasswordIndexRouteImport
       parentRoute: typeof authRouteRoute
     }
-    '/(auth)/reset-password/invalid': {
-      id: '/(auth)/reset-password/invalid'
-      path: '/reset-password/invalid'
-      fullPath: '/reset-password/invalid'
-      preLoaderRoute: typeof authResetPasswordInvalidRouteImport
-      parentRoute: typeof authRouteRoute
-    }
   }
 }
 
 interface authRouteRouteChildren {
-  authResetPasswordInvalidRoute: typeof authResetPasswordInvalidRoute
   authForgotPasswordIndexRoute: typeof authForgotPasswordIndexRoute
   authResetPasswordIndexRoute: typeof authResetPasswordIndexRoute
   authSignInIndexRoute: typeof authSignInIndexRoute
@@ -248,7 +227,6 @@ interface authRouteRouteChildren {
 }
 
 const authRouteRouteChildren: authRouteRouteChildren = {
-  authResetPasswordInvalidRoute: authResetPasswordInvalidRoute,
   authForgotPasswordIndexRoute: authForgotPasswordIndexRoute,
   authResetPasswordIndexRoute: authResetPasswordIndexRoute,
   authSignInIndexRoute: authSignInIndexRoute,

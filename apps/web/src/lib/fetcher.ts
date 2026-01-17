@@ -1,23 +1,45 @@
+import { getCookies, setCookie } from "@tanstack/react-start/server";
 import ky from "ky";
-import {getCookies, setCookie} from "@tanstack/react-start/server";
 
 type CookieOptions = Parameters<typeof setCookie>[2];
 
 function parseCookieAttributes(attributes: string[]): CookieOptions {
 	const options: CookieOptions = {};
 
+	const attributeHandlers: Record<string, (value: string | undefined) => void> = {
+		path: (value) => {
+			options.path = value;
+		},
+		"max-age": (value) => {
+			if (value) options.maxAge = Number.parseInt(value, 10);
+		},
+		httponly: () => {
+			options.httpOnly = true;
+		},
+		secure: () => {
+			options.secure = true;
+		},
+		expires: (value) => {
+			if (value) {
+				const expires = new Date(value);
+				if (!Number.isNaN(expires.getTime())) options.expires = expires;
+			}
+		},
+		samesite: (value) => {
+			options.sameSite = value?.toLowerCase() as "strict" | "lax" | "none";
+		}
+	};
+
 	for (const attr of attributes) {
 		const [attrName, attrValue] = attr.split("=").map((s) => s?.trim());
 		const lowerAttrName = attrName?.toLowerCase();
 
-		if (lowerAttrName === "path") options.path = attrValue;
-		else if (lowerAttrName === "max-age" && attrValue) options.maxAge = Number.parseInt(attrValue, 10);
-		else if (lowerAttrName === "httponly") options.httpOnly = true;
-		else if (lowerAttrName === "secure") options.secure = true;
-		else if (lowerAttrName === "samesite") options.sameSite = attrValue?.toLowerCase() as "strict" | "lax" | "none";
+		if (!lowerAttrName) continue;
+
+    const handler = attributeHandlers[lowerAttrName];
+		
+		if (handler) handler(attrValue);
 	}
-
-
 
 	return options;
 }
@@ -32,7 +54,12 @@ function forwardSetCookieHeader(setCookieHeader: string): void {
 
 		if (!nameValue) continue;
 
-		const [name, value] = nameValue.split("=");
+		const separatorIndex = nameValue.indexOf("=");
+
+		if (separatorIndex === -1) continue;
+
+		const name = nameValue.slice(0, separatorIndex);
+		const value = nameValue.slice(separatorIndex + 1);
 
 		if (name && value) {
 			const options = parseCookieAttributes(attributes);
@@ -51,7 +78,6 @@ async function forwardCookiesToBackend(request: Request): Promise<void> {
 				.map(([key, value]) => `${key}=${value}`)
 				.join("; ");
 
-			console.log("Sending cookies:", cookieString);
 			request.headers.set("cookie", cookieString);
 		}
 	} catch (error) {
@@ -64,8 +90,6 @@ async function forwardCookiesToBrowser(response: Response): Promise<void> {
 
 	const setCookieHeader = response.headers.get("set-cookie");
 	if (!setCookieHeader) return;
-
-	console.log("Received Set-Cookie:", setCookieHeader);
 
 	try {
 		forwardSetCookieHeader(setCookieHeader);
@@ -84,7 +108,7 @@ async function handleErrorResponse(response: Response): Promise<void> {
 		errorData = await response.json();
 	} catch {
 		errorData = await response.text();
-  }
+	}
 
 	let message: string;
 

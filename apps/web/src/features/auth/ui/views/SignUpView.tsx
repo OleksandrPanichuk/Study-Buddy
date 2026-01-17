@@ -24,7 +24,7 @@ export const SignUpView = () => {
 	const navigate = useNavigate();
 
 	const { mutateAsync: signUp } = useMutation(getSignUpMutationOptions());
-	const { mutateAsync: sendVerificationEmail } = useMutation(getSendVerificationCodeMutationOptions());
+	const { mutate: sendVerificationEmail } = useMutation(getSendVerificationCodeMutationOptions());
 
 	const form = useForm({
 		defaultValues: {

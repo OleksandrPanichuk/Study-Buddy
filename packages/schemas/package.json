@@ -18,8 +18,10 @@
 			"default": "./dist/esm/index.js"
 		},
 		"./*": {
-			"default": "./dist/*",
-			"types": "./dist/*"
+			"types": "./dist/esm/*",
+			"import": "./dist/esm/*",
+			"require": "./dist/cjs/*",
+			"default": "./dist/esm/*"
 		}
 	},
 	"main": "./dist/cjs/index.js",

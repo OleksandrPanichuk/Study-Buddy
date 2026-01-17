@@ -4,9 +4,18 @@ import { ensureCurrentUser } from "@/lib";
 export const Route = createFileRoute("/(platform)")({
 	component: RouteComponent,
 	beforeLoad: async ({ context, location }) => {
-		const [currentUser] = await ensureCurrentUser(context.queryClient);
+		const [currentUser, error] = await ensureCurrentUser(context.queryClient);
 
-		if (currentUser && !currentUser.emailVerified) {
+		if (!currentUser || error) {
+			throw redirect({
+				to: "/sign-in",
+				search: {
+					redirect_url: location.href
+				}
+			});
+		}
+
+		if (!currentUser.emailVerified) {
 			throw redirect({
 				to: "/verification",
 				search: {

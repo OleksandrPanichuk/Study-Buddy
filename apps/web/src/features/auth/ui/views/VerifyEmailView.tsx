@@ -121,7 +121,7 @@ export const VerifyEmailView = ({ redirectUrl }: IVerifyEmailViewProps) => {
 					</Button>
 				</form>
 				<div className="mt-4 text-center text-sm">
-					Did&apos;t receive the code?{" "}
+					Didn&apos;t receive the code?{" "}
 					<Button variant="link" className="p-0 h-auto font-normal" onClick={handleResendCode}>
 						Resend
 					</Button>

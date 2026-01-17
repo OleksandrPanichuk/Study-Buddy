@@ -6,6 +6,6 @@ export const getCurrentUserQueryOptions = () =>
 	queryOptions({
 		queryKey: PROFILE_QUERY_KEYS.currentUser(),
 		queryFn: () => getCurrentUserFn(),
-		staleTime: Number.POSITIVE_INFINITY,
+		staleTime: 15 * 60 * 1000, // 15 minutes
 		retry: false
 	});

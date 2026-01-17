@@ -59,7 +59,7 @@ export const resetPasswordFn = createServerFn({ method: "POST" })
 		});
 	});
 
-export const verifyResetTokenFn = createServerFn({ method: "GET" })
+export const verifyResetTokenFn = createServerFn({ method: "POST" })
 	.inputValidator((data: TVerifyResetPasswordTokenInput) => verifyResetPasswordTokenInputSchema.parse(data))
 	.handler(async (ctx) => {
 		return await fetcher

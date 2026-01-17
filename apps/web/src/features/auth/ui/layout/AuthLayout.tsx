@@ -6,6 +6,8 @@ export const AuthLayout = () => {
 	const mouseX = useSpring(0, { stiffness: 150, damping: 25 });
 	const mouseY = useSpring(0, { stiffness: 150, damping: 25 });
 
+	const backgroundGradient = useMotionTemplate`radial-gradient(300px circle at ${mouseX}px ${mouseY}px, rgba(99, 102, 241, 0.25), transparent 60%)`;
+
 	function handleMouseMove({ currentTarget, clientX, clientY }: MouseEvent) {
 		const { left, top } = currentTarget.getBoundingClientRect();
 
@@ -26,7 +28,7 @@ export const AuthLayout = () => {
 				<motion.div
 					className="absolute inset-0 "
 					style={{
-						background: useMotionTemplate`radial-gradient(300px circle at ${mouseX}px ${mouseY}px, rgba(99, 102, 241, 0.25), transparent 60%)`
+						background: backgroundGradient
 					}}
 				/>
 			</div>

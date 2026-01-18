@@ -52,7 +52,7 @@ export const SignInView = ({ redirectUrl }: ISignInViewProps) => {
 				} else {
 					sendVerificationEmail();
 					await navigate({
-						to: redirectUrl ? redirectUrl : "/verification",
+						to: "/verification",
 						search: redirectUrl ? { redirect_url: redirectUrl } : undefined
 					});
 				}

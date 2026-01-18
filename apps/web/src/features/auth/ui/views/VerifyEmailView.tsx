@@ -52,15 +52,9 @@ export const VerifyEmailView = ({ redirectUrl }: IVerifyEmailViewProps) => {
 					};
 				});
 
-				if (redirectUrl) {
-					navigate({
-						href: redirectUrl
-					});
-				} else {
-					navigate({
-						to: "/"
-					});
-				}
+				navigate({
+					to: redirectUrl ? redirectUrl : "/"
+				});
 			} catch (error) {
 				if (error instanceof Error) {
 					toast.error(error.message);

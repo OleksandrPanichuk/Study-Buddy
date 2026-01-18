@@ -26,3 +26,5 @@ export async function ensureCurrentUser(queryClient: QueryClient) {
 
 	return await tryCatch(queryClient.ensureQueryData(getCurrentUserQueryOptions()));
 }
+
+

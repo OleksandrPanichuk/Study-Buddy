@@ -10,7 +10,7 @@ export const Route = createFileRoute("/(platform)")({
 			throw redirect({
 				to: "/sign-in",
 				search: {
-					redirect_url: location.href
+					redirect_url: location.pathname
 				}
 			});
 		}
@@ -19,7 +19,7 @@ export const Route = createFileRoute("/(platform)")({
 			throw redirect({
 				to: "/verification",
 				search: {
-					redirect_url: location.href
+					redirect_url: location.pathname
 				}
 			});
 		}

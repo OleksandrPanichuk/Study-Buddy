@@ -20,7 +20,11 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { AUTH_API_ROUTES, getSendVerificationCodeMutationOptions, getSignInMutationOptions } from "@/features/auth";
 
-export const SignInView = () => {
+interface ISignInViewProps {
+	redirectUrl?: string;
+}
+
+export const SignInView = ({ redirectUrl }: ISignInViewProps) => {
 	const navigate = useNavigate();
 
 	const { mutateAsync: signIn } = useMutation(getSignInMutationOptions());
@@ -43,12 +47,13 @@ export const SignInView = () => {
 
 				if (user.emailVerified) {
 					await navigate({
-						to: "/"
+						to: redirectUrl ? redirectUrl : "/"
 					});
 				} else {
 					sendVerificationEmail();
 					await navigate({
-						to: "/verification"
+						to: redirectUrl ? redirectUrl : "/verification",
+						search: redirectUrl ? { redirect_url: redirectUrl } : undefined
 					});
 				}
 			} catch (error) {

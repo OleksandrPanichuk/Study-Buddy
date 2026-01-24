@@ -1,9 +1,10 @@
-import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
-import { ensureCurrentUser } from "@/lib";
+import {createFileRoute, redirect} from "@tanstack/react-router";
+import {PlatformLayout} from "@/features/platform";
+import {ensureCurrentUser} from "@/lib";
 
 export const Route = createFileRoute("/(platform)")({
 	component: RouteComponent,
-	beforeLoad: async ({ context, location }) => {
+	beforeLoad: async ({ context }) => {
 		const [currentUser, error] = await ensureCurrentUser(context.queryClient);
 
 		if (!currentUser || error) {
@@ -27,5 +28,5 @@ export const Route = createFileRoute("/(platform)")({
 });
 
 function RouteComponent() {
-	return <Outlet />;
+	return <PlatformLayout />;
 }

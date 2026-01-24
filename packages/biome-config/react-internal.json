@@ -15,14 +15,6 @@
 		"includes": ["**", "!dist", "!build"]
 	},
 
-	"assist": {
-		"actions": {
-			"source": {
-				"organizeImports": "on"
-			}
-		}
-	},
-
 	"linter": {
 		"enabled": true,
 		"domains": {

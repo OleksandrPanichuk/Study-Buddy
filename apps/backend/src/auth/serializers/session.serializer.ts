@@ -1,7 +1,7 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { PassportSerializer } from "@nestjs/passport";
+import type { TUserWithAvatar } from "@repo/schemas";
 import { UsersRepository } from "@/users/users.repository";
-import { User } from "@prisma/generated/client";
 
 @Injectable()
 export class SessionSerializer extends PassportSerializer {
@@ -12,7 +12,7 @@ export class SessionSerializer extends PassportSerializer {
   }
 
   async serializeUser(
-    user: User,
+    user: TUserWithAvatar,
     done: (err: unknown, userId: string | null) => void,
   ) {
     try {
@@ -26,7 +26,7 @@ export class SessionSerializer extends PassportSerializer {
 
   async deserializeUser(
     userId: string,
-    done: (err: unknown, user: User | null) => void,
+    done: (err: unknown, user: TUserWithAvatar | null) => void,
   ) {
     try {
       this.logger.log(`Deserializing user: ${userId}`);

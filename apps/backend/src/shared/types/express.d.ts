@@ -1,7 +1,7 @@
-import type { User as UserType } from "@prisma/generated/client";
+import type { TUserWithAvatar } from "@repo/schemas";
 
 declare global {
   namespace Express {
-    interface User extends UserType {}
+    interface User extends TUserWithAvatar {}
   }
 }

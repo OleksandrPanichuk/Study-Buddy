@@ -1,6 +1,6 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
-import { AuthLayout, sendVerificationCodeFn } from "@/features/auth";
-import { ensureCurrentUser } from "@/lib";
+import {createFileRoute, redirect} from "@tanstack/react-router";
+import {AuthLayout, sendVerificationCodeFn} from "@/features/auth";
+import {ensureCurrentUser} from "@/lib";
 
 export const Route = createFileRoute("/(auth)")({
 	component: AuthLayout,

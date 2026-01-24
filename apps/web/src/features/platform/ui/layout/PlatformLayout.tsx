@@ -2,9 +2,15 @@ import {SidebarInset, SidebarProvider, SidebarTrigger} from "@repo/ui";
 import {Outlet} from "@tanstack/react-router";
 import {PlatformSidebar} from "@/features/platform";
 
-export const PlatformLayout = () => {
+interface IPlatformLayoutProps {
+	defaultSidebarOpen?: boolean;
+}
+
+export const PlatformLayout = ({
+	defaultSidebarOpen,
+}: IPlatformLayoutProps) => {
 	return (
-		<SidebarProvider>
+		<SidebarProvider defaultOpen={defaultSidebarOpen}>
 			<PlatformSidebar />
 			<SidebarInset>
 				{/*TODO: remove*/}

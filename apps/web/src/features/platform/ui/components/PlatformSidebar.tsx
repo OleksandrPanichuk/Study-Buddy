@@ -15,7 +15,7 @@ import {
 	SidebarRail,
 	SidebarSeparator,
 } from "@repo/ui";
-import {Link} from "@tanstack/react-router";
+import {Link, useLocation} from "@tanstack/react-router";
 import {BotIcon, ChevronsUpDownIcon} from "lucide-react";
 import {
 	generalSidebarItems,
@@ -26,6 +26,7 @@ import {
 } from "@/features/platform";
 
 export const PlatformSidebar = () => {
+	const location = useLocation();
 	return (
 		<Sidebar collapsible={"offcanvas"}>
 			<SidebarHeader className="p-4">

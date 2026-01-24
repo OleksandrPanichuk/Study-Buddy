@@ -1,5 +1,5 @@
 import {createFileRoute, redirect} from "@tanstack/react-router";
-import {PlatformLayout} from "@/features/platform";
+import {getSidebarStateFn, PlatformLayout} from "@/features/platform";
 import {ensureCurrentUser} from "@/lib";
 
 export const Route = createFileRoute("/(platform)")({
@@ -11,8 +11,8 @@ export const Route = createFileRoute("/(platform)")({
 			throw redirect({
 				to: "/sign-in",
 				search: {
-					redirect_url: location.pathname
-				}
+					redirect_url: location.pathname,
+				},
 			});
 		}
 
@@ -20,13 +20,17 @@ export const Route = createFileRoute("/(platform)")({
 			throw redirect({
 				to: "/verification",
 				search: {
-					redirect_url: location.pathname
-				}
+					redirect_url: location.pathname,
+				},
 			});
 		}
-	}
+	},
+	loader: async () => {
+		return await getSidebarStateFn();
+	},
 });
 
 function RouteComponent() {
-	return <PlatformLayout />;
+	const defaultOpen = Route.useLoaderData();
+	return <PlatformLayout defaultSidebarOpen={defaultOpen} />;
 }

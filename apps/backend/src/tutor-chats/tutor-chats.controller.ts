@@ -47,7 +47,7 @@ export class TutorChatsController {
     type: FindAllTutorChatsResponse,
   })
   @HttpCode(HttpStatus.OK)
-  @Get("")
+  @Get("/")
   findByUserId(
     @Query() query: FindAllTutorChatsQuery,
     @CurrentUser("id") userId: string,
@@ -60,7 +60,7 @@ export class TutorChatsController {
     type: CreateTutorChatResponse,
   })
   @HttpCode(HttpStatus.CREATED)
-  @Post("")
+  @Post("/")
   create(@Body() dto: CreateTutorChatInput, @CurrentUser("id") userId: string) {
     return this.tutorChatsService.create(dto, userId);
   }
@@ -76,7 +76,7 @@ export class TutorChatsController {
 
   @ApiDeleteTutorChat()
   @HttpCode(HttpStatus.NO_CONTENT)
-  @Delete("/:tutorChatId")
+  @Delete("/by-id/:tutorChatId")
   delete(
     @Param() params: DeleteTutorChatParams,
     @CurrentUser("id") userId: string,

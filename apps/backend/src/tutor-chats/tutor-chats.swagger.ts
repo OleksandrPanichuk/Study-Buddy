@@ -6,11 +6,12 @@ import {
   ApiNotFoundResponse,
   ApiOperation,
   ApiParam,
+  ApiQuery,
 } from "@nestjs/swagger";
 import {
   BulkDeleteTutorChatsInput,
   CreateTutorChatInput,
-  FindAllTutorChatsInput,
+  FindAllTutorChatsQuery,
 } from "./tutor-chats.dto";
 
 export const ApiFindAllTutorChats = () => {
@@ -20,8 +21,8 @@ export const ApiFindAllTutorChats = () => {
       description:
         "Retrieves a list of tutor chats associated with the authenticated user.",
     }),
-    ApiBody({
-      type: FindAllTutorChatsInput,
+    ApiQuery({
+      type: FindAllTutorChatsQuery,
     }),
   );
 };

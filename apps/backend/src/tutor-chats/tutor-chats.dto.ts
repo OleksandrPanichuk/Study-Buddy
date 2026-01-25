@@ -18,7 +18,7 @@ export class CreateTutorChatResponse extends createZodDto(
   createTutorChatResponseSchema,
 ) {}
 
-export class FindAllTutorChatsInput extends createZodDto(
+export class FindAllTutorChatsQuery extends createZodDto(
   findAllTutorChatsInputSchema,
 ) {}
 

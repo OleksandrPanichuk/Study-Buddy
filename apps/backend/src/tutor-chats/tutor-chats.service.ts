@@ -2,9 +2,10 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import {
   CreateTutorChatInput,
   CreateTutorChatResponse,
-  FindAllTutorChatsInput,
+  FindAllTutorChatsQuery,
   FindAllTutorChatsResponse,
-  UpdateTutorChatInput
+  UpdateTutorChatInput,
+  UpdateTutorChatResponse
 } from "./tutor-chats.dto";
 import type { TutorChatsRepository } from "./tutor-chats.repository";
 
@@ -12,7 +13,7 @@ import type { TutorChatsRepository } from "./tutor-chats.repository";
 export class TutorChatsService {
 	constructor(private readonly tutorChatsRepository: TutorChatsRepository) {}
 
-	public async findAll(dto: FindAllTutorChatsInput, userId: string): Promise<FindAllTutorChatsResponse> {
+	public async findAll(dto: FindAllTutorChatsQuery, userId: string): Promise<FindAllTutorChatsResponse> {
 		const take = dto.cursor ? dto.limit + 1 : dto.limit;
 		const data = await this.tutorChatsRepository.findByUserId({
 			...dto,
@@ -39,7 +40,7 @@ export class TutorChatsService {
 		});
 	}
 
-	public async update(dto: UpdateTutorChatInput, userId: string) {
+	public async update(dto: UpdateTutorChatInput, userId: string): Promise<UpdateTutorChatResponse> {
 		const existingChat = await this.tutorChatsRepository.findById(dto.id);
 
 		if (!existingChat || existingChat.userId !== userId) {

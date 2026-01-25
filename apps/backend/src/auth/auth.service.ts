@@ -10,6 +10,7 @@ import {
 } from "@nestjs/common";
 import type { User } from "@prisma/generated/client";
 import { SignInInput, SignUpInput } from "@/auth/auth.dto";
+import { TUserWithAvatar } from "@repo/schemas";
 
 @Injectable()
 export class AuthService {
@@ -23,7 +24,7 @@ export class AuthService {
     private readonly hashingService: HashingService,
   ) {}
 
-  public async oauthSignIn(dto?: TOAuthUser): Promise<User> {
+  public async oauthSignIn(dto?: TOAuthUser): Promise<TUserWithAvatar> {
     if (!dto) {
       throw new BadRequestException("Invalid OAuth2 data");
     }
@@ -73,7 +74,7 @@ export class AuthService {
     return newUser;
   }
 
-  public async singIn(dto: SignInInput): Promise<User> {
+  public async singIn(dto: SignInInput): Promise<TUserWithAvatar> {
     const user = await this.usersRepository.findByEmail(dto.email);
     if (!user) {
       throw new BadRequestException("Invalid email or password");

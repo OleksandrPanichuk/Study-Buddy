@@ -1,4 +1,4 @@
-import { signUpInputSchema, type TSignUpInput } from "@repo/schemas";
+import {signUpInputSchema, type TSignUpInput} from "@repo/schemas";
 import {
 	Button,
 	Card,
@@ -14,27 +14,29 @@ import {
 	Input,
 	Separator
 } from "@repo/ui";
-import { useForm } from "@tanstack/react-form";
-import { useMutation } from "@tanstack/react-query";
-import { Link, useNavigate } from "@tanstack/react-router";
-import { toast } from "sonner";
-import { AUTH_API_ROUTES, getSendVerificationCodeMutationOptions, getSignUpMutationOptions } from "@/features/auth";
+import {useForm} from "@tanstack/react-form";
+import {useMutation} from "@tanstack/react-query";
+import {Link, useNavigate} from "@tanstack/react-router";
+import {toast} from "sonner";
+import {AUTH_API_ROUTES, getSendVerificationCodeMutationOptions, getSignUpMutationOptions} from "@/features/auth";
 
 export const SignUpView = () => {
 	const navigate = useNavigate();
 
 	const { mutateAsync: signUp } = useMutation(getSignUpMutationOptions());
-	const { mutate: sendVerificationEmail } = useMutation(getSendVerificationCodeMutationOptions());
+	const { mutate: sendVerificationEmail } = useMutation(
+		getSendVerificationCodeMutationOptions(),
+	);
 
 	const form = useForm({
 		defaultValues: {
 			email: "",
 			username: "",
-			password: ""
+			password: "",
 		} as TSignUpInput,
 		validators: {
 			onBlur: signUpInputSchema,
-			onSubmit: signUpInputSchema
+			onSubmit: signUpInputSchema,
 		},
 		onSubmit: async ({ value }) => {
 			try {
@@ -45,14 +47,14 @@ export const SignUpView = () => {
 				sendVerificationEmail();
 
 				await navigate({
-					to: "/verification"
+					to: "/verification",
 				});
 			} catch (error) {
 				if (error instanceof Error) {
 					toast.error(error.message);
 				}
 			}
-		}
+		},
 	});
 
 	const handleSocialAuth = (provider: "google" | "github") => {
@@ -73,11 +75,13 @@ export const SignUpView = () => {
 						e.preventDefault();
 						form.handleSubmit();
 					}}
-					className="space-y-4">
+					className="space-y-4"
+				>
 					<FieldGroup className={"gap-2"}>
 						<form.Field name={"username"}>
 							{(field) => {
-								const isInvalid = !field.state.meta.isValid && field.state.meta.isTouched;
+								const isInvalid =
+									!field.state.meta.isValid && field.state.meta.isTouched;
 								return (
 									<Field data-invalid={isInvalid}>
 										<FieldLabel htmlFor={field.name}>Username</FieldLabel>
@@ -92,14 +96,17 @@ export const SignUpView = () => {
 											placeholder="username"
 											autoComplete="username"
 										/>
-										{isInvalid && <FieldError errors={field.state.meta.errors} />}
+										{isInvalid && (
+											<FieldError errors={field.state.meta.errors} />
+										)}
 									</Field>
 								);
 							}}
 						</form.Field>
 						<form.Field name={"email"}>
 							{(field) => {
-								const isInvalid = !field.state.meta.isValid && field.state.meta.isTouched;
+								const isInvalid =
+									!field.state.meta.isValid && field.state.meta.isTouched;
 								return (
 									<Field data-invalid={isInvalid}>
 										<FieldLabel htmlFor={field.name}>Email</FieldLabel>
@@ -114,14 +121,17 @@ export const SignUpView = () => {
 											placeholder="your.email@example.com"
 											autoComplete="email"
 										/>
-										{isInvalid && <FieldError errors={field.state.meta.errors} />}
+										{isInvalid && (
+											<FieldError errors={field.state.meta.errors} />
+										)}
 									</Field>
 								);
 							}}
 						</form.Field>
 						<form.Field name={"password"}>
 							{(field) => {
-								const isInvalid = !field.state.meta.isValid && field.state.meta.isTouched;
+								const isInvalid =
+									!field.state.meta.isValid && field.state.meta.isTouched;
 								return (
 									<Field data-invalid={isInvalid}>
 										<FieldLabel htmlFor={field.name}>Password</FieldLabel>
@@ -136,7 +146,11 @@ export const SignUpView = () => {
 											placeholder="Create a password"
 											autoComplete="new-password"
 										/>
-										{isInvalid && <FieldError errors={field.state.meta.errors.toSpliced(1)} />}
+										{isInvalid && (
+											<FieldError
+												errors={field.state.meta.errors.toSpliced(1)}
+											/>
+										)}
 									</Field>
 								);
 							}}
@@ -157,11 +171,19 @@ export const SignUpView = () => {
 
 				<div className={"flex gap-2 w-full"}>
 					<Button onClick={() => handleSocialAuth("google")} variant="outline">
-						<img src={"/icons/google.svg"} alt={"Google logo"} className={"size-5"} />
+						<img
+							src={"/icons/google.svg"}
+							alt={"Google logo"}
+							className={"size-5"}
+						/>
 						Continue with Google
 					</Button>
 					<Button onClick={() => handleSocialAuth("github")} variant="outline">
-						<img src={"/icons/github.svg"} alt={"Github logo"} className={"size-5"} />
+						<img
+							src={"/icons/github.svg"}
+							alt={"Github logo"}
+							className={"size-5"}
+						/>
 						Continue with Github
 					</Button>
 				</div>

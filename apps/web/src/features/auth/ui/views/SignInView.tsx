@@ -1,4 +1,4 @@
-import { signInInputSchema, type TSignInInput } from "@repo/schemas";
+import {signInInputSchema, type TSignInInput} from "@repo/schemas";
 import {
 	Button,
 	Card,
@@ -12,13 +12,13 @@ import {
 	FieldGroup,
 	FieldLabel,
 	Input,
-	Separator
+	Separator,
 } from "@repo/ui";
-import { useForm } from "@tanstack/react-form";
-import { useMutation } from "@tanstack/react-query";
-import { Link, useNavigate } from "@tanstack/react-router";
-import { toast } from "sonner";
-import { AUTH_API_ROUTES, getSendVerificationCodeMutationOptions, getSignInMutationOptions } from "@/features/auth";
+import {useForm} from "@tanstack/react-form";
+import {useMutation} from "@tanstack/react-query";
+import {Link, useNavigate} from "@tanstack/react-router";
+import {toast} from "sonner";
+import {AUTH_API_ROUTES, getSendVerificationCodeMutationOptions, getSignInMutationOptions,} from "@/features/auth";
 
 interface ISignInViewProps {
 	redirectUrl?: string;
@@ -28,16 +28,18 @@ export const SignInView = ({ redirectUrl }: ISignInViewProps) => {
 	const navigate = useNavigate();
 
 	const { mutateAsync: signIn } = useMutation(getSignInMutationOptions());
-	const { mutate: sendVerificationEmail } = useMutation(getSendVerificationCodeMutationOptions());
+	const { mutate: sendVerificationEmail } = useMutation(
+		getSendVerificationCodeMutationOptions(),
+	);
 
 	const form = useForm({
 		defaultValues: {
 			email: "",
-			password: ""
+			password: "",
 		} as TSignInInput,
 		validators: {
 			onBlur: signInInputSchema,
-			onSubmit: signInInputSchema
+			onSubmit: signInInputSchema,
 		},
 		onSubmit: async ({ value }) => {
 			try {
@@ -47,13 +49,13 @@ export const SignInView = ({ redirectUrl }: ISignInViewProps) => {
 
 				if (user.emailVerified) {
 					await navigate({
-						to: redirectUrl ? redirectUrl : "/"
+						to: redirectUrl ? redirectUrl : "/",
 					});
 				} else {
 					sendVerificationEmail();
 					await navigate({
 						to: "/verification",
-						search: redirectUrl ? { redirect_url: redirectUrl } : undefined
+						search: redirectUrl ? { redirect_url: redirectUrl } : undefined,
 					});
 				}
 			} catch (error) {
@@ -61,7 +63,7 @@ export const SignInView = ({ redirectUrl }: ISignInViewProps) => {
 					toast.error(error.message);
 				}
 			}
-		}
+		},
 	});
 
 	const handleSocialAuth = (provider: "google" | "github") => {
@@ -74,7 +76,9 @@ export const SignInView = ({ redirectUrl }: ISignInViewProps) => {
 		<Card className="w-full max-w-md">
 			<CardHeader>
 				<CardTitle className="text-2xl">Sign in to your account</CardTitle>
-				<CardDescription>Enter your email and password to access your account</CardDescription>
+				<CardDescription>
+					Enter your email and password to access your account
+				</CardDescription>
 			</CardHeader>
 			<CardContent>
 				<form
@@ -82,11 +86,13 @@ export const SignInView = ({ redirectUrl }: ISignInViewProps) => {
 						e.preventDefault();
 						form.handleSubmit();
 					}}
-					className="space-y-4">
+					className="space-y-4"
+				>
 					<FieldGroup className={"gap-2"}>
 						<form.Field name={"email"}>
 							{(field) => {
-								const isInvalid = !field.state.meta.isValid && field.state.meta.isTouched;
+								const isInvalid =
+									!field.state.meta.isValid && field.state.meta.isTouched;
 								return (
 									<Field data-invalid={isInvalid}>
 										<FieldLabel htmlFor={field.name}>Email</FieldLabel>
@@ -101,14 +107,17 @@ export const SignInView = ({ redirectUrl }: ISignInViewProps) => {
 											placeholder="your.email@example.com"
 											autoComplete="email"
 										/>
-										{isInvalid && <FieldError errors={field.state.meta.errors} />}
+										{isInvalid && (
+											<FieldError errors={field.state.meta.errors} />
+										)}
 									</Field>
 								);
 							}}
 						</form.Field>
 						<form.Field name={"password"}>
 							{(field) => {
-								const isInvalid = !field.state.meta.isValid && field.state.meta.isTouched;
+								const isInvalid =
+									!field.state.meta.isValid && field.state.meta.isTouched;
 								return (
 									<Field data-invalid={isInvalid}>
 										<FieldLabel htmlFor={field.name}>Password</FieldLabel>
@@ -123,7 +132,11 @@ export const SignInView = ({ redirectUrl }: ISignInViewProps) => {
 											placeholder="Enter your password"
 											autoComplete="current-password"
 										/>
-										{isInvalid && <FieldError errors={field.state.meta.errors.toSpliced(1)} />}
+										{isInvalid && (
+											<FieldError
+												errors={field.state.meta.errors.toSpliced(1)}
+											/>
+										)}
 									</Field>
 								);
 							}}
@@ -131,7 +144,10 @@ export const SignInView = ({ redirectUrl }: ISignInViewProps) => {
 					</FieldGroup>
 
 					<div className="flex items-center justify-between">
-						<Link to="/forgot-password" className="text-sm text-primary hover:underline">
+						<Link
+							to="/forgot-password"
+							className="text-sm text-primary hover:underline"
+						>
 							Forgot password?
 						</Link>
 					</div>
@@ -150,11 +166,19 @@ export const SignInView = ({ redirectUrl }: ISignInViewProps) => {
 
 				<div className={"flex gap-2 w-full"}>
 					<Button onClick={() => handleSocialAuth("google")} variant="outline">
-						<img src={"/icons/google.svg"} alt={"Google logo"} className={"size-5"} />
+						<img
+							src={"/icons/google.svg"}
+							alt={"Google logo"}
+							className={"size-5"}
+						/>
 						Continue with Google
 					</Button>
 					<Button onClick={() => handleSocialAuth("github")} variant="outline">
-						<img src={"/icons/github.svg"} alt={"Github logo"} className={"size-5"} />
+						<img
+							src={"/icons/github.svg"}
+							alt={"Github logo"}
+							className={"size-5"}
+						/>
 						Continue with Github
 					</Button>
 				</div>

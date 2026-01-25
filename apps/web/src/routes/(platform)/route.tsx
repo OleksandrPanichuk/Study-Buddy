@@ -1,4 +1,5 @@
-import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
+import { getSidebarStateFn, PlatformLayout } from "@/features/platform";
 import { ensureCurrentUser } from "@/lib";
 
 export const Route = createFileRoute("/(platform)")({
@@ -23,9 +24,13 @@ export const Route = createFileRoute("/(platform)")({
 				}
 			});
 		}
+	},
+	loader: async () => {
+		return await getSidebarStateFn();
 	}
 });
 
 function RouteComponent() {
-	return <Outlet />;
+	const defaultOpen = Route.useLoaderData();
+	return <PlatformLayout defaultSidebarOpen={defaultOpen} />;
 }

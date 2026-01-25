@@ -1,21 +1,30 @@
+import { PrismaService } from "@app/prisma";
+import { Injectable } from "@nestjs/common";
+import type { User } from "@prisma/generated/client";
+import type { TUserWithAvatar } from "@repo/schemas";
 import type {
   ICreateUserData,
   IUpdateFailedLoginAttemptsData,
 } from "@/users/interfaces";
-import { PrismaService } from "@app/prisma";
-import { Injectable } from "@nestjs/common";
-import type { User } from "@prisma/generated/client";
 
 @Injectable()
 export class UsersRepository {
   constructor(private readonly db: PrismaService) {}
 
-  public findById(userId: string): Promise<User | null> {
-    return this.db.user.findUnique({ where: { id: userId } });
+  public findById(userId: string): Promise<TUserWithAvatar | null> {
+    return this.db.user.findUnique({
+      where: { id: userId },
+      include: {
+        avatar: true,
+      },
+    });
   }
 
-  public findByEmail(email: string): Promise<User | null> {
-    return this.db.user.findUnique({ where: { email } });
+  public findByEmail(email: string): Promise<TUserWithAvatar | null> {
+    return this.db.user.findUnique({
+      where: { email },
+      include: { avatar: true },
+    });
   }
 
   public findByEmailOrUsername(

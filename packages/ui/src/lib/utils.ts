@@ -1,6 +1,6 @@
 import {type ClassValue, clsx} from "clsx";
-import {twMerge} from "tailwind-merge";
 import type {Ref} from "react";
+import {twMerge} from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
@@ -9,7 +9,9 @@ export function cn(...inputs: ClassValue[]) {
 export function mergeRefs<T>(...refs: (Ref<unknown> | undefined)[]) {
 	return (node: T) => {
 		for (const ref of refs) {
-			if (ref && typeof ref === "object") {
+			if (typeof ref === "function") {
+				ref(node);
+			} else if (ref && typeof ref === "object") {
 				ref.current = node;
 			}
 		}

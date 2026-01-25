@@ -1,4 +1,3 @@
-import {getForgotPasswordMutationOptions} from "@/features/auth";
 import {sendResetPasswordTokenInputSchema, type TSendResetPasswordTokenInput} from "@repo/schemas";
 import {
 	Button,
@@ -18,24 +17,29 @@ import {useForm} from "@tanstack/react-form";
 import {useMutation} from "@tanstack/react-query";
 import {Link} from "@tanstack/react-router";
 import {toast} from "sonner";
+import {getForgotPasswordMutationOptions} from "@/features/auth";
 
 export const ForgotPasswordView = () => {
-	const { mutateAsync: forgotPassword } = useMutation(getForgotPasswordMutationOptions());
+	const { mutateAsync: forgotPassword } = useMutation(
+		getForgotPasswordMutationOptions(),
+	);
 
 	const form = useForm({
 		defaultValues: {
 			email: "",
-			resetPageUrl: `${import.meta.env.VITE_APP_URL}/reset-password`
+			resetPageUrl: `${import.meta.env.VITE_APP_URL}/reset-password`,
 		} as TSendResetPasswordTokenInput,
 		validators: {
 			onBlur: sendResetPasswordTokenInputSchema,
-			onSubmit: sendResetPasswordTokenInputSchema
+			onSubmit: sendResetPasswordTokenInputSchema,
 		},
 		onSubmit: async ({ value, formApi }) => {
 			try {
 				await forgotPassword(value);
 
-				toast.info("If an account with that email exists, a reset link has been sent.");
+				toast.info(
+					"If an account with that email exists, a reset link has been sent.",
+				);
 			} catch (error) {
 				if (error instanceof Error) {
 					toast.error(error.message);
@@ -43,14 +47,17 @@ export const ForgotPasswordView = () => {
 			} finally {
 				formApi.reset();
 			}
-		}
+		},
 	});
 
 	return (
 		<Card className="w-full max-w-md">
 			<CardHeader>
 				<CardTitle className="text-2xl">Forgot password?</CardTitle>
-				<CardDescription>Enter your email address and we'll send you a link to reset your password</CardDescription>
+				<CardDescription>
+					Enter your email address and we'll send you a link to reset your
+					password
+				</CardDescription>
 			</CardHeader>
 			<CardContent>
 				<form
@@ -58,11 +65,13 @@ export const ForgotPasswordView = () => {
 						e.preventDefault();
 						form.handleSubmit();
 					}}
-					className="space-y-4">
+					className="space-y-4"
+				>
 					<FieldGroup className={"gap-2"}>
 						<form.Field name={"email"}>
 							{(field) => {
-								const isInvalid = !field.state.meta.isValid && field.state.meta.isTouched;
+								const isInvalid =
+									!field.state.meta.isValid && field.state.meta.isTouched;
 								return (
 									<Field data-invalid={isInvalid}>
 										<FieldLabel htmlFor={field.name}>Email</FieldLabel>
@@ -77,7 +86,9 @@ export const ForgotPasswordView = () => {
 											placeholder="your.email@example.com"
 											autoComplete="email"
 										/>
-										{isInvalid && <FieldError errors={field.state.meta.errors} />}
+										{isInvalid && (
+											<FieldError errors={field.state.meta.errors} />
+										)}
 									</Field>
 								);
 							}}

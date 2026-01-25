@@ -1,80 +1,84 @@
-import { SignInResponse, SignUpInput, SignUpResponse } from "@/auth/auth.dto";
 import {
-  ApiGithubOAuth,
-  ApiGithubOAuthCallback,
-  ApiGoogleOAuth,
-  ApiGoogleOAuthCallback,
-  ApiSignIn,
-  ApiSignOut,
-  ApiSignUp,
+	Body,
+	Controller,
+	Get,
+	HttpCode,
+	HttpStatus,
+	Post,
+	Req,
+	Res,
+	Session,
+	UnauthorizedException,
+	UseGuards,
+} from "@nestjs/common";
+import type { ConfigService } from "@nestjs/config";
+import { ApiTags } from "@nestjs/swagger";
+import { Throttle, ThrottlerGuard } from "@nestjs/throttler";
+import type { Request, Response } from "express";
+import { ZodResponse } from "nestjs-zod";
+import {
+	SignInResponse,
+	type SignUpInput,
+	SignUpResponse,
+} from "@/auth/auth.dto";
+import {
+	ApiGithubOAuth,
+	ApiGithubOAuthCallback,
+	ApiGoogleOAuth,
+	ApiGoogleOAuthCallback,
+	ApiSignIn,
+	ApiSignOut,
+	ApiSignUp,
 } from "@/auth/auth.swagger";
 import type { TOAuthUser } from "@/auth/auth.types";
 import {
-  GithubOAuthGuard,
-  GoogleOAuthGuard,
-  LocalAuthGuard,
+	GithubOAuthGuard,
+	GoogleOAuthGuard,
+	LocalAuthGuard,
 } from "@/auth/guards";
 import type { Env } from "@/shared/config";
 import { RATE_LIMITS } from "@/shared/constants";
 import { AuthenticatedGuard } from "@/shared/guards";
 import type { TSession } from "@/shared/types";
 import { destroySession } from "@/shared/utils/session.utils";
-import {
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Post,
-  Req,
-  Res,
-  Session,
-  UnauthorizedException,
-  UseGuards,
-} from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
-import { ApiTags } from "@nestjs/swagger";
-import { Throttle, ThrottlerGuard } from "@nestjs/throttler";
-import type { Request, Response } from "express";
-import { ZodResponse } from "nestjs-zod";
-import { AuthService } from "./auth.service";
+import type { AuthService } from "./auth.service";
 
 @ApiTags("Auth")
 @UseGuards(ThrottlerGuard)
 @Throttle({ default: RATE_LIMITS.AUTH.CONTROLLER })
 @Controller("auth")
 export class AuthController {
-  constructor(
-    private readonly authService: AuthService,
-    private readonly config: ConfigService<Env>,
-  ) {}
+	constructor(
+		private readonly authService: AuthService,
+		private readonly config: ConfigService<Env>,
+	) {}
 
-  @ApiSignUp()
-  @ZodResponse({
-    type: SignUpResponse,
-  })
-  @HttpCode(HttpStatus.CREATED)
-  @Post("/sign-up")
-  async signUp(
-    @Body() dto: SignUpInput,
-    @Req() req: Request,
-  ): Promise<SignUpResponse> {
-    const user = await this.authService.signUp(dto);
+	@ApiSignUp()
+	@ZodResponse({
+		type: SignUpResponse,
+	})
+	@HttpCode(HttpStatus.CREATED)
+	@Post("/sign-up")
+	async signUp(
+		@Body() dto: SignUpInput,
+		@Req() req: Request,
+	): Promise<SignUpResponse> {
+		const user = await this.authService.signUp(dto);
 
-    await new Promise<void>((resolve, reject) => {
-      req.logIn(user, (err) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve();
-        }
-      });
-    });
+		await new Promise<void>((resolve, reject) => {
+			req.logIn(user, (err) => {
+				if (err) {
+					reject(err);
+				} else {
+					resolve();
+				}
+			});
+		});
 
-    return user;
-  }
+		return user;
+	}
 
-  @ApiSignIn()
+	@ApiSignIn()
   @ZodResponse({
     type: SignInResponse,
   })
@@ -91,7 +95,7 @@ export class AuthController {
     return user;
   }
 
-  @ApiSignOut()
+	@ApiSignOut()
   @UseGuards(AuthenticatedGuard)
   @HttpCode(HttpStatus.OK)
   @Get("sign-out")
@@ -99,59 +103,59 @@ export class AuthController {
     await destroySession(session);
   }
 
-  @ApiGoogleOAuth()
-  @UseGuards(GoogleOAuthGuard)
-  @Get("sign-in/google")
-  signInGoogle() {
-    return;
-  }
+	@ApiGoogleOAuth()
+	@UseGuards(GoogleOAuthGuard)
+	@Get("sign-in/google")
+	signInGoogle() {
+		return;
+	}
 
-  @ApiGithubOAuth()
-  @UseGuards(GithubOAuthGuard)
-  @Get("sign-in/github")
-  signInGithub() {
-    return;
-  }
+	@ApiGithubOAuth()
+	@UseGuards(GithubOAuthGuard)
+	@Get("sign-in/github")
+	signInGithub() {
+		return;
+	}
 
-  @ApiGoogleOAuthCallback()
-  @UseGuards(GoogleOAuthGuard)
-  @Get("callback/google")
-  async googleCallback(
-    @Req()
+	@ApiGoogleOAuthCallback()
+	@UseGuards(GoogleOAuthGuard)
+	@Get("callback/google")
+	async googleCallback(
+		@Req()
     req: Request & {
       user?: TOAuthUser;
     },
-    @Res() res: Response,
-    @Session() session: TSession
-  ) {
-    const user = await this.authService.oauthSignIn(req?.user);
+		@Res() res: Response,
+		@Session() session: TSession,
+	) {
+		const user = await this.authService.oauthSignIn(req?.user);
 
-    session.passport = {
-      user: user.id,
-      verified: user.emailVerified
-    }
+		session.passport = {
+			user: user.id,
+			verified: user.emailVerified,
+		};
 
-    return res.redirect(this.config.get("WEB_URL") as string);
-  }
+		return res.redirect(this.config.get("WEB_URL") as string);
+	}
 
-  @ApiGithubOAuthCallback()
-  @Get("callback/github")
-  @UseGuards(GithubOAuthGuard)
-  async githubCallback(
-    @Req()
+	@ApiGithubOAuthCallback()
+	@Get("callback/github")
+	@UseGuards(GithubOAuthGuard)
+	async githubCallback(
+		@Req()
     req: Request & {
       user?: TOAuthUser;
     },
-    @Res() res: Response,
-    @Session() session: TSession
-  ) {
-    const user = await this.authService.oauthSignIn(req?.user);
+		@Res() res: Response,
+		@Session() session: TSession,
+	) {
+		const user = await this.authService.oauthSignIn(req?.user);
 
-    session.passport = {
-      user: user.id,
-      verified: user.emailVerified
-    }
-    
-    return res.redirect(this.config.get("WEB_URL") as string);
-  }
+		session.passport = {
+			user: user.id,
+			verified: user.emailVerified,
+		};
+
+		return res.redirect(this.config.get("WEB_URL") as string);
+	}
 }

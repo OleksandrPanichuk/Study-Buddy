@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { zDate, zUsername } from "../utils";
+import { zDate, zUsername } from "@/utils";
 
 export const userSchema = z.object({
 	id: z.uuidv4(),

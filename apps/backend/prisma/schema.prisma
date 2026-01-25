@@ -15,7 +15,7 @@ datasource db {
 }
 
 model File {
-  id String @id @default(uuid())
+  id String @id @default(uuid()) @db.Uuid
 
   createdAt DateTime @default(now()) @map("created_at")
   url       String
@@ -27,7 +27,7 @@ model File {
 }
 
 model User {
-  id            String  @id @default(uuid())
+  id            String  @id @default(uuid()) @db.Uuid
   email         String  @unique
   emailVerified Boolean @default(false) @map("email_verified")
   username      String  @unique
@@ -36,25 +36,27 @@ model User {
   failedLoginAttempts Int       @default(0) @map("failed_login_attempts")
   lockedUntil         DateTime? @map("locked_until")
 
-  avatarId String? @map("avatar_id")
+  avatarId String? @map("avatar_id") @db.Uuid
   avatar   File?   @relation(references: [id], fields: [avatarId], onDelete: SetNull)
 
   verificationCodes   VerificationCode[]
   resetPasswordTokens ResetPasswordToken[]
 
+  tutorChats TutorChat[]
+
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt  DateTime @updatedAt @map("updated_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("users")
 }
 
 model VerificationCode {
-  id String @id @default(uuid())
+  id String @id @default(uuid()) @db.Uuid
 
   code String
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId String @map("user_id")
+  userId String @map("user_id") @db.Uuid
 
   resendCount Int      @default(0) @map("resend_count")
   expiresAt   DateTime @map("expires_at")
@@ -64,12 +66,12 @@ model VerificationCode {
 }
 
 model ResetPasswordToken {
-  id String @id @default(uuid())
+  id String @id @default(uuid()) @db.Uuid
 
   token String @unique
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId String @map("user_id")
+  userId String @map("user_id") @db.Uuid
 
   resendCount Int @default(0) @map("resend_count")
 
@@ -78,4 +80,22 @@ model ResetPasswordToken {
   lastSentAt DateTime @default(now()) @map("last_sent_at")
 
   @@map("reset_password_tokens")
+}
+
+model TutorChat {
+  id String @id @default(uuid()) @db.Uuid
+
+  name        String  @db.VarChar(60)
+  description String? @db.Text
+  topic       String? @db.VarChar(60)
+  prompt      String  @default("You are a helpful and knowledgeable tutor. Provide clear and concise explanations to help the student understand the topic at hand.") @db.Text
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @map("user_id") @db.Uuid
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([userId])
+  @@map("tutor_chats")
 }

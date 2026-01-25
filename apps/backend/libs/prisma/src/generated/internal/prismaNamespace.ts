@@ -387,7 +387,8 @@ export const ModelName = {
   File: 'File',
   User: 'User',
   VerificationCode: 'VerificationCode',
-  ResetPasswordToken: 'ResetPasswordToken'
+  ResetPasswordToken: 'ResetPasswordToken',
+  TutorChat: 'TutorChat'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -403,7 +404,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "file" | "user" | "verificationCode" | "resetPasswordToken"
+    modelProps: "file" | "user" | "verificationCode" | "resetPasswordToken" | "tutorChat"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -703,6 +704,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    TutorChat: {
+      payload: Prisma.$TutorChatPayload<ExtArgs>
+      fields: Prisma.TutorChatFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TutorChatFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TutorChatPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TutorChatFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TutorChatPayload>
+        }
+        findFirst: {
+          args: Prisma.TutorChatFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TutorChatPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TutorChatFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TutorChatPayload>
+        }
+        findMany: {
+          args: Prisma.TutorChatFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TutorChatPayload>[]
+        }
+        create: {
+          args: Prisma.TutorChatCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TutorChatPayload>
+        }
+        createMany: {
+          args: Prisma.TutorChatCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TutorChatCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TutorChatPayload>[]
+        }
+        delete: {
+          args: Prisma.TutorChatDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TutorChatPayload>
+        }
+        update: {
+          args: Prisma.TutorChatUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TutorChatPayload>
+        }
+        deleteMany: {
+          args: Prisma.TutorChatDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TutorChatUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TutorChatUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TutorChatPayload>[]
+        }
+        upsert: {
+          args: Prisma.TutorChatUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TutorChatPayload>
+        }
+        aggregate: {
+          args: Prisma.TutorChatAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTutorChat>
+        }
+        groupBy: {
+          args: Prisma.TutorChatGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TutorChatGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TutorChatCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TutorChatCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -791,6 +866,20 @@ export const ResetPasswordTokenScalarFieldEnum = {
 } as const
 
 export type ResetPasswordTokenScalarFieldEnum = (typeof ResetPasswordTokenScalarFieldEnum)[keyof typeof ResetPasswordTokenScalarFieldEnum]
+
+
+export const TutorChatScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  topic: 'topic',
+  prompt: 'prompt',
+  userId: 'userId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TutorChatScalarFieldEnum = (typeof TutorChatScalarFieldEnum)[keyof typeof TutorChatScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -984,6 +1073,7 @@ export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
   verificationCode?: Prisma.VerificationCodeOmit
   resetPasswordToken?: Prisma.ResetPasswordTokenOmit
+  tutorChat?: Prisma.TutorChatOmit
 }
 
 /* Types for Logging */

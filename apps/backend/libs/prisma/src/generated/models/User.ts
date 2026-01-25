@@ -246,19 +246,20 @@ export type UserWhereInput = {
   AND?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
-  id?: Prisma.StringFilter<"User"> | string
+  id?: Prisma.UuidFilter<"User"> | string
   email?: Prisma.StringFilter<"User"> | string
   emailVerified?: Prisma.BoolFilter<"User"> | boolean
   username?: Prisma.StringFilter<"User"> | string
   hash?: Prisma.StringNullableFilter<"User"> | string | null
   failedLoginAttempts?: Prisma.IntFilter<"User"> | number
   lockedUntil?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
-  avatarId?: Prisma.StringNullableFilter<"User"> | string | null
+  avatarId?: Prisma.UuidNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   avatar?: Prisma.XOR<Prisma.FileNullableScalarRelationFilter, Prisma.FileWhereInput> | null
   verificationCodes?: Prisma.VerificationCodeListRelationFilter
   resetPasswordTokens?: Prisma.ResetPasswordTokenListRelationFilter
+  tutorChats?: Prisma.TutorChatListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -275,6 +276,7 @@ export type UserOrderByWithRelationInput = {
   avatar?: Prisma.FileOrderByWithRelationInput
   verificationCodes?: Prisma.VerificationCodeOrderByRelationAggregateInput
   resetPasswordTokens?: Prisma.ResetPasswordTokenOrderByRelationAggregateInput
+  tutorChats?: Prisma.TutorChatOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -288,12 +290,13 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   hash?: Prisma.StringNullableFilter<"User"> | string | null
   failedLoginAttempts?: Prisma.IntFilter<"User"> | number
   lockedUntil?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
-  avatarId?: Prisma.StringNullableFilter<"User"> | string | null
+  avatarId?: Prisma.UuidNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   avatar?: Prisma.XOR<Prisma.FileNullableScalarRelationFilter, Prisma.FileWhereInput> | null
   verificationCodes?: Prisma.VerificationCodeListRelationFilter
   resetPasswordTokens?: Prisma.ResetPasswordTokenListRelationFilter
+  tutorChats?: Prisma.TutorChatListRelationFilter
 }, "id" | "email" | "username">
 
 export type UserOrderByWithAggregationInput = {
@@ -318,14 +321,14 @@ export type UserScalarWhereWithAggregatesInput = {
   AND?: Prisma.UserScalarWhereWithAggregatesInput | Prisma.UserScalarWhereWithAggregatesInput[]
   OR?: Prisma.UserScalarWhereWithAggregatesInput[]
   NOT?: Prisma.UserScalarWhereWithAggregatesInput | Prisma.UserScalarWhereWithAggregatesInput[]
-  id?: Prisma.StringWithAggregatesFilter<"User"> | string
+  id?: Prisma.UuidWithAggregatesFilter<"User"> | string
   email?: Prisma.StringWithAggregatesFilter<"User"> | string
   emailVerified?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   username?: Prisma.StringWithAggregatesFilter<"User"> | string
   hash?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   failedLoginAttempts?: Prisma.IntWithAggregatesFilter<"User"> | number
   lockedUntil?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
-  avatarId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  avatarId?: Prisma.UuidNullableWithAggregatesFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
 }
@@ -343,6 +346,7 @@ export type UserCreateInput = {
   avatar?: Prisma.FileCreateNestedOneWithoutUsersInput
   verificationCodes?: Prisma.VerificationCodeCreateNestedManyWithoutUserInput
   resetPasswordTokens?: Prisma.ResetPasswordTokenCreateNestedManyWithoutUserInput
+  tutorChats?: Prisma.TutorChatCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -358,6 +362,7 @@ export type UserUncheckedCreateInput = {
   updatedAt?: Date | string
   verificationCodes?: Prisma.VerificationCodeUncheckedCreateNestedManyWithoutUserInput
   resetPasswordTokens?: Prisma.ResetPasswordTokenUncheckedCreateNestedManyWithoutUserInput
+  tutorChats?: Prisma.TutorChatUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -373,6 +378,7 @@ export type UserUpdateInput = {
   avatar?: Prisma.FileUpdateOneWithoutUsersNestedInput
   verificationCodes?: Prisma.VerificationCodeUpdateManyWithoutUserNestedInput
   resetPasswordTokens?: Prisma.ResetPasswordTokenUpdateManyWithoutUserNestedInput
+  tutorChats?: Prisma.TutorChatUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -388,6 +394,7 @@ export type UserUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   verificationCodes?: Prisma.VerificationCodeUncheckedUpdateManyWithoutUserNestedInput
   resetPasswordTokens?: Prisma.ResetPasswordTokenUncheckedUpdateManyWithoutUserNestedInput
+  tutorChats?: Prisma.TutorChatUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -576,6 +583,20 @@ export type UserUpdateOneRequiredWithoutResetPasswordTokensNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutResetPasswordTokensInput, Prisma.UserUpdateWithoutResetPasswordTokensInput>, Prisma.UserUncheckedUpdateWithoutResetPasswordTokensInput>
 }
 
+export type UserCreateNestedOneWithoutTutorChatsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutTutorChatsInput, Prisma.UserUncheckedCreateWithoutTutorChatsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTutorChatsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutTutorChatsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutTutorChatsInput, Prisma.UserUncheckedCreateWithoutTutorChatsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTutorChatsInput
+  upsert?: Prisma.UserUpsertWithoutTutorChatsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutTutorChatsInput, Prisma.UserUpdateWithoutTutorChatsInput>, Prisma.UserUncheckedUpdateWithoutTutorChatsInput>
+}
+
 export type UserCreateWithoutAvatarInput = {
   id?: string
   email: string
@@ -588,6 +609,7 @@ export type UserCreateWithoutAvatarInput = {
   updatedAt?: Date | string
   verificationCodes?: Prisma.VerificationCodeCreateNestedManyWithoutUserInput
   resetPasswordTokens?: Prisma.ResetPasswordTokenCreateNestedManyWithoutUserInput
+  tutorChats?: Prisma.TutorChatCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAvatarInput = {
@@ -602,6 +624,7 @@ export type UserUncheckedCreateWithoutAvatarInput = {
   updatedAt?: Date | string
   verificationCodes?: Prisma.VerificationCodeUncheckedCreateNestedManyWithoutUserInput
   resetPasswordTokens?: Prisma.ResetPasswordTokenUncheckedCreateNestedManyWithoutUserInput
+  tutorChats?: Prisma.TutorChatUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAvatarInput = {
@@ -634,14 +657,14 @@ export type UserScalarWhereInput = {
   AND?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
   OR?: Prisma.UserScalarWhereInput[]
   NOT?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
-  id?: Prisma.StringFilter<"User"> | string
+  id?: Prisma.UuidFilter<"User"> | string
   email?: Prisma.StringFilter<"User"> | string
   emailVerified?: Prisma.BoolFilter<"User"> | boolean
   username?: Prisma.StringFilter<"User"> | string
   hash?: Prisma.StringNullableFilter<"User"> | string | null
   failedLoginAttempts?: Prisma.IntFilter<"User"> | number
   lockedUntil?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
-  avatarId?: Prisma.StringNullableFilter<"User"> | string | null
+  avatarId?: Prisma.UuidNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
 }
@@ -658,6 +681,7 @@ export type UserCreateWithoutVerificationCodesInput = {
   updatedAt?: Date | string
   avatar?: Prisma.FileCreateNestedOneWithoutUsersInput
   resetPasswordTokens?: Prisma.ResetPasswordTokenCreateNestedManyWithoutUserInput
+  tutorChats?: Prisma.TutorChatCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutVerificationCodesInput = {
@@ -672,6 +696,7 @@ export type UserUncheckedCreateWithoutVerificationCodesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   resetPasswordTokens?: Prisma.ResetPasswordTokenUncheckedCreateNestedManyWithoutUserInput
+  tutorChats?: Prisma.TutorChatUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutVerificationCodesInput = {
@@ -702,6 +727,7 @@ export type UserUpdateWithoutVerificationCodesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   avatar?: Prisma.FileUpdateOneWithoutUsersNestedInput
   resetPasswordTokens?: Prisma.ResetPasswordTokenUpdateManyWithoutUserNestedInput
+  tutorChats?: Prisma.TutorChatUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutVerificationCodesInput = {
@@ -716,6 +742,7 @@ export type UserUncheckedUpdateWithoutVerificationCodesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resetPasswordTokens?: Prisma.ResetPasswordTokenUncheckedUpdateManyWithoutUserNestedInput
+  tutorChats?: Prisma.TutorChatUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutResetPasswordTokensInput = {
@@ -730,6 +757,7 @@ export type UserCreateWithoutResetPasswordTokensInput = {
   updatedAt?: Date | string
   avatar?: Prisma.FileCreateNestedOneWithoutUsersInput
   verificationCodes?: Prisma.VerificationCodeCreateNestedManyWithoutUserInput
+  tutorChats?: Prisma.TutorChatCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutResetPasswordTokensInput = {
@@ -744,6 +772,7 @@ export type UserUncheckedCreateWithoutResetPasswordTokensInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   verificationCodes?: Prisma.VerificationCodeUncheckedCreateNestedManyWithoutUserInput
+  tutorChats?: Prisma.TutorChatUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutResetPasswordTokensInput = {
@@ -774,6 +803,7 @@ export type UserUpdateWithoutResetPasswordTokensInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   avatar?: Prisma.FileUpdateOneWithoutUsersNestedInput
   verificationCodes?: Prisma.VerificationCodeUpdateManyWithoutUserNestedInput
+  tutorChats?: Prisma.TutorChatUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutResetPasswordTokensInput = {
@@ -788,6 +818,83 @@ export type UserUncheckedUpdateWithoutResetPasswordTokensInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   verificationCodes?: Prisma.VerificationCodeUncheckedUpdateManyWithoutUserNestedInput
+  tutorChats?: Prisma.TutorChatUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutTutorChatsInput = {
+  id?: string
+  email: string
+  emailVerified?: boolean
+  username: string
+  hash?: string | null
+  failedLoginAttempts?: number
+  lockedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  avatar?: Prisma.FileCreateNestedOneWithoutUsersInput
+  verificationCodes?: Prisma.VerificationCodeCreateNestedManyWithoutUserInput
+  resetPasswordTokens?: Prisma.ResetPasswordTokenCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutTutorChatsInput = {
+  id?: string
+  email: string
+  emailVerified?: boolean
+  username: string
+  hash?: string | null
+  failedLoginAttempts?: number
+  lockedUntil?: Date | string | null
+  avatarId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  verificationCodes?: Prisma.VerificationCodeUncheckedCreateNestedManyWithoutUserInput
+  resetPasswordTokens?: Prisma.ResetPasswordTokenUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutTutorChatsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutTutorChatsInput, Prisma.UserUncheckedCreateWithoutTutorChatsInput>
+}
+
+export type UserUpsertWithoutTutorChatsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutTutorChatsInput, Prisma.UserUncheckedUpdateWithoutTutorChatsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutTutorChatsInput, Prisma.UserUncheckedCreateWithoutTutorChatsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutTutorChatsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutTutorChatsInput, Prisma.UserUncheckedUpdateWithoutTutorChatsInput>
+}
+
+export type UserUpdateWithoutTutorChatsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  hash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  failedLoginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  avatar?: Prisma.FileUpdateOneWithoutUsersNestedInput
+  verificationCodes?: Prisma.VerificationCodeUpdateManyWithoutUserNestedInput
+  resetPasswordTokens?: Prisma.ResetPasswordTokenUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutTutorChatsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  hash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  failedLoginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  avatarId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  verificationCodes?: Prisma.VerificationCodeUncheckedUpdateManyWithoutUserNestedInput
+  resetPasswordTokens?: Prisma.ResetPasswordTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyAvatarInput = {
@@ -814,6 +921,7 @@ export type UserUpdateWithoutAvatarInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   verificationCodes?: Prisma.VerificationCodeUpdateManyWithoutUserNestedInput
   resetPasswordTokens?: Prisma.ResetPasswordTokenUpdateManyWithoutUserNestedInput
+  tutorChats?: Prisma.TutorChatUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAvatarInput = {
@@ -828,6 +936,7 @@ export type UserUncheckedUpdateWithoutAvatarInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   verificationCodes?: Prisma.VerificationCodeUncheckedUpdateManyWithoutUserNestedInput
   resetPasswordTokens?: Prisma.ResetPasswordTokenUncheckedUpdateManyWithoutUserNestedInput
+  tutorChats?: Prisma.TutorChatUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutAvatarInput = {
@@ -850,11 +959,13 @@ export type UserUncheckedUpdateManyWithoutAvatarInput = {
 export type UserCountOutputType = {
   verificationCodes: number
   resetPasswordTokens: number
+  tutorChats: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   verificationCodes?: boolean | UserCountOutputTypeCountVerificationCodesArgs
   resetPasswordTokens?: boolean | UserCountOutputTypeCountResetPasswordTokensArgs
+  tutorChats?: boolean | UserCountOutputTypeCountTutorChatsArgs
 }
 
 /**
@@ -881,6 +992,13 @@ export type UserCountOutputTypeCountResetPasswordTokensArgs<ExtArgs extends runt
   where?: Prisma.ResetPasswordTokenWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountTutorChatsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TutorChatWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -896,6 +1014,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   avatar?: boolean | Prisma.User$avatarArgs<ExtArgs>
   verificationCodes?: boolean | Prisma.User$verificationCodesArgs<ExtArgs>
   resetPasswordTokens?: boolean | Prisma.User$resetPasswordTokensArgs<ExtArgs>
+  tutorChats?: boolean | Prisma.User$tutorChatsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -945,6 +1064,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   avatar?: boolean | Prisma.User$avatarArgs<ExtArgs>
   verificationCodes?: boolean | Prisma.User$verificationCodesArgs<ExtArgs>
   resetPasswordTokens?: boolean | Prisma.User$resetPasswordTokensArgs<ExtArgs>
+  tutorChats?: boolean | Prisma.User$tutorChatsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -960,6 +1080,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     avatar: Prisma.$FilePayload<ExtArgs> | null
     verificationCodes: Prisma.$VerificationCodePayload<ExtArgs>[]
     resetPasswordTokens: Prisma.$ResetPasswordTokenPayload<ExtArgs>[]
+    tutorChats: Prisma.$TutorChatPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1369,6 +1490,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   avatar<T extends Prisma.User$avatarArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$avatarArgs<ExtArgs>>): Prisma.Prisma__FileClient<runtime.Types.Result.GetResult<Prisma.$FilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   verificationCodes<T extends Prisma.User$verificationCodesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$verificationCodesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$VerificationCodePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   resetPasswordTokens<T extends Prisma.User$resetPasswordTokensArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$resetPasswordTokensArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ResetPasswordTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  tutorChats<T extends Prisma.User$tutorChatsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$tutorChatsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TutorChatPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1868,6 +1990,30 @@ export type User$resetPasswordTokensArgs<ExtArgs extends runtime.Types.Extension
   take?: number
   skip?: number
   distinct?: Prisma.ResetPasswordTokenScalarFieldEnum | Prisma.ResetPasswordTokenScalarFieldEnum[]
+}
+
+/**
+ * User.tutorChats
+ */
+export type User$tutorChatsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TutorChat
+   */
+  select?: Prisma.TutorChatSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TutorChat
+   */
+  omit?: Prisma.TutorChatOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TutorChatInclude<ExtArgs> | null
+  where?: Prisma.TutorChatWhereInput
+  orderBy?: Prisma.TutorChatOrderByWithRelationInput | Prisma.TutorChatOrderByWithRelationInput[]
+  cursor?: Prisma.TutorChatWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TutorChatScalarFieldEnum | Prisma.TutorChatScalarFieldEnum[]
 }
 
 /**

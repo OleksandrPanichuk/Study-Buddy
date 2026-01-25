@@ -170,7 +170,7 @@ export type FileWhereInput = {
   AND?: Prisma.FileWhereInput | Prisma.FileWhereInput[]
   OR?: Prisma.FileWhereInput[]
   NOT?: Prisma.FileWhereInput | Prisma.FileWhereInput[]
-  id?: Prisma.StringFilter<"File"> | string
+  id?: Prisma.UuidFilter<"File"> | string
   createdAt?: Prisma.DateTimeFilter<"File"> | Date | string
   url?: Prisma.StringFilter<"File"> | string
   key?: Prisma.StringNullableFilter<"File"> | string | null
@@ -210,7 +210,7 @@ export type FileScalarWhereWithAggregatesInput = {
   AND?: Prisma.FileScalarWhereWithAggregatesInput | Prisma.FileScalarWhereWithAggregatesInput[]
   OR?: Prisma.FileScalarWhereWithAggregatesInput[]
   NOT?: Prisma.FileScalarWhereWithAggregatesInput | Prisma.FileScalarWhereWithAggregatesInput[]
-  id?: Prisma.StringWithAggregatesFilter<"File"> | string
+  id?: Prisma.UuidWithAggregatesFilter<"File"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"File"> | Date | string
   url?: Prisma.StringWithAggregatesFilter<"File"> | string
   key?: Prisma.StringNullableWithAggregatesFilter<"File"> | string | null

@@ -1,3 +1,4 @@
 export * from "./auth";
 export * from "./models";
-export * from "./user"
+export * from "./tutor-chats";
+export * from "./user";

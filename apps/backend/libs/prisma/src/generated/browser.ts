@@ -37,3 +37,8 @@ export type VerificationCode = Prisma.VerificationCodeModel
  * 
  */
 export type ResetPasswordToken = Prisma.ResetPasswordTokenModel
+/**
+ * Model TutorChat
+ * 
+ */
+export type TutorChat = Prisma.TutorChatModel

@@ -54,7 +54,8 @@ export const ModelName = {
   File: 'File',
   User: 'User',
   VerificationCode: 'VerificationCode',
-  ResetPasswordToken: 'ResetPasswordToken'
+  ResetPasswordToken: 'ResetPasswordToken',
+  TutorChat: 'TutorChat'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -122,6 +123,20 @@ export const ResetPasswordTokenScalarFieldEnum = {
 } as const
 
 export type ResetPasswordTokenScalarFieldEnum = (typeof ResetPasswordTokenScalarFieldEnum)[keyof typeof ResetPasswordTokenScalarFieldEnum]
+
+
+export const TutorChatScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  topic: 'topic',
+  prompt: 'prompt',
+  userId: 'userId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TutorChatScalarFieldEnum = (typeof TutorChatScalarFieldEnum)[keyof typeof TutorChatScalarFieldEnum]
 
 
 export const SortOrder = {

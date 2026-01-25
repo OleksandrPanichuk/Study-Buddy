@@ -225,9 +225,9 @@ export type ResetPasswordTokenWhereInput = {
   AND?: Prisma.ResetPasswordTokenWhereInput | Prisma.ResetPasswordTokenWhereInput[]
   OR?: Prisma.ResetPasswordTokenWhereInput[]
   NOT?: Prisma.ResetPasswordTokenWhereInput | Prisma.ResetPasswordTokenWhereInput[]
-  id?: Prisma.StringFilter<"ResetPasswordToken"> | string
+  id?: Prisma.UuidFilter<"ResetPasswordToken"> | string
   token?: Prisma.StringFilter<"ResetPasswordToken"> | string
-  userId?: Prisma.StringFilter<"ResetPasswordToken"> | string
+  userId?: Prisma.UuidFilter<"ResetPasswordToken"> | string
   resendCount?: Prisma.IntFilter<"ResetPasswordToken"> | number
   expiresAt?: Prisma.DateTimeFilter<"ResetPasswordToken"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"ResetPasswordToken"> | Date | string
@@ -252,7 +252,7 @@ export type ResetPasswordTokenWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.ResetPasswordTokenWhereInput | Prisma.ResetPasswordTokenWhereInput[]
   OR?: Prisma.ResetPasswordTokenWhereInput[]
   NOT?: Prisma.ResetPasswordTokenWhereInput | Prisma.ResetPasswordTokenWhereInput[]
-  userId?: Prisma.StringFilter<"ResetPasswordToken"> | string
+  userId?: Prisma.UuidFilter<"ResetPasswordToken"> | string
   resendCount?: Prisma.IntFilter<"ResetPasswordToken"> | number
   expiresAt?: Prisma.DateTimeFilter<"ResetPasswordToken"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"ResetPasswordToken"> | Date | string
@@ -279,9 +279,9 @@ export type ResetPasswordTokenScalarWhereWithAggregatesInput = {
   AND?: Prisma.ResetPasswordTokenScalarWhereWithAggregatesInput | Prisma.ResetPasswordTokenScalarWhereWithAggregatesInput[]
   OR?: Prisma.ResetPasswordTokenScalarWhereWithAggregatesInput[]
   NOT?: Prisma.ResetPasswordTokenScalarWhereWithAggregatesInput | Prisma.ResetPasswordTokenScalarWhereWithAggregatesInput[]
-  id?: Prisma.StringWithAggregatesFilter<"ResetPasswordToken"> | string
+  id?: Prisma.UuidWithAggregatesFilter<"ResetPasswordToken"> | string
   token?: Prisma.StringWithAggregatesFilter<"ResetPasswordToken"> | string
-  userId?: Prisma.StringWithAggregatesFilter<"ResetPasswordToken"> | string
+  userId?: Prisma.UuidWithAggregatesFilter<"ResetPasswordToken"> | string
   resendCount?: Prisma.IntWithAggregatesFilter<"ResetPasswordToken"> | number
   expiresAt?: Prisma.DateTimeWithAggregatesFilter<"ResetPasswordToken"> | Date | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"ResetPasswordToken"> | Date | string
@@ -495,9 +495,9 @@ export type ResetPasswordTokenScalarWhereInput = {
   AND?: Prisma.ResetPasswordTokenScalarWhereInput | Prisma.ResetPasswordTokenScalarWhereInput[]
   OR?: Prisma.ResetPasswordTokenScalarWhereInput[]
   NOT?: Prisma.ResetPasswordTokenScalarWhereInput | Prisma.ResetPasswordTokenScalarWhereInput[]
-  id?: Prisma.StringFilter<"ResetPasswordToken"> | string
+  id?: Prisma.UuidFilter<"ResetPasswordToken"> | string
   token?: Prisma.StringFilter<"ResetPasswordToken"> | string
-  userId?: Prisma.StringFilter<"ResetPasswordToken"> | string
+  userId?: Prisma.UuidFilter<"ResetPasswordToken"> | string
   resendCount?: Prisma.IntFilter<"ResetPasswordToken"> | number
   expiresAt?: Prisma.DateTimeFilter<"ResetPasswordToken"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"ResetPasswordToken"> | Date | string

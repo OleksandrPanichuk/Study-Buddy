@@ -17,6 +17,7 @@ import { LoggingInterceptor } from "@/shared/interceptors";
 import { SecurityHeadersMiddleware } from "@/shared/middlewares";
 import { SanitizationPipe } from "@/shared/pipes";
 import { UsersModule } from "@/users/users.module";
+import { TutorChatsModule } from './tutor-chats/tutor-chats.module';
 
 @Module({
 	imports: [
@@ -37,7 +38,8 @@ import { UsersModule } from "@/users/users.module";
 		PrismaModule,
 		RedisModule,
 		AuthModule,
-		UsersModule
+		UsersModule,
+		TutorChatsModule
 	],
 	providers: [
 		{ provide: APP_PIPE, useClass: SanitizationPipe },

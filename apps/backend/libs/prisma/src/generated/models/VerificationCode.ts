@@ -218,9 +218,9 @@ export type VerificationCodeWhereInput = {
   AND?: Prisma.VerificationCodeWhereInput | Prisma.VerificationCodeWhereInput[]
   OR?: Prisma.VerificationCodeWhereInput[]
   NOT?: Prisma.VerificationCodeWhereInput | Prisma.VerificationCodeWhereInput[]
-  id?: Prisma.StringFilter<"VerificationCode"> | string
+  id?: Prisma.UuidFilter<"VerificationCode"> | string
   code?: Prisma.StringFilter<"VerificationCode"> | string
-  userId?: Prisma.StringFilter<"VerificationCode"> | string
+  userId?: Prisma.UuidFilter<"VerificationCode"> | string
   resendCount?: Prisma.IntFilter<"VerificationCode"> | number
   expiresAt?: Prisma.DateTimeFilter<"VerificationCode"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"VerificationCode"> | Date | string
@@ -243,7 +243,7 @@ export type VerificationCodeWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.VerificationCodeWhereInput[]
   NOT?: Prisma.VerificationCodeWhereInput | Prisma.VerificationCodeWhereInput[]
   code?: Prisma.StringFilter<"VerificationCode"> | string
-  userId?: Prisma.StringFilter<"VerificationCode"> | string
+  userId?: Prisma.UuidFilter<"VerificationCode"> | string
   resendCount?: Prisma.IntFilter<"VerificationCode"> | number
   expiresAt?: Prisma.DateTimeFilter<"VerificationCode"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"VerificationCode"> | Date | string
@@ -268,9 +268,9 @@ export type VerificationCodeScalarWhereWithAggregatesInput = {
   AND?: Prisma.VerificationCodeScalarWhereWithAggregatesInput | Prisma.VerificationCodeScalarWhereWithAggregatesInput[]
   OR?: Prisma.VerificationCodeScalarWhereWithAggregatesInput[]
   NOT?: Prisma.VerificationCodeScalarWhereWithAggregatesInput | Prisma.VerificationCodeScalarWhereWithAggregatesInput[]
-  id?: Prisma.StringWithAggregatesFilter<"VerificationCode"> | string
+  id?: Prisma.UuidWithAggregatesFilter<"VerificationCode"> | string
   code?: Prisma.StringWithAggregatesFilter<"VerificationCode"> | string
-  userId?: Prisma.StringWithAggregatesFilter<"VerificationCode"> | string
+  userId?: Prisma.UuidWithAggregatesFilter<"VerificationCode"> | string
   resendCount?: Prisma.IntWithAggregatesFilter<"VerificationCode"> | number
   expiresAt?: Prisma.DateTimeWithAggregatesFilter<"VerificationCode"> | Date | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"VerificationCode"> | Date | string
@@ -471,9 +471,9 @@ export type VerificationCodeScalarWhereInput = {
   AND?: Prisma.VerificationCodeScalarWhereInput | Prisma.VerificationCodeScalarWhereInput[]
   OR?: Prisma.VerificationCodeScalarWhereInput[]
   NOT?: Prisma.VerificationCodeScalarWhereInput | Prisma.VerificationCodeScalarWhereInput[]
-  id?: Prisma.StringFilter<"VerificationCode"> | string
+  id?: Prisma.UuidFilter<"VerificationCode"> | string
   code?: Prisma.StringFilter<"VerificationCode"> | string
-  userId?: Prisma.StringFilter<"VerificationCode"> | string
+  userId?: Prisma.UuidFilter<"VerificationCode"> | string
   resendCount?: Prisma.IntFilter<"VerificationCode"> | number
   expiresAt?: Prisma.DateTimeFilter<"VerificationCode"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"VerificationCode"> | Date | string

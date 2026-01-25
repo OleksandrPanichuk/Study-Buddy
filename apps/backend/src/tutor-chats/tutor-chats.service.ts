@@ -63,15 +63,13 @@ export class TutorChatsService {
 	}
 
 	public async bulkDelete(ids: string[], userId: string) {
-		const existingChats = await Promise.all(ids.map((id) => this.tutorChatsRepository.findById(id)));
+		const existingChats = await Promise.all(
+      ids.map((id) => this.tutorChatsRepository.findById(id)),
+    );
 
-		if (existingChats.length !== ids.length) {
-			throw new NotFoundException("Some of the tutor chats were not found");
-		}
-
-		if (existingChats.some((chat) => chat.userId !== userId)) {
-			throw new NotFoundException("Some of the tutor chats were not found");
-		}
+    if (existingChats.some((chat) => !chat || chat.userId !== userId)) {
+      throw new NotFoundException("Some of the tutor chats were not found");
+    }
 
 		// TODO: delete all messages/files associated with this chat
 		return this.tutorChatsRepository.bulkDelete(ids);

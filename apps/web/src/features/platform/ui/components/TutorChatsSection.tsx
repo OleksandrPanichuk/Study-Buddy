@@ -16,10 +16,8 @@ import {getTutorChatsQueryOptions} from "@/features/tutor-chats";
 
 export const TutorChatsSection = () => {
 	const location = useLocation();
-
-	const { data, isFetching } = useQuery(getTutorChatsQueryOptions({ limit: 10 }));
-
 	const { open } = useModal(MODALS.CREATE_TUTOR_CHAT);
+	const { data, isFetching } = useQuery(getTutorChatsQueryOptions({ limit: 10 }));
 
 	return (
 		<AccordionItem value="chats" className="border-none">
@@ -31,21 +29,14 @@ export const TutorChatsSection = () => {
 			</AccordionTrigger>
 			<AccordionContent className="pb-0 pl-2">
 				<SidebarMenuSubButton className="mb-1" asChild>
-					<Button
-						variant={"ghost"}
-						className="w-full justify-start px-2!"
-						onClick={() => {
-							// 	TODO:
-							open();
-						}}>
+					<Button variant={"ghost"} className="w-full justify-start px-2!" onClick={open}>
 						<PlusIcon className="size-4 mr-0.5" />
 						<span>New Chat</span>
 					</Button>
 				</SidebarMenuSubButton>
 				<SidebarMenuSubButton className="mb-1" asChild isActive={location.pathname === "/d/chats"}>
 					<Button variant={"ghost"} className="w-full justify-start px-2!" asChild>
-						{/*TODO: change with proper url*/}
-						<Link to="/">
+						<Link to="/p/tutor-chats" preload={false}>
 							<ListIcon className="size-4 mr-0.5" />
 							<span>View All</span>
 						</Link>

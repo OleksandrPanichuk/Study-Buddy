@@ -4,6 +4,7 @@ import {tutorChatSchema} from "../models";
 export const findAllTutorChatsInputSchema = z.object({
 	limit: z.coerce.number().min(1).max(100).optional().default(20),
 	cursor: z.uuidv4().nullish(),
+	infinite: z.coerce.boolean().optional(),
 });
 
 export const findAllTutorChatsResponseSchema = z.object({

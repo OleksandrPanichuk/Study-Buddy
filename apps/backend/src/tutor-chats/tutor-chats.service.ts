@@ -17,9 +17,10 @@ export class TutorChatsService {
     dto: FindAllTutorChatsQuery,
     userId: string,
   ): Promise<FindAllTutorChatsResponse> {
-    const take = dto.cursor ? dto.limit + 1 : dto.limit;
+    const take = dto.infinite ? dto.limit + 1 : dto.limit;
+
     const data = await this.tutorChatsRepository.findByUserId({
-      ...dto,
+      cursor: dto.cursor,
       take,
       userId,
     });

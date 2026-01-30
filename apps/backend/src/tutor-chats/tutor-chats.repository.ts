@@ -17,6 +17,9 @@ export class TutorChatsRepository {
       },
       take: dto.take,
       cursor: dto.cursor ? { id: dto.cursor } : undefined,
+      orderBy: {
+        createdAt: "desc",
+      },
     });
   }
 

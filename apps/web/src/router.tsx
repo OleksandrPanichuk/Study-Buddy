@@ -11,21 +11,27 @@ export type TRouterContext = {
 };
 
 export const getRouter = () => {
-	const queryClient = new QueryClient();
+	const queryClient = new QueryClient({
+		defaultOptions: {
+			queries: {
+				staleTime: 5 * 60 * 1000
+			}
+		}
+	});
 
 	const router = createRouter({
 		routeTree,
 		context: {
-			queryClient,
+			queryClient
 		} satisfies TRouterContext,
 		defaultPreload: "intent",
 		scrollRestoration: true,
-		defaultPreloadStaleTime: 0,
+		defaultPreloadStaleTime: 0
 	});
 
 	setupRouterSsrQueryIntegration({
 		router,
-		queryClient,
+		queryClient
 	});
 
 	return router;

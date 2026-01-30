@@ -1,4 +1,4 @@
-import type { PrismaService } from "@app/prisma";
+import { PrismaService } from "@app/prisma";
 import { Injectable } from "@nestjs/common";
 import type {
   ICreateTutorCharInput,

@@ -13,52 +13,52 @@ import { WinstonModule } from "nest-winston";
 import { cleanupOpenApiDoc } from "nestjs-zod";
 import passport from "passport";
 import { createLogger } from "winston";
+import type { Env } from "@/shared/config";
 import {
-	type Env,
-	getCorsConfig,
-	getSessionConfig,
-	getSwaggerConfig,
-	helmetConfig,
+  getCorsConfig,
+  getSessionConfig,
+  getSwaggerConfig,
+  helmetConfig,
 } from "@/shared/config";
 import { AppModule } from "./app.module";
 
 async function bootstrap() {
-	const logger = createLogger(getLoggerConfig());
-	const app = await NestFactory.create(AppModule, {
-		logger: WinstonModule.createLogger({
-			instance: logger,
-		}),
-	});
+  const logger = createLogger(getLoggerConfig());
+  const app = await NestFactory.create(AppModule, {
+    logger: WinstonModule.createLogger({
+      instance: logger,
+    }),
+  });
 
-	const config = app.get(ConfigService<Env>);
-	const PORT = config.get("PORT", 8080);
+  const config = app.get(ConfigService<Env>);
+  const PORT = config.get("PORT", 8080);
 
-	// Swagger
-	const openApiDoc = SwaggerModule.createDocument(
-		app,
-		getSwaggerConfig(config),
-	);
+  // Swagger
+  const openApiDoc = SwaggerModule.createDocument(
+    app,
+    getSwaggerConfig(config),
+  );
 
-	SwaggerModule.setup("api/swagger", app, cleanupOpenApiDoc(openApiDoc));
+  SwaggerModule.setup("api/swagger", app, cleanupOpenApiDoc(openApiDoc));
 
-	// Compression and Cookies
-	app.use(compression());
-	app.use(cookieParser());
+  // Compression and Cookies
+  app.use(compression());
+  app.use(cookieParser());
 
-	// Session
-	app.use(session(getSessionConfig(config)));
-	app.use(passport.initialize());
-	app.use(passport.session());
+  // Session
+  app.use(session(getSessionConfig(config)));
+  app.use(passport.initialize());
+  app.use(passport.session());
 
-	// Security
-	app.enableCors(getCorsConfig(config));
-	app.use(helmet(helmetConfig));
-	app.use(nestCsrf());
+  // Security
+  app.enableCors(getCorsConfig(config));
+  app.use(helmet(helmetConfig));
+  app.use(nestCsrf());
 
-	app.setGlobalPrefix("api");
+  app.setGlobalPrefix("api");
 
-	await app.listen(PORT, () => {
-		console.log(`Listening on port ${PORT}`);
-	});
+  await app.listen(PORT, () => {
+    console.log(`Listening on port ${PORT}`);
+  });
 }
 bootstrap();

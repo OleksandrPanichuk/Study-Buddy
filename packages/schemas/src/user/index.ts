@@ -10,5 +10,5 @@ export const currentUserResponseSchema = userSchema
 export type TCurrentUserResponse = z.infer<typeof currentUserResponseSchema>;
 
 export type TUserWithAvatar = TUser & {
-	avatar?: TFile;
+	avatar?: TFile | null;
 };

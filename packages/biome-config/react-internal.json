@@ -24,6 +24,9 @@
 			"correctness": {
 				"noUnusedImports": "error"
 			},
+			"suspicious": {
+				"noArrayIndexKey": "off"
+			},
 			"a11y": {
 				"noStaticElementInteractions": "off",
 				"useKeyWithClickEvents": "off"

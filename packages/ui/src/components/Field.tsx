@@ -1,10 +1,10 @@
 "use client";
 
-import {cva, type VariantProps} from "class-variance-authority"
-import {useMemo} from "react"
-import {Label} from "@/components/Label"
-import {Separator} from "@/components/Separator"
-import {cn} from "@/lib/utils"
+import { Label } from "@/components/Label";
+import { Separator } from "@/components/Separator";
+import { cn } from "@/lib/utils";
+import { cva, type VariantProps } from "class-variance-authority";
+import { ComponentProps, useMemo } from "react";
 
 function FieldSet({ className, ...props }: React.ComponentProps<"fieldset">) {
 	return (
@@ -106,10 +106,7 @@ function FieldContent({ className, ...props }: React.ComponentProps<"div">) {
 	);
 }
 
-function FieldLabel({
-	className,
-	...props
-}: React.ComponentProps<typeof Label>) {
+function FieldLabel({ className, ...props }: ComponentProps<"label">) {
 	return (
 		<Label
 			data-slot="field-label"
@@ -235,13 +232,13 @@ function FieldError({
 
 export {
 	Field,
-	FieldLabel,
+	FieldContent,
 	FieldDescription,
 	FieldError,
 	FieldGroup,
+	FieldLabel,
 	FieldLegend,
 	FieldSeparator,
 	FieldSet,
-	FieldContent,
 	FieldTitle,
 };

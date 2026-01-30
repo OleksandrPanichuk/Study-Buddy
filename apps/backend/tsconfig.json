@@ -18,50 +18,20 @@
 		"resolveJsonModule": true,
 		"noImplicitAny": false,
 		"paths": {
-			"@/*": [
-				"src/*"
-			],
-			"@app/logger": [
-				"libs/logger/src"
-			],
-			"@app/logger/*": [
-				"libs/logger/src/*"
-			],
-			"@app/hashing": [
-				"libs/hashing/src"
-			],
-			"@app/hashing/*": [
-				"libs/hashing/src/*"
-			],
-			"@app/mailer": [
-				"libs/mailer/src"
-			],
-			"@app/mailer/*": [
-				"libs/mailer/src/*"
-			],
-			"@app/prisma": [
-				"libs/prisma/src"
-			],
-			"@app/prisma/*": [
-				"libs/prisma/src/*"
-			],
-			"@app/redis": [
-				"libs/redis/src"
-			],
-			"@app/redis/*": [
-				"libs/redis/src/*"
-			],
-			"@prisma/generated/*": [
-				"libs/prisma/src/generated/*"
-			]
+			"@/*": ["src/*"],
+			"@app/logger": ["libs/logger/src"],
+			"@app/logger/*": ["libs/logger/src/*"],
+			"@app/hashing": ["libs/hashing/src"],
+			"@app/hashing/*": ["libs/hashing/src/*"],
+			"@app/mailer": ["libs/mailer/src"],
+			"@app/mailer/*": ["libs/mailer/src/*"],
+			"@app/prisma": ["libs/prisma/src"],
+			"@app/prisma/*": ["libs/prisma/src/*"],
+			"@app/redis": ["libs/redis/src"],
+			"@app/redis/*": ["libs/redis/src/*"],
+			"@prisma/generated/*": ["libs/prisma/src/generated/*"]
 		}
 	},
-	"include": [
-		"src/**/*",
-		"libs/**/*",
-	],
-	"exclude": [
-		"node_modules",
-		"dist"
-	]
+	"include": ["src/**/*", "libs/**/*"],
+	"exclude": ["node_modules", "dist"]
 }

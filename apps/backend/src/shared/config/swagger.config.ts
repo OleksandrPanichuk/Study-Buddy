@@ -1,7 +1,6 @@
 import { ConfigService } from "@nestjs/config";
-import { Env } from "@/shared/config/env.config";
 import { DocumentBuilder } from "@nestjs/swagger";
-
+import type { Env } from "@/shared/config";
 
 export const getSwaggerConfig = (config: ConfigService<Env>) => {
   return new DocumentBuilder()
@@ -12,4 +11,4 @@ export const getSwaggerConfig = (config: ConfigService<Env>) => {
       description: "Internal Server Error",
     })
     .build();
-}
+};

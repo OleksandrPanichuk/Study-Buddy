@@ -27,7 +27,7 @@ import {
   UpdateTutorChatInput,
   UpdateTutorChatResponse,
 } from "./tutor-chats.dto";
-import type { TutorChatsService } from "./tutor-chats.service";
+import { TutorChatsService } from "./tutor-chats.service";
 import {
   ApiBulkDeleteTutorChats,
   ApiCreateTutorChat,

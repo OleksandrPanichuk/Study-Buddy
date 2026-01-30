@@ -93,7 +93,7 @@
 				},
 				"noParameterAssign": "error",
 				"useDefaultParameterLast": "error",
-				"useEnumInitializers": "error",
+				"useEnumInitializers": "off",
 				"useSelfClosingElements": "error",
 				"noUnusedTemplateLiteral": "error",
 				"useNumberNamespace": "error",

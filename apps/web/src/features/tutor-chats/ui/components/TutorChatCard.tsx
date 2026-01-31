@@ -1,5 +1,5 @@
 ﻿import type {TTutorChat} from "@repo/schemas";
-import {Checkbox} from "@repo/ui";
+import {Checkbox, Skeleton} from "@repo/ui";
 import {Link} from "@tanstack/react-router";
 import {formatDistanceToNow} from "date-fns";
 import {MessageSquareIcon} from "lucide-react";
@@ -49,10 +49,7 @@ export const TutorChatCard = ({ data, isBulkMode, isSelected, onToggleSelection 
 					/>
 				</div>
 
-				<Link
-					to={"/p/tutor-chats/$tutorChatId"}
-					params={{ tutorChatId: data.id }}
-					className="min-w-0 flex-1 space-y-2">
+				<Link to={"/p/tutor-chats/$tutorChatId"} params={{ tutorChatId: data.id }} className="min-w-0 flex-1 space-y-2">
 					<div className="space-y-1">
 						<h3 className="truncate text-base font-semibold text-foreground transition-colors group-hover:text-primary">
 							{data.name}
@@ -78,3 +75,24 @@ export const TutorChatCard = ({ data, isBulkMode, isSelected, onToggleSelection 
 		</div>
 	);
 };
+
+export const TutorChatCardSkeleton = () => (
+	<div className="relative overflow-hidden rounded-2xl border bg-card/60 p-4 shadow-sm">
+		<div className="absolute inset-0 bg-[linear-gradient(110deg,_rgba(59,130,246,0.08),_transparent_45%,_rgba(16,185,129,0.08))]" />
+		<div className="relative space-y-4">
+			<div className="space-y-2">
+				<Skeleton className="h-5 w-40" />
+				<Skeleton className="h-4 w-24" />
+			</div>
+			<div className="space-y-2">
+				<Skeleton className="h-3 w-full" />
+				<Skeleton className="h-3 w-11/12" />
+				<Skeleton className="h-3 w-5/6" />
+			</div>
+			<div className="flex items-center justify-between">
+				<Skeleton className="h-6 w-24 rounded-full" />
+				<Skeleton className="h-6 w-10 rounded-full" />
+			</div>
+		</div>
+	</div>
+);

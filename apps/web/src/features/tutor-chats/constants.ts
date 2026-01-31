@@ -13,7 +13,7 @@ export const TUTOR_CHATS_QUERY_KEYS = {
 	findAllInfinite: (data?: TFindAllTutorChatsInput) => [...TUTOR_CHATS_QUERY_KEYS.findAll(data), "infinite"]
 };
 
-export const DEFAULT_TUTOR_CHATS_LIMIT = 20;
+export const DEFAULT_TUTOR_CHATS_LIMIT = 10;
 
 export const templates = [
 	{

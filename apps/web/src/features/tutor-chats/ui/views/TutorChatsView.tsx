@@ -9,7 +9,8 @@ import {
 	EmptyChatsState,
 	getBulkDeleteTutorChatsMutationOptions,
 	getInfiniteTutorChatsQueryOptions,
-	TutorChatCard
+	TutorChatCard,
+	TutorChatCardSkeleton
 } from "@/features/tutor-chats";
 
 export const TutorChatsView = () => {
@@ -149,6 +150,8 @@ export const TutorChatsView = () => {
 						onToggleSelection={toggleSelection}
 					/>
 				))}
+				{isFetching &&
+					Array.from({ length: DEFAULT_TUTOR_CHATS_LIMIT }).map((_, index) => <TutorChatCardSkeleton key={index} />)}
 			</div>
 			{hasNextPage && <div ref={ref} />}
 		</div>
@@ -158,11 +161,33 @@ export const TutorChatsView = () => {
 export const TutorChatsViewSkeleton = () => {
 	return (
 		<div className="p-4 sm:p-6 space-y-6">
-			<Skeleton className="h-28 w-full rounded-2xl" />
+			<div className="relative overflow-hidden rounded-2xl border bg-card/70 p-5 sm:p-6 shadow-sm">
+				<div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(251,191,36,0.22),_transparent_60%)]" />
+				<div className="relative flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+					<div className="space-y-2">
+						<Skeleton className="h-3 w-28 rounded-full" />
+						<Skeleton className="h-6 w-60" />
+						<Skeleton className="h-4 w-40" />
+					</div>
+					<div className="flex items-center gap-2">
+						<Skeleton className="h-9 w-28 rounded-full" />
+						<Skeleton className="h-9 w-24 rounded-full" />
+					</div>
+				</div>
+			</div>
+
+			<div className="flex flex-col gap-4 rounded-xl border bg-muted/30 p-4 sm:flex-row sm:items-center sm:justify-between">
+				<div className="flex items-center gap-3">
+					<Skeleton className="h-5 w-5 rounded" />
+					<Skeleton className="h-4 w-36" />
+				</div>
+				<Skeleton className="h-9 w-36 rounded-full" />
+			</div>
+
 			<div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-				<Skeleton className="h-40 w-full rounded-2xl" />
-				<Skeleton className="h-40 w-full rounded-2xl" />
-				<Skeleton className="h-40 w-full rounded-2xl" />
+				{Array.from({ length: DEFAULT_TUTOR_CHATS_LIMIT }).map((_, index) => (
+					<TutorChatCardSkeleton key={index} />
+				))}
 			</div>
 		</div>
 	);

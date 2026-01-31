@@ -1,4 +1,5 @@
 ﻿import type {TTutorChat} from "@repo/schemas";
+import {Checkbox} from "@repo/ui";
 import {Link} from "@tanstack/react-router";
 import {formatDistanceToNow} from "date-fns";
 import {MessageSquareIcon} from "lucide-react";
@@ -7,15 +8,27 @@ import {TutorChatActions} from "@/features/tutor-chats";
 
 interface ITutorChatCardProps {
 	data: TTutorChat;
+	isBulkMode?: boolean;
+	isSelected?: boolean;
+	onToggleSelection?: (id: string) => void;
 }
 
-export const TutorChatCard = ({ data }: ITutorChatCardProps) => {
+export const TutorChatCard = ({ data, isBulkMode, isSelected, onToggleSelection }: ITutorChatCardProps) => {
 	const topicLabel = data.topic?.trim() || "No topic";
 	const description = data.description?.trim();
 
 	return (
 		<div className="group relative flex h-full flex-col gap-4 rounded-2xl border bg-card/80 p-4 shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:bg-accent/40 hover:shadow-md">
 			<div className="flex items-start gap-4">
+				{isBulkMode && (
+					<div className="flex h-12 items-center">
+						<Checkbox
+							checked={isSelected}
+							onCheckedChange={() => onToggleSelection?.(data.id)}
+							onClick={(e) => e.stopPropagation()}
+						/>
+					</div>
+				)}
 				<div
 					className="flex size-12 shrink-0 items-center justify-center rounded-2xl ring-1 ring-black/5"
 					style={{

@@ -5,7 +5,7 @@ import {MODALS, useModal} from "@/features/shared";
 export const EmptyChatsState = () => {
 	const { open } = useModal(MODALS.CREATE_TUTOR_CHAT);
 	return (
-		<div className="flex flex-col items-center justify-center rounded-lg border bg-card p-12 text-center">
+		<div className=" m-4 flex flex-col items-center justify-center rounded-lg border bg-card p-12 text-center">
 			<div className="flex size-20 items-center justify-center rounded-full bg-primary/10 mb-6">
 				<MessagesSquareIcon className="size-10 text-primary" />
 			</div>

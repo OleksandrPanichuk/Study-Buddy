@@ -3,7 +3,7 @@ import {tutorChatSchema} from "../models";
 
 export const createTutorChatInputSchema = z.object({
 	name: z
-		.string()
+		.string("Name is required")
 		.trim()
 		.min(3, "Name must be at least 3 characters long")
 		.max(60, "Name must be at most 60 characters long"),

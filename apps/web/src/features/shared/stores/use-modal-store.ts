@@ -1,7 +1,10 @@
 import {create} from "zustand";
 import type {MODALS} from "@/features/shared";
+import type {IUpdateTutorChatModalData} from "@/features/tutor-chats";
 
-export type ModalRegistry = {};
+export type ModalRegistry = {
+	[MODALS.UPDATE_TUTOR_CHAT]: IUpdateTutorChatModalData;
+};
 
 type ModalKey = (typeof MODALS)[keyof typeof MODALS];
 

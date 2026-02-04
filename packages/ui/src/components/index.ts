@@ -1,7 +1,10 @@
 export * from "./Accordion";
+export * from "./AlertDialog";
 export * from "./Avatar";
 export * from "./Button";
 export * from "./Card";
+export * from "./Checkbox";
+export * from "./Dialog";
 export * from "./DropdownMenu";
 export * from "./Field";
 export * from "./Input";
@@ -10,4 +13,5 @@ export * from "./Separator";
 export * from "./Sheet";
 export * from "./Sidebar";
 export * from "./Skeleton";
+export * from "./Textarea";
 export * from "./Tooltip";

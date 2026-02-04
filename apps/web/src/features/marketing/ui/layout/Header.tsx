@@ -1,8 +1,8 @@
-import { Button } from "@repo/ui";
-import { useMutation } from "@tanstack/react-query";
-import { Link } from "@tanstack/react-router";
-import { getSignOutMutationOptions } from "@/features/auth";
-import { useUser } from "@/hooks/use-user";
+import {Button} from "@repo/ui";
+import {useMutation} from "@tanstack/react-query";
+import {Link} from "@tanstack/react-router";
+import {getSignOutMutationOptions} from "@/features/auth";
+import {useUser} from "@/features/shared";
 
 export const Header = () => {
 	const user = useUser();

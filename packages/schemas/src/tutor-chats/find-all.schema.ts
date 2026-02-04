@@ -1,15 +1,20 @@
 import z from "zod";
-import { tutorChatSchema } from "@/models";
+import {tutorChatSchema} from "../models";
 
 export const findAllTutorChatsInputSchema = z.object({
-	limit: z.number().min(1).max(100).optional().default(20),
-	cursor: z.uuidv4().nullish()
+	limit: z.coerce.number().min(1).max(100).optional().default(20),
+	cursor: z.uuidv4().nullish(),
+	infinite: z.coerce.boolean().optional(),
 });
 
 export const findAllTutorChatsResponseSchema = z.object({
 	data: z.array(tutorChatSchema),
-	nextCursor: z.string().nullish()
+	nextCursor: z.string().nullish(),
 });
 
-export type TFindAllTutorChatsInput = z.infer<typeof findAllTutorChatsInputSchema>;
-export type TFindAllTutorChatsResponse = z.infer<typeof findAllTutorChatsResponseSchema>;
+export type TFindAllTutorChatsInput = z.infer<
+	typeof findAllTutorChatsInputSchema
+>;
+export type TFindAllTutorChatsResponse = z.infer<
+	typeof findAllTutorChatsResponseSchema
+>;

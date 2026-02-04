@@ -6,38 +6,22 @@ import {
   findAllTutorChatsInputSchema,
   findAllTutorChatsResponseSchema,
   updateTutorChatInputSchema,
-  updateTutorChatResponseSchema,
+  updateTutorChatResponseSchema
 } from "@repo/schemas";
-import { createZodDto } from "nestjs-zod";
+import {createZodDto} from "nestjs-zod";
 
-export class CreateTutorChatInput extends createZodDto(
-  createTutorChatInputSchema,
-) {}
+export class CreateTutorChatInput extends createZodDto(createTutorChatInputSchema) {}
 
-export class CreateTutorChatResponse extends createZodDto(
-  createTutorChatResponseSchema,
-) {}
+export class CreateTutorChatResponse extends createZodDto(createTutorChatResponseSchema) {}
 
-export class FindAllTutorChatsQuery extends createZodDto(
-  findAllTutorChatsInputSchema,
-) {}
+export class FindAllTutorChatsQuery extends createZodDto(findAllTutorChatsInputSchema) {}
 
-export class FindAllTutorChatsResponse extends createZodDto(
-  findAllTutorChatsResponseSchema,
-) {}
+export class FindAllTutorChatsResponse extends createZodDto(findAllTutorChatsResponseSchema) {}
 
-export class DeleteTutorChatParams extends createZodDto(
-  deleteTutorChatInputSchema,
-) {}
+export class DeleteTutorChatParams extends createZodDto(deleteTutorChatInputSchema) {}
 
-export class BulkDeleteTutorChatsInput extends createZodDto(
-  bulkDeleteTutorChatsInputSchema,
-) {}
+export class BulkDeleteTutorChatQuery extends createZodDto(bulkDeleteTutorChatsInputSchema) {}
 
-export class UpdateTutorChatInput extends createZodDto(
-  updateTutorChatInputSchema,
-) {}
+export class UpdateTutorChatInput extends createZodDto(updateTutorChatInputSchema) {}
 
-export class UpdateTutorChatResponse extends createZodDto(
-  updateTutorChatResponseSchema,
-) {}
+export class UpdateTutorChatResponse extends createZodDto(updateTutorChatResponseSchema) {}

@@ -1,22 +1,23 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import {Injectable, NotFoundException} from "@nestjs/common";
 import {
-  CreateTutorChatInput,
-  CreateTutorChatResponse,
-  FindAllTutorChatsQuery,
-  FindAllTutorChatsResponse,
-  UpdateTutorChatInput,
-  UpdateTutorChatResponse
+	CreateTutorChatInput,
+	CreateTutorChatResponse,
+	FindAllTutorChatsQuery,
+	FindAllTutorChatsResponse,
+	UpdateTutorChatInput,
+	UpdateTutorChatResponse
 } from "./tutor-chats.dto";
-import type { TutorChatsRepository } from "./tutor-chats.repository";
+import {TutorChatsRepository} from "./tutor-chats.repository";
 
 @Injectable()
 export class TutorChatsService {
 	constructor(private readonly tutorChatsRepository: TutorChatsRepository) {}
 
 	public async findAll(dto: FindAllTutorChatsQuery, userId: string): Promise<FindAllTutorChatsResponse> {
-		const take = dto.cursor ? dto.limit + 1 : dto.limit;
+		const take = dto.infinite ? dto.limit + 1 : dto.limit;
+
 		const data = await this.tutorChatsRepository.findByUserId({
-			...dto,
+			cursor: dto.cursor,
 			take,
 			userId
 		});
@@ -63,13 +64,11 @@ export class TutorChatsService {
 	}
 
 	public async bulkDelete(ids: string[], userId: string) {
-		const existingChats = await Promise.all(
-      ids.map((id) => this.tutorChatsRepository.findById(id)),
-    );
+		const existingChats = await Promise.all(ids.map((id) => this.tutorChatsRepository.findById(id)));
 
-    if (existingChats.some((chat) => !chat || chat.userId !== userId)) {
-      throw new NotFoundException("Some of the tutor chats were not found");
-    }
+		if (existingChats.some((chat) => !chat || chat.userId !== userId)) {
+			throw new NotFoundException("Some of the tutor chats were not found");
+		}
 
 		// TODO: delete all messages/files associated with this chat
 		return this.tutorChatsRepository.bulkDelete(ids);

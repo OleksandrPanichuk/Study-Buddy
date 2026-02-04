@@ -1,5 +1,5 @@
 import {z} from "zod";
-import {tutorChatSchema} from "@/models";
+import {tutorChatSchema} from "../models";
 
 export const updateTutorChatInputSchema = z.object({
 	id: z.uuidv4("Invalid Id"),

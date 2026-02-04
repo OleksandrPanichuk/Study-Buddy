@@ -1,4 +1,4 @@
-import type { TUserWithAvatar } from "@repo/schemas";
+import type {TUserWithAvatar} from "@repo/schemas";
 import {
 	Avatar,
 	AvatarFallback,
@@ -11,12 +11,12 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger
 } from "@repo/ui";
-import { useMutation } from "@tanstack/react-query";
-import { useNavigate } from "@tanstack/react-router";
-import { BadgeCheckIcon, BellIcon, CreditCardIcon, LogOutIcon, SparklesIcon } from "lucide-react";
-import type { ReactNode } from "react";
-import { getSignOutMutationOptions } from "@/features/auth";
-import { useUser } from "@/hooks";
+import {useMutation} from "@tanstack/react-query";
+import {useNavigate} from "@tanstack/react-router";
+import {BadgeCheckIcon, BellIcon, CreditCardIcon, LogOutIcon, SparklesIcon} from "lucide-react";
+import type {ReactNode} from "react";
+import {getSignOutMutationOptions} from "@/features/auth";
+import {useUser} from "@/features/shared";
 
 interface IUserMenuProps {
 	side?: "right" | "left" | "top" | "bottom";

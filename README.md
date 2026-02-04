@@ -1,135 +1,269 @@
-# Turborepo starter
+# AI Study Buddy
 
-This Turborepo starter is maintained by the Turborepo core team.
+An AI-powered study assistant that helps students learn more effectively through personalized tutor chats, structured study sessions, and a comprehensive learning materials library.
 
-## Using this example
+## Overview
 
-Run the following command:
+AI Study Buddy is a unified learning platform that combines AI-driven tutoring with structured course generation and intelligent practice systems. The platform organizes learning into three core modules:
 
-```sh
-npx create-turbo@latest
-```
+- **Tutor Chats** - Free-form AI conversations with context-aware material generation
+- **Study Sessions** - AI-generated structured mini-courses with lessons and exercises
+- **Library** - Centralized storage for all learning materials (files, notes, quizzes, flashcards, code labs)
 
 ## What's inside?
 
-This Turborepo includes the following packages/apps:
+This is a Turborepo monorepo containing the following packages and apps:
 
-### Apps and Packages
+### Apps
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+- **`backend`** - NestJS REST API with Prisma ORM and PostgreSQL
+- **`web`** - React SPA with TanStack Router and TanStack Query
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+### Packages
 
-### Utilities
+- **`@repo/ui`** - Shared React component library built with shadcn/ui and Tailwind CSS
+- **`@repo/schemas`** - Shared Zod validation schemas for type-safe API contracts
+- **`@repo/typescript-config`** - Shared TypeScript configurations
+- **`@repo/biome-config`** - Shared Biome linting and formatting configurations
 
-This Turborepo has some additional tools already setup for you:
+## Tech Stack
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+### Frontend
+- **Framework:** React 19 with Vite
+- **Routing:** TanStack Router v1
+- **State Management:** Zustand
+- **Server State:** TanStack Query v5
+- **Forms:** TanStack Form
+- **UI Components:** shadcn/ui (Radix UI primitives)
+- **Styling:** Tailwind CSS v4
+- **Animations:** Motion (Framer Motion)
+- **HTTP Client:** Ky
+- **Date Utilities:** date-fns
+
+### Backend
+- **Framework:** NestJS v11
+- **Database:** PostgreSQL with Prisma ORM v7
+- **Caching:** Redis (ioredis + connect-redis)
+- **Authentication:** Passport (Local, Google OAuth, GitHub OAuth)
+- **Session Management:** express-session with Redis store
+- **Security:** Helmet, ncsrf, xss, argon2 (password hashing)
+- **Email:** Nodemailer with Handlebars templates
+- **Logging:** Winston with nest-winston
+- **Monitoring:** Sentry
+- **Rate Limiting:** @nestjs/throttler
+- **API Documentation:** Swagger (OpenAPI)
+- **Validation:** Zod with nestjs-zod
+
+### Development Tools
+- **Monorepo:** Turborepo v2
+- **Package Manager:** Bun v1.3
+- **Language:** TypeScript v5
+- **Linting/Formatting:** Biome
+- **Containerization:** Docker Compose
+
+## Prerequisites
+
+- [Bun](https://bun.sh/) v1.3.0 or higher
+- [Node.js](https://nodejs.org/) v18 or higher
+- [Docker](https://www.docker.com/) and Docker Compose (for running PostgreSQL and Redis)
+
+## Getting Started
+
+### Installation
+
+Clone the repository and install dependencies:
+
+```bash
+git clone <repository-url>
+cd turbo-study-buddy
+bun install
+```
+
+### Environment Setup
+
+Create `.env` files for both apps:
+
+**Backend** (`apps/backend/.env`):
+```env
+# Database
+DATABASE_URL="postgresql://user:password@localhost:5432/study_buddy"
+
+# Redis
+REDIS_URL="redis://localhost:6379"
+
+# Session
+SESSION_SECRET="your-secret-key-here"
+
+# OAuth
+GOOGLE_CLIENT_ID="your-google-client-id"
+GOOGLE_CLIENT_SECRET="your-google-client-secret"
+GOOGLE_CALLBACK_URL="http://localhost:4000/api/auth/google/callback"
+
+GITHUB_CLIENT_ID="your-github-client-id"
+GITHUB_CLIENT_SECRET="your-github-client-secret"
+GITHUB_CALLBACK_URL="http://localhost:4000/api/auth/github/callback"
+
+# Email
+SMTP_HOST="smtp.gmail.com"
+SMTP_PORT=587
+SMTP_USER="your-email@gmail.com"
+SMTP_PASS="your-app-password"
+
+# Sentry
+SENTRY_DSN="your-sentry-dsn"
+```
+
+**Frontend** (`apps/web/.env`):
+```env
+VITE_API_URL="http://localhost:4000"
+```
+
+### Running the Application
+
+#### Development Mode
+
+Start all services (PostgreSQL, Redis, Backend, Frontend):
+
+```bash
+bun run dev
+```
+
+This command will:
+1. Start Docker containers (PostgreSQL & Redis)
+2. Run the backend API on `http://localhost:4000`
+3. Run the frontend dev server on `http://localhost:3000`
+
+#### Run Individual Apps
+
+```bash
+# Backend only
+turbo dev --filter=backend
+
+# Frontend only
+turbo dev --filter=web
+
+# Docker services only
+bun run dev:docker
+```
+
+### Database Setup
+
+Generate Prisma client and push schema to database:
+
+```bash
+cd apps/backend
+bun run db:generate
+bun run db:push
+```
 
 ### Build
 
-To build all apps and packages, run the following command:
+Build all apps and packages:
 
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
+```bash
+bun run build
 ```
 
-You can build a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+Build specific package:
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
+```bash
+turbo build --filter=backend
+turbo build --filter=web
 ```
 
-### Develop
+### Linting & Type Checking
 
-To develop all apps and packages, run the following command:
+```bash
+# Run linting
+bun run lint
 
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
+# Run type checking
+bun run check-types
 ```
 
-You can develop a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+## Project Structure
 
 ```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
+turbo-study-buddy/
+├── apps/
+│   ├── backend/              # NestJS API
+│   │   ├── src/
+│   │   │   ├── auth/         # Authentication module
+│   │   │   ├── tutor-chats/  # Tutor chats module
+│   │   │   ├── users/        # Users module
+│   │   │   └── shared/       # Shared utilities
+│   │   ├── libs/             # Backend libraries
+│   │   │   ├── hashing/      # Password hashing
+│   │   │   ├── logger/       # Winston logger
+│   │   │   ├── mailer/       # Email service
+│   │   │   ├── prisma/       # Prisma service
+│   │   │   └── redis/        # Redis service
+│   │   └── prisma/           # Database schema
+│   └── web/                  # React frontend
+│       └── src/
+│           ├── routes/       # TanStack Router routes
+│           ├── features/     # Feature modules
+│           └── lib/          # Utilities
+└── packages/
+    ├── ui/                   # Shared UI components
+    ├── schemas/              # Shared Zod schemas
+    ├── typescript-config/    # TS configs
+    └── biome-config/         # Biome configs
 ```
 
-### Remote Caching
+## Core Features
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+### 🎓 Tutor Chats
+- AI-powered conversational learning
+- File upload for context
+- Generate quizzes, flashcards, and code labs within chats
+- Persistent chat history
 
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+### 📚 Study Sessions
+- AI-generated structured learning paths
+- Lesson sequencing with progress tracking
+- Embedded practice materials
+- Adaptive difficulty
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
+### 📖 Library
+- Centralized material storage (Files, Notes, Quizzes, Flashcards, Code Labs)
+- Search and filtering
+- Tags and metadata
+- Export capabilities (CSV, Anki, plain text)
 
+### 🔐 Authentication
+- Email/Password authentication
+- Google OAuth 2.0
+- GitHub OAuth
+- Email verification
+- Password reset
+
+### 💳 Subscription System
+**Free Tier:**
+- 3 uploads/week
+- 500MB storage
+- Unlimited chats and explanations
+- Basic quizzes and flashcards
+
+**Pro Tier:**
+- Unlimited uploads
+- 5GB storage
+- Advanced analytics
+- Exam simulator
+- Study plans and groups
+- Export features
+
+## API Documentation
+
+When running in development, Swagger documentation is available at:
 ```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
+http://localhost:4000/api
 ```
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+## Contributing
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+This is a learning project. Contributions are welcome!
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
+## License
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+[Your License Here]

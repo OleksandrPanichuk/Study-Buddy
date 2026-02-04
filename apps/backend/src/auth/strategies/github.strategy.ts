@@ -1,11 +1,11 @@
 import { Injectable, Logger, UnauthorizedException } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { PassportStrategy } from "@nestjs/passport";
 import { type Profile, Strategy } from "passport-github2";
 import { STRATEGIES } from "@/auth/auth.constants";
-import { ConfigService } from "@nestjs/config";
-import type { Env } from "@/shared/config";
 import { getCallbackUrl } from "@/auth/auth.helpers";
 import type { TOAuthUser } from "@/auth/auth.types";
+import type { Env } from "@/shared/config";
 
 @Injectable()
 export class GithubStrategy extends PassportStrategy(

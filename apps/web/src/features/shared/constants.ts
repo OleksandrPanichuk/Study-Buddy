@@ -1,0 +1,4 @@
+export enum MODALS {
+	CREATE_TUTOR_CHAT,
+	UPDATE_TUTOR_CHAT
+}

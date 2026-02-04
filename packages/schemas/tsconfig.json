@@ -17,10 +17,7 @@
 		"forceConsistentCasingInFileNames": true,
 		"noImplicitReturns": true,
 		"noFallthroughCasesInSwitch": true,
-		"useUnknownInCatchVariables": true,
-		"paths": {
-			"@/*": ["./src/*"]
-		}
+		"useUnknownInCatchVariables": true
 	},
 	"exclude": ["node_modules", "dist"]
 }

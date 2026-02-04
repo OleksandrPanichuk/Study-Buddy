@@ -17,8 +17,8 @@ import type * as Prisma from "./prismaNamespace.js"
 
 const config: runtime.GetPrismaClientConfig = {
   "previewFeatures": [],
-  "clientVersion": "7.2.0",
-  "engineVersion": "0c8ef2ce45c83248ab3df073180d5eda9e8be7a3",
+  "clientVersion": "7.3.0",
+  "engineVersion": "9d6ad21cbbceab97458517b147a6a09ff43aa735",
   "activeProvider": "postgresql",
   "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider     = \"prisma-client\"\n  output       = \"../libs/prisma/src/generated\"\n  moduleFormat = \"cjs\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel File {\n  id String @id @default(uuid()) @db.Uuid\n\n  createdAt DateTime @default(now()) @map(\"created_at\")\n  url       String\n  key       String?\n\n  users User[]\n\n  @@map(\"files\")\n}\n\nmodel User {\n  id            String  @id @default(uuid()) @db.Uuid\n  email         String  @unique\n  emailVerified Boolean @default(false) @map(\"email_verified\")\n  username      String  @unique\n  hash          String?\n\n  failedLoginAttempts Int       @default(0) @map(\"failed_login_attempts\")\n  lockedUntil         DateTime? @map(\"locked_until\")\n\n  avatarId String? @map(\"avatar_id\") @db.Uuid\n  avatar   File?   @relation(references: [id], fields: [avatarId], onDelete: SetNull)\n\n  verificationCodes   VerificationCode[]\n  resetPasswordTokens ResetPasswordToken[]\n\n  tutorChats TutorChat[]\n\n  createdAt DateTime @default(now()) @map(\"created_at\")\n  updatedAt DateTime @updatedAt @map(\"updated_at\")\n\n  @@map(\"users\")\n}\n\nmodel VerificationCode {\n  id String @id @default(uuid()) @db.Uuid\n\n  code String\n\n  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)\n  userId String @map(\"user_id\") @db.Uuid\n\n  resendCount Int      @default(0) @map(\"resend_count\")\n  expiresAt   DateTime @map(\"expires_at\")\n  createdAt   DateTime @default(now()) @map(\"created_at\")\n\n  @@map(\"verification_codes\")\n}\n\nmodel ResetPasswordToken {\n  id String @id @default(uuid()) @db.Uuid\n\n  token String @unique\n\n  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)\n  userId String @map(\"user_id\") @db.Uuid\n\n  resendCount Int @default(0) @map(\"resend_count\")\n\n  expiresAt  DateTime @map(\"expires_at\")\n  createdAt  DateTime @default(now()) @map(\"created_at\")\n  lastSentAt DateTime @default(now()) @map(\"last_sent_at\")\n\n  @@map(\"reset_password_tokens\")\n}\n\nmodel TutorChat {\n  id String @id @default(uuid()) @db.Uuid\n\n  name        String  @db.VarChar(60)\n  description String? @db.Text\n  topic       String? @db.VarChar(60)\n  prompt      String  @default(\"You are a helpful and knowledgeable tutor. Provide clear and concise explanations to help the student understand the topic at hand.\") @db.Text\n\n  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)\n  userId String @map(\"user_id\") @db.Uuid\n\n  createdAt DateTime @default(now()) @map(\"created_at\")\n  updatedAt DateTime @updatedAt @map(\"updated_at\")\n\n  @@index([userId])\n  @@map(\"tutor_chats\")\n}\n",
   "runtimeDataModel": {
@@ -37,12 +37,14 @@ async function decodeBase64AsWasm(wasmBase64: string): Promise<WebAssembly.Modul
 }
 
 config.compilerWasm = {
-  getRuntime: async () => await import("@prisma/client/runtime/query_compiler_bg.postgresql.js"),
+  getRuntime: async () => await import("@prisma/client/runtime/query_compiler_fast_bg.postgresql.js"),
 
   getQueryCompilerWasmModule: async () => {
-    const { wasm } = await import("@prisma/client/runtime/query_compiler_bg.postgresql.wasm-base64.js")
+    const { wasm } = await import("@prisma/client/runtime/query_compiler_fast_bg.postgresql.wasm-base64.js")
     return await decodeBase64AsWasm(wasm)
-  }
+  },
+
+  importName: "./query_compiler_fast_bg.js"
 }
 
 

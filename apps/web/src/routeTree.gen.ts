@@ -20,6 +20,8 @@ import { Route as authSignUpIndexRouteImport } from './routes/(auth)/sign-up/ind
 import { Route as authSignInIndexRouteImport } from './routes/(auth)/sign-in/index'
 import { Route as authResetPasswordIndexRouteImport } from './routes/(auth)/reset-password/index'
 import { Route as authForgotPasswordIndexRouteImport } from './routes/(auth)/forgot-password/index'
+import { Route as platformPTutorChatsIndexRouteImport } from './routes/(platform)/p/tutor-chats/index'
+import { Route as platformPTutorChatsTutorChatIdRouteImport } from './routes/(platform)/p/tutor-chats/$tutorChatId'
 
 const platformRouteRoute = platformRouteRouteImport.update({
   id: '/(platform)',
@@ -73,16 +75,30 @@ const authForgotPasswordIndexRoute = authForgotPasswordIndexRouteImport.update({
   path: '/forgot-password/',
   getParentRoute: () => authRouteRoute,
 } as any)
+const platformPTutorChatsIndexRoute =
+  platformPTutorChatsIndexRouteImport.update({
+    id: '/p/tutor-chats/',
+    path: '/p/tutor-chats/',
+    getParentRoute: () => platformRouteRoute,
+  } as any)
+const platformPTutorChatsTutorChatIdRoute =
+  platformPTutorChatsTutorChatIdRouteImport.update({
+    id: '/p/tutor-chats/$tutorChatId',
+    path: '/p/tutor-chats/$tutorChatId',
+    getParentRoute: () => platformRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/about': typeof marketingAboutRoute
   '/': typeof marketingIndexRoute
-  '/forgot-password': typeof authForgotPasswordIndexRoute
-  '/reset-password': typeof authResetPasswordIndexRoute
-  '/sign-in': typeof authSignInIndexRoute
-  '/sign-up': typeof authSignUpIndexRoute
-  '/verification': typeof authVerificationIndexRoute
-  '/dashboard': typeof platformDashboardIndexRoute
+  '/forgot-password/': typeof authForgotPasswordIndexRoute
+  '/reset-password/': typeof authResetPasswordIndexRoute
+  '/sign-in/': typeof authSignInIndexRoute
+  '/sign-up/': typeof authSignUpIndexRoute
+  '/verification/': typeof authVerificationIndexRoute
+  '/dashboard/': typeof platformDashboardIndexRoute
+  '/p/tutor-chats/$tutorChatId': typeof platformPTutorChatsTutorChatIdRoute
+  '/p/tutor-chats/': typeof platformPTutorChatsIndexRoute
 }
 export interface FileRoutesByTo {
   '/about': typeof marketingAboutRoute
@@ -93,6 +109,8 @@ export interface FileRoutesByTo {
   '/sign-up': typeof authSignUpIndexRoute
   '/verification': typeof authVerificationIndexRoute
   '/dashboard': typeof platformDashboardIndexRoute
+  '/p/tutor-chats/$tutorChatId': typeof platformPTutorChatsTutorChatIdRoute
+  '/p/tutor-chats': typeof platformPTutorChatsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -107,18 +125,22 @@ export interface FileRoutesById {
   '/(auth)/sign-up/': typeof authSignUpIndexRoute
   '/(auth)/verification/': typeof authVerificationIndexRoute
   '/(platform)/dashboard/': typeof platformDashboardIndexRoute
+  '/(platform)/p/tutor-chats/$tutorChatId': typeof platformPTutorChatsTutorChatIdRoute
+  '/(platform)/p/tutor-chats/': typeof platformPTutorChatsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/about'
     | '/'
-    | '/forgot-password'
-    | '/reset-password'
-    | '/sign-in'
-    | '/sign-up'
-    | '/verification'
-    | '/dashboard'
+    | '/forgot-password/'
+    | '/reset-password/'
+    | '/sign-in/'
+    | '/sign-up/'
+    | '/verification/'
+    | '/dashboard/'
+    | '/p/tutor-chats/$tutorChatId'
+    | '/p/tutor-chats/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/about'
@@ -129,6 +151,8 @@ export interface FileRouteTypes {
     | '/sign-up'
     | '/verification'
     | '/dashboard'
+    | '/p/tutor-chats/$tutorChatId'
+    | '/p/tutor-chats'
   id:
     | '__root__'
     | '/(auth)'
@@ -142,6 +166,8 @@ export interface FileRouteTypes {
     | '/(auth)/sign-up/'
     | '/(auth)/verification/'
     | '/(platform)/dashboard/'
+    | '/(platform)/p/tutor-chats/$tutorChatId'
+    | '/(platform)/p/tutor-chats/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -190,44 +216,58 @@ declare module '@tanstack/react-router' {
     '/(platform)/dashboard/': {
       id: '/(platform)/dashboard/'
       path: '/dashboard'
-      fullPath: '/dashboard'
+      fullPath: '/dashboard/'
       preLoaderRoute: typeof platformDashboardIndexRouteImport
       parentRoute: typeof platformRouteRoute
     }
     '/(auth)/verification/': {
       id: '/(auth)/verification/'
       path: '/verification'
-      fullPath: '/verification'
+      fullPath: '/verification/'
       preLoaderRoute: typeof authVerificationIndexRouteImport
       parentRoute: typeof authRouteRoute
     }
     '/(auth)/sign-up/': {
       id: '/(auth)/sign-up/'
       path: '/sign-up'
-      fullPath: '/sign-up'
+      fullPath: '/sign-up/'
       preLoaderRoute: typeof authSignUpIndexRouteImport
       parentRoute: typeof authRouteRoute
     }
     '/(auth)/sign-in/': {
       id: '/(auth)/sign-in/'
       path: '/sign-in'
-      fullPath: '/sign-in'
+      fullPath: '/sign-in/'
       preLoaderRoute: typeof authSignInIndexRouteImport
       parentRoute: typeof authRouteRoute
     }
     '/(auth)/reset-password/': {
       id: '/(auth)/reset-password/'
       path: '/reset-password'
-      fullPath: '/reset-password'
+      fullPath: '/reset-password/'
       preLoaderRoute: typeof authResetPasswordIndexRouteImport
       parentRoute: typeof authRouteRoute
     }
     '/(auth)/forgot-password/': {
       id: '/(auth)/forgot-password/'
       path: '/forgot-password'
-      fullPath: '/forgot-password'
+      fullPath: '/forgot-password/'
       preLoaderRoute: typeof authForgotPasswordIndexRouteImport
       parentRoute: typeof authRouteRoute
+    }
+    '/(platform)/p/tutor-chats/': {
+      id: '/(platform)/p/tutor-chats/'
+      path: '/p/tutor-chats'
+      fullPath: '/p/tutor-chats/'
+      preLoaderRoute: typeof platformPTutorChatsIndexRouteImport
+      parentRoute: typeof platformRouteRoute
+    }
+    '/(platform)/p/tutor-chats/$tutorChatId': {
+      id: '/(platform)/p/tutor-chats/$tutorChatId'
+      path: '/p/tutor-chats/$tutorChatId'
+      fullPath: '/p/tutor-chats/$tutorChatId'
+      preLoaderRoute: typeof platformPTutorChatsTutorChatIdRouteImport
+      parentRoute: typeof platformRouteRoute
     }
   }
 }
@@ -268,10 +308,14 @@ const marketingRouteRouteWithChildren = marketingRouteRoute._addFileChildren(
 
 interface platformRouteRouteChildren {
   platformDashboardIndexRoute: typeof platformDashboardIndexRoute
+  platformPTutorChatsTutorChatIdRoute: typeof platformPTutorChatsTutorChatIdRoute
+  platformPTutorChatsIndexRoute: typeof platformPTutorChatsIndexRoute
 }
 
 const platformRouteRouteChildren: platformRouteRouteChildren = {
   platformDashboardIndexRoute: platformDashboardIndexRoute,
+  platformPTutorChatsTutorChatIdRoute: platformPTutorChatsTutorChatIdRoute,
+  platformPTutorChatsIndexRoute: platformPTutorChatsIndexRoute,
 }
 
 const platformRouteRouteWithChildren = platformRouteRoute._addFileChildren(

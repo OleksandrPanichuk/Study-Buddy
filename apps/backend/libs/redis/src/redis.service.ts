@@ -1,7 +1,7 @@
 import { Injectable, Logger, OnModuleDestroy } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import Redis from "ioredis";
-import { Env } from "@/shared/config";
+import type { Env } from "@/shared/config";
 
 @Injectable()
 export class RedisService extends Redis implements OnModuleDestroy {

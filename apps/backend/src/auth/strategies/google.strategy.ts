@@ -1,9 +1,9 @@
+import { Injectable, Logger, UnauthorizedException } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { PassportStrategy } from "@nestjs/passport";
 import { type Profile, Strategy } from "passport-google-oauth20";
-import { ConfigService } from "@nestjs/config";
-import type { Env } from "@/shared/config";
 import { getCallbackUrl } from "@/auth/auth.helpers";
-import { Injectable, Logger, UnauthorizedException } from "@nestjs/common";
+import type { Env } from "@/shared/config";
 import type { TOAuthUser } from "../auth.types";
 
 @Injectable()

@@ -1,8 +1,8 @@
-import { SessionOptions } from "express-session";
 import { ConfigService } from "@nestjs/config";
-import { Env } from "./env.config";
 import { RedisStore } from "connect-redis";
+import { SessionOptions } from "express-session";
 import Redis from "ioredis";
+import type { Env } from "@/shared/config";
 import {
   SESSION_COOKIE_NAME,
   SESSION_MAX_AGE,

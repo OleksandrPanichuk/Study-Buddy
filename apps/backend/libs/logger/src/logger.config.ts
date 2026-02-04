@@ -1,6 +1,6 @@
-import { utilities as nestWinstonModuleUtilities } from 'nest-winston';
-import * as path from 'path';
-import * as winston from 'winston';
+import * as path from "node:path";
+import { utilities as nestWinstonModuleUtilities } from "nest-winston";
+import * as winston from "winston";
 
 // Define log levels with priorities
 const levels = {
@@ -13,28 +13,28 @@ const levels = {
 
 // Define colors for each level
 const colors = {
-  error: 'red',
-  warn: 'yellow',
-  info: 'green',
-  http: 'magenta',
-  debug: 'blue',
+  error: "red",
+  warn: "yellow",
+  info: "green",
+  http: "magenta",
+  debug: "blue",
 };
 
 // Determine log level based on NODE_ENV
 const level = () => {
-  const env = process.env.NODE_ENV || 'development';
-  const isDevelopment = env === 'development';
-  return isDevelopment ? 'debug' : 'info';
+  const env = process.env.NODE_ENV || "development";
+  const isDevelopment = env === "development";
+  return isDevelopment ? "debug" : "info";
 };
 
 // Format for development - colorized console output
 const developmentFormat = winston.format.combine(
-  winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+  winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
   winston.format.colorize({ all: true }),
   winston.format.printf((info) => {
     const { timestamp, level, message, context, trace, ...meta } = info;
 
-    const contextStr = typeof context === 'string' ? `[${context}]` : '';
+    const contextStr = typeof context === "string" ? `[${context}]` : "";
     let log = `${String(timestamp)} [${String(level)}] ${contextStr} ${String(message)}`;
 
     // Add metadata if present
@@ -43,7 +43,7 @@ const developmentFormat = winston.format.combine(
     }
 
     // Add stack trace for errors
-    if (trace && typeof trace === 'string') {
+    if (trace && typeof trace === "string") {
       log += `\n${trace}`;
     }
 
@@ -66,7 +66,7 @@ const getTransports = (): winston.transport[] => {
   transports.push(
     new winston.transports.Console({
       format:
-        process.env.NODE_ENV === 'production'
+        process.env.NODE_ENV === "production"
           ? productionFormat
           : developmentFormat,
     }),
@@ -74,17 +74,17 @@ const getTransports = (): winston.transport[] => {
 
   // File transports (only in production or if explicitly enabled)
   if (
-    process.env.NODE_ENV === 'production' ||
-    process.env.ENABLE_FILE_LOGGING === 'true'
+    process.env.NODE_ENV === "production" ||
+    process.env.ENABLE_FILE_LOGGING === "true"
   ) {
     // Ensure logs directory exists
-    const logsDir = path.join(process.cwd(), 'logs');
+    const logsDir = path.join(process.cwd(), "logs");
 
     // Error logs
     transports.push(
       new winston.transports.File({
-        filename: path.join(logsDir, 'error.log'),
-        level: 'error',
+        filename: path.join(logsDir, "error.log"),
+        level: "error",
         format: productionFormat,
         maxsize: 10485760, // 10MB
         maxFiles: 5,
@@ -95,7 +95,7 @@ const getTransports = (): winston.transport[] => {
     // Combined logs
     transports.push(
       new winston.transports.File({
-        filename: path.join(logsDir, 'combined.log'),
+        filename: path.join(logsDir, "combined.log"),
         format: productionFormat,
         maxsize: 10485760, // 10MB
         maxFiles: 5,
@@ -106,8 +106,8 @@ const getTransports = (): winston.transport[] => {
     // HTTP logs (for request/response tracking)
     transports.push(
       new winston.transports.File({
-        filename: path.join(logsDir, 'http.log'),
-        level: 'http',
+        filename: path.join(logsDir, "http.log"),
+        level: "http",
         format: productionFormat,
         maxsize: 10485760, // 10MB
         maxFiles: 3,
@@ -147,13 +147,13 @@ export const getLoggerConfig = (): winston.LoggerOptions => {
     exitOnError: false,
     exceptionHandlers: [
       new winston.transports.File({
-        filename: path.join(process.cwd(), 'logs', 'exceptions.log'),
+        filename: path.join(process.cwd(), "logs", "exceptions.log"),
         format: productionFormat,
       }),
     ],
     rejectionHandlers: [
       new winston.transports.File({
-        filename: path.join(process.cwd(), 'logs', 'rejections.log'),
+        filename: path.join(process.cwd(), "logs", "rejections.log"),
         format: productionFormat,
       }),
     ],

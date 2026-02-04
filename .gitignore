@@ -41,3 +41,5 @@ yarn-error.log*
 # IDEs and editors
 /.vscode
 /.idea
+
+PLAN.md

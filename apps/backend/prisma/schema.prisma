@@ -5,14 +5,46 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider     = "prisma-client"
-  output       = "../libs/prisma/src/generated"
-  moduleFormat = "cjs"
+  provider        = "prisma-client"
+  output          = "../libs/prisma/src/generated"
+  moduleFormat    = "cjs"
+  previewFeatures = ["postgresqlExtensions"]
 }
 
 datasource db {
-  provider = "postgresql"
+  provider   = "postgresql"
+  extensions = [vector]
 }
+
+// Enums
+
+enum MessageRole {
+  USER
+  ASSISTANT
+  SYSTEM
+  TOOL
+}
+
+enum FileStatus {
+  UPLOADING
+  PROCESSING
+  READY
+  FAILED
+}
+
+enum AttachmentScope {
+  MESSAGE
+}
+
+enum MaterialType {
+  FILE
+  NOTE
+  QUIZ
+  FLASHCARD_DECK
+  LESSON
+}
+
+// Models
 
 model File {
   id String @id @default(uuid()) @db.Uuid
@@ -42,7 +74,12 @@ model User {
   verificationCodes   VerificationCode[]
   resetPasswordTokens ResetPasswordToken[]
 
-  tutorChats TutorChat[]
+  tutorChats       TutorChat[]
+  messages         Message[]
+  files            FileAsset[]
+  materials        Material[]
+  quizResults      QuizResult[]
+  flashcardReviews FlashcardReview[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -90,6 +127,11 @@ model TutorChat {
   topic       String? @db.VarChar(60)
   prompt      String  @default("You are a helpful and knowledgeable tutor. Provide clear and concise explanations to help the student understand the topic at hand.") @db.Text
 
+  messages      Message[]
+  contextFiles  ContextFile[]
+  materials     Material[]
+  chatSummaries ChatSummary[]
+
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @map("user_id") @db.Uuid
 
@@ -98,4 +140,250 @@ model TutorChat {
 
   @@index([userId])
   @@map("tutor_chats")
+}
+
+model Message {
+  id String @id @default(uuid()) @db.Uuid
+
+  role         MessageRole @default(USER)
+  content      String      @db.Text
+  model        String?
+  inputTokens  Int?        @map("input_tokens")
+  outputTokens Int?        @map("output_tokens")
+  latencyMs    Int?        @map("latency_ms")
+
+  attachments MessageAttachment[]
+
+  tutorChat   TutorChat @relation(fields: [tutorChatId], references: [id], onDelete: Cascade)
+  tutorChatId String    @map("tutor_chat_id") @db.Uuid
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @map("user_id") @db.Uuid
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([tutorChatId, userId])
+  @@map("messages")
+}
+
+model MessageAttachment {
+  id    String          @id @default(uuid()) @db.Uuid
+  scope AttachmentScope @default(MESSAGE)
+
+  message   Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  messageId String  @map("message_id") @db.Uuid
+
+  file   FileAsset @relation(fields: [fileId], references: [id], onDelete: Cascade)
+  fileId String    @map("file_id") @db.Uuid
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([messageId])
+  @@map("message_attachments")
+}
+
+model ContextFile {
+  id       String  @id @default(uuid()) @db.Uuid
+  priority Int     @default(0)
+  note     String? @db.Text
+
+  tutorChat   TutorChat @relation(fields: [tutorChatId], references: [id], onDelete: Cascade)
+  tutorChatId String    @map("tutor_chat_id") @db.Uuid
+
+  file   FileAsset @relation(fields: [fileId], references: [id], onDelete: Cascade)
+  fileId String    @map("file_id") @db.Uuid
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([tutorChatId, fileId])
+  @@map("context_files")
+}
+
+model ChatSummary {
+  id String @id @default(uuid()) @db.Uuid
+
+  summary    String @db.Text
+  tokenCount Int?   @map("token_count")
+
+  tutorChat   TutorChat @relation(fields: [tutorChatId], references: [id], onDelete: Cascade)
+  tutorChatId String    @map("tutor_chat_id") @db.Uuid
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([tutorChatId])
+  @@map("chat_summaries")
+}
+
+model FileAsset {
+  id         String     @id @default(uuid()) @db.Uuid
+  name       String
+  mimeType   String     @map("mime_type")
+  sizeBytes  Int        @map("size_bytes")
+  url        String
+  storageKey String?    @map("storage_key")
+  status     FileStatus @default(UPLOADING)
+  textHash   String?    @map("text_hash")
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @map("user_id") @db.Uuid
+
+  chunks      FileChunk[]
+  attachments MessageAttachment[]
+  contextRefs ContextFile[]
+  materials   Material[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("file_assets")
+}
+
+model FileChunk {
+  id         String                      @id @default(uuid()) @db.Uuid
+  index      Int
+  content    String                      @db.Text
+  tokenCount Int                         @map("token_count")
+  embedding  Unsupported("vector(768)")?
+
+  file   FileAsset @relation(fields: [fileId], references: [id], onDelete: Cascade)
+  fileId String    @map("file_id") @db.Uuid
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([fileId])
+  @@map("file_chunks")
+}
+
+model Material {
+  id      String       @id @default(uuid()) @db.Uuid
+  type    MaterialType
+  title   String
+  summary String?      @db.Text
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @map("user_id") @db.Uuid
+
+  tutorChat   TutorChat? @relation(fields: [tutorChatId], references: [id], onDelete: SetNull)
+  tutorChatId String?    @map("tutor_chat_id") @db.Uuid
+
+  file   FileAsset? @relation(fields: [fileId], references: [id], onDelete: SetNull)
+  fileId String?    @map("file_id") @db.Uuid
+
+  note Note?
+  quiz Quiz?
+  deck FlashcardDeck?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([userId, tutorChatId])
+  @@map("materials")
+}
+
+model Note {
+  id      String @id @default(uuid()) @db.Uuid
+  content String @db.Text
+
+  material   Material @relation(fields: [materialId], references: [id], onDelete: Cascade)
+  materialId String   @unique @map("material_id") @db.Uuid
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("notes")
+}
+
+model Quiz {
+  id         String  @id @default(uuid()) @db.Uuid
+  difficulty String?
+
+  material   Material @relation(fields: [materialId], references: [id], onDelete: Cascade)
+  materialId String   @unique @map("material_id") @db.Uuid
+
+  questions QuizQuestion[]
+  results   QuizResult[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("quizzes")
+}
+
+model QuizQuestion {
+  id      String @id @default(uuid()) @db.Uuid
+  prompt  String @db.Text
+  type    String
+  options Json?
+  answer  Json?
+
+  quiz   Quiz   @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  quizId String @map("quiz_id") @db.Uuid
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("quiz_questions")
+}
+
+model QuizResult {
+  id      String @id @default(uuid()) @db.Uuid
+  score   Int
+  total   Int
+  answers Json?
+
+  quiz   Quiz   @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  quizId String @map("quiz_id") @db.Uuid
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @map("user_id") @db.Uuid
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([userId, quizId])
+  @@map("quiz_results")
+}
+
+model FlashcardDeck {
+  id String @id @default(uuid()) @db.Uuid
+
+  material   Material @relation(fields: [materialId], references: [id], onDelete: Cascade)
+  materialId String   @unique @map("material_id") @db.Uuid
+
+  cards Flashcard[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("flashcard_decks")
+}
+
+model Flashcard {
+  id    String @id @default(uuid()) @db.Uuid
+  front String @db.Text
+  back  String @db.Text
+
+  deck   FlashcardDeck @relation(fields: [deckId], references: [id], onDelete: Cascade)
+  deckId String        @map("deck_id") @db.Uuid
+
+  reviews FlashcardReview[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("flashcards")
+}
+
+model FlashcardReview {
+  id         String   @id @default(uuid()) @db.Uuid
+  easeFactor Float    @map("ease_factor")
+  interval   Int
+  nextReview DateTime @map("next_review")
+
+  card   Flashcard @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  cardId String    @map("card_id") @db.Uuid
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @map("user_id") @db.Uuid
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([userId, cardId])
+  @@map("flashcard_reviews")
 }

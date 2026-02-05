@@ -22,6 +22,7 @@ import { SecurityHeadersMiddleware } from "@/shared/middlewares";
 import { SanitizationPipe } from "@/shared/pipes";
 import { UsersModule } from "@/users/users.module";
 import { TutorChatsModule } from "./tutor-chats/tutor-chats.module";
+import { MessagesModule } from './messages/messages.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { TutorChatsModule } from "./tutor-chats/tutor-chats.module";
     AuthModule,
     UsersModule,
     TutorChatsModule,
+    MessagesModule,
   ],
   providers: [
     { provide: APP_PIPE, useClass: SanitizationPipe },

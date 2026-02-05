@@ -34,7 +34,6 @@ enum FileStatus {
 
 enum AttachmentScope {
   MESSAGE
-  CHAT_CONTEXT
 }
 
 enum MaterialType {
@@ -43,7 +42,6 @@ enum MaterialType {
   QUIZ
   FLASHCARD_DECK
   LESSON
-  CODE_LAB
 }
 
 // Models
@@ -130,7 +128,7 @@ model TutorChat {
   prompt      String  @default("You are a helpful and knowledgeable tutor. Provide clear and concise explanations to help the student understand the topic at hand.") @db.Text
 
   messages      Message[]
-  contextFiles  ChatContextFile[]
+  contextFiles  ContextFile[]
   materials     Material[]
   chatSummaries ChatSummary[]
 
@@ -185,7 +183,7 @@ model MessageAttachment {
   @@map("message_attachments")
 }
 
-model ChatContextFile {
+model ContextFile {
   id       String  @id @default(uuid()) @db.Uuid
   priority Int     @default(0)
   note     String? @db.Text
@@ -228,11 +226,11 @@ model FileAsset {
   textHash   String?    @map("text_hash")
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId String @db.Uuid @map("user_id")
+  userId String @map("user_id") @db.Uuid
 
   chunks      FileChunk[]
   attachments MessageAttachment[]
-  contextRefs ChatContextFile[]
+  contextRefs ContextFile[]
   materials   Material[]
 
   createdAt DateTime @default(now()) @map("created_at")
@@ -249,7 +247,7 @@ model FileChunk {
   embedding  Unsupported("vector(768)")?
 
   file   FileAsset @relation(fields: [fileId], references: [id], onDelete: Cascade)
-  fileId String    @db.Uuid @map("file_id")
+  fileId String    @map("file_id") @db.Uuid
 
   createdAt DateTime @default(now()) @map("created_at")
 
@@ -264,20 +262,20 @@ model Material {
   summary String?      @db.Text
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId String @db.Uuid
+  userId String @map("user_id") @db.Uuid
 
   tutorChat   TutorChat? @relation(fields: [tutorChatId], references: [id], onDelete: SetNull)
-  tutorChatId String?    @db.Uuid
+  tutorChatId String?    @map("tutor_chat_id") @db.Uuid
 
   file   FileAsset? @relation(fields: [fileId], references: [id], onDelete: SetNull)
-  fileId String?    @db.Uuid
+  fileId String?    @map("file_id") @db.Uuid
 
   note Note?
   quiz Quiz?
   deck FlashcardDeck?
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@index([userId, tutorChatId])
   @@map("materials")
@@ -288,7 +286,7 @@ model Note {
   content String @db.Text
 
   material   Material @relation(fields: [materialId], references: [id], onDelete: Cascade)
-  materialId String   @unique @db.Uuid @map("material_id")
+  materialId String   @unique @map("material_id") @db.Uuid
 
   createdAt DateTime @default(now()) @map("created_at")
 
@@ -300,7 +298,7 @@ model Quiz {
   difficulty String?
 
   material   Material @relation(fields: [materialId], references: [id], onDelete: Cascade)
-  materialId String   @unique @db.Uuid @map("material_id")
+  materialId String   @unique @map("material_id") @db.Uuid
 
   questions QuizQuestion[]
   results   QuizResult[]
@@ -318,7 +316,7 @@ model QuizQuestion {
   answer  Json?
 
   quiz   Quiz   @relation(fields: [quizId], references: [id], onDelete: Cascade)
-  quizId String @db.Uuid @map("quiz_id")
+  quizId String @map("quiz_id") @db.Uuid
 
   createdAt DateTime @default(now()) @map("created_at")
 
@@ -332,10 +330,10 @@ model QuizResult {
   answers Json?
 
   quiz   Quiz   @relation(fields: [quizId], references: [id], onDelete: Cascade)
-  quizId String @db.Uuid @map("quiz_id")
+  quizId String @map("quiz_id") @db.Uuid
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId String @db.Uuid @map("user_id")
+  userId String @map("user_id") @db.Uuid
 
   createdAt DateTime @default(now()) @map("created_at")
 
@@ -347,7 +345,7 @@ model FlashcardDeck {
   id String @id @default(uuid()) @db.Uuid
 
   material   Material @relation(fields: [materialId], references: [id], onDelete: Cascade)
-  materialId String   @unique @db.Uuid @map("material_id")
+  materialId String   @unique @map("material_id") @db.Uuid
 
   cards Flashcard[]
 
@@ -362,7 +360,7 @@ model Flashcard {
   back  String @db.Text
 
   deck   FlashcardDeck @relation(fields: [deckId], references: [id], onDelete: Cascade)
-  deckId String        @db.Uuid @map("deck_id")
+  deckId String        @map("deck_id") @db.Uuid
 
   reviews FlashcardReview[]
 
@@ -378,10 +376,10 @@ model FlashcardReview {
   nextReview DateTime @map("next_review")
 
   card   Flashcard @relation(fields: [cardId], references: [id], onDelete: Cascade)
-  cardId String    @db.Uuid @map("card_id")
+  cardId String    @map("card_id") @db.Uuid
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId String @db.Uuid @map("user_id")
+  userId String @map("user_id") @db.Uuid
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

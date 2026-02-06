@@ -218,8 +218,11 @@ export class S3Service {
 
 			return Buffer.concat(chunks);
 		} catch (error) {
-			if (error instanceof NotFoundException) {
+			if (error instanceof HttpException) {
 				throw error;
+      }
+      if (this.isS3Exception(error) && error.$metadata?.httpStatusCode === 404) {
+				throw new NotFoundException(`File with key ${key} not found`);
 			}
 			this.logger.error(`Failed to download file with key ${key}: ${error}`);
 			throw new InternalServerErrorException("Failed to download file from S3");

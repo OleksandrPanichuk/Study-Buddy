@@ -23,6 +23,8 @@
 		"db:push": "prisma db push"
 	},
 	"dependencies": {
+		"@aws-sdk/client-s3": "^3.983.0",
+		"@aws-sdk/s3-request-presigner": "^3.983.0",
 		"@keyv/redis": "^5.1.5",
 		"@nestjs/common": "^11.0.1",
 		"@nestjs/config": "^4.0.2",
@@ -57,6 +59,7 @@
 		"pg": "^8.16.3",
 		"reflect-metadata": "^0.2.2",
 		"rxjs": "^7.8.1",
+		"uuid": "^13.0.0",
 		"winston": "^3.19.0",
 		"xss": "^1.0.15",
 		"zod": "^4.3.4"
@@ -76,6 +79,7 @@
 		"@types/handlebars": "^4.1.0",
 		"@types/ioredis": "^5.0.0",
 		"@types/jest": "^29.5.14",
+		"@types/multer": "^2.0.0",
 		"@types/node": "^25.0.3",
 		"@types/nodemailer": "^7.0.4",
 		"@types/passport": "^1.0.17",
@@ -119,15 +123,14 @@
 			"<rootDir>/libs/"
 		],
 		"moduleNameMapper": {
-			"moduleNameMapper": {
-				"^@/(.*)$": "<rootDir>/src/$1",
-				"^@app/hashing(|/.*)$": "<rootDir>/libs/hashing/src/$1",
-				"^@app/logger(|/.*)$": "<rootDir>/libs/logger/src/$1",
-				"^@app/mailer(|/.*)$": "<rootDir>/libs/mailer/src/$1",
-				"^@app/prisma(|/.*)$": "<rootDir>/libs/prisma/src/$1",
-				"^@app/redis(|/.*)$": "<rootDir>/libs/redis/src/$1",
-				"^@prisma/generated$": "<rootDir>/generated/prisma"
-			}
+			"^@/(.*)$": "<rootDir>/src/$1",
+			"^@app/s3(|/.*)$": "<rootDir>/libs/s3/src/$1",
+			"^@app/hashing(|/.*)$": "<rootDir>/libs/hashing/src/$1",
+			"^@app/logger(|/.*)$": "<rootDir>/libs/logger/src/$1",
+			"^@app/mailer(|/.*)$": "<rootDir>/libs/mailer/src/$1",
+			"^@app/prisma(|/.*)$": "<rootDir>/libs/prisma/src/$1",
+			"^@app/redis(|/.*)$": "<rootDir>/libs/redis/src/$1",
+			"^@prisma/generated$": "<rootDir>/generated/prisma"
 		}
 	}
 }

@@ -7,6 +7,14 @@ export interface IUploadResult {
 	etag?: string;
 }
 
+export interface IPresignedUploadUrlResult {
+	uploadUrl: string;
+	key: string;
+	publicUrl: string;
+	bucket: string;
+	expiresIn: number;
+}
+
 export interface IUploadOptions {
 	folder?: string;
 	filename?: string;
@@ -28,11 +36,4 @@ export interface IDeleteResult {
 	key: string;
 	success: boolean;
 	error?: string;
-}
-
-export interface IFileExistsResult {
-	exists: boolean;
-	size?: number;
-	lastModified?: Date;
-	contentType?: string;
 }

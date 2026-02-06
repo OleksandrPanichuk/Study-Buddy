@@ -1,11 +1,10 @@
-import path from "node:path";
-import type { Readable } from "node:stream";
+import type { Env } from "@/shared/config";
 import type {
 	IDeleteResult,
 	IFileValidationOptions,
 	IPresignedUploadUrlResult,
 	IUploadOptions,
-	IUploadResult
+	IUploadResult,
 } from "@app/s3/s3.interfaces";
 import {
 	DeleteObjectCommand,
@@ -14,7 +13,7 @@ import {
 	HeadObjectCommand,
 	PutObjectCommand,
 	S3Client,
-	type S3ServiceException
+	type S3ServiceException,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import {
@@ -23,11 +22,12 @@ import {
 	Injectable,
 	InternalServerErrorException,
 	Logger,
-	NotFoundException
+	NotFoundException,
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
+import path from "node:path";
+import type { Readable } from "node:stream";
 import { v4 as uuid } from "uuid";
-import type { Env } from "@/shared/config";
 
 @Injectable()
 export class S3Service {
@@ -44,12 +44,13 @@ export class S3Service {
 
 		this.client = new S3Client({
 			region: this.region,
+			endpoint: this.config.get("AWS_S3_ENDPOINT"),
 			credentials: {
 				accessKeyId: this.config.get("AWS_S3_ACCESS_KEY_ID"),
-				secretAccessKey: this.config.get("AWS_S3_SECRET_ACCESS_KEY")
+				secretAccessKey: this.config.get("AWS_S3_SECRET_ACCESS_KEY"),
 			},
-			forcePathStyle: this.config.get<boolean>("AWS_S3_FORCE_PATH_STYLE"),
-			maxAttempts: this.maxRetries
+			forcePathStyle: this.config.get("AWS_S3_FORCE_PATH_STYLE") === "true",
+			maxAttempts: this.maxRetries,
 		});
 	}
 
@@ -57,11 +58,14 @@ export class S3Service {
 		return this.client;
 	}
 
-	public async uploadFile(file: Express.Multer.File, options: IUploadOptions = {}): Promise<IUploadResult> {
+	public async uploadFile(
+		file: Express.Multer.File,
+		options: IUploadOptions = {},
+	): Promise<IUploadResult> {
 		try {
 			this.validateFile(file, {
 				maxSize: options.maxSize,
-				allowedMimeTypes: options.allowedMimeTypes
+				allowedMimeTypes: options.allowedMimeTypes,
 			});
 
 			const key = this.generateKey(file.originalname, options);
@@ -74,10 +78,12 @@ export class S3Service {
 				ContentType: contentType,
 				ACL: options.acl || "private",
 				Metadata: options.metadata,
-				CacheControl: options.cacheControl
+				CacheControl: options.cacheControl,
 			});
 
-			const result = await this.executeWithRetry(() => this.client.send(command));
+			const result = await this.executeWithRetry(() =>
+				this.client.send(command),
+			);
 
 			const url = this.getPublicUrl(key);
 
@@ -89,20 +95,30 @@ export class S3Service {
 				bucket: this.bucket,
 				size: file.size,
 				mimetype: contentType,
-				etag: result.ETag
+				etag: result.ETag,
 			};
 		} catch (error) {
 			if (error instanceof HttpException) {
-				this.logger.error(`Failed to upload file: ${error.message}`, error.stack);
+				this.logger.error(
+					`Failed to upload file: ${error.message}`,
+					error.stack,
+				);
 				throw error;
 			}
 
-			this.logger.error(`Unexpected error occurred while uploading file: ${error}`);
-			throw new InternalServerErrorException("An unexpected error occurred while uploading file.");
+			this.logger.error(
+				`Unexpected error occurred while uploading file: ${error}`,
+			);
+			throw new InternalServerErrorException(
+				"An unexpected error occurred while uploading file.",
+			);
 		}
 	}
 
-	public async uploadFiles(files: Express.Multer.File[], options: IUploadOptions = {}): Promise<IUploadResult[]> {
+	public async uploadFiles(
+		files: Express.Multer.File[],
+		options: IUploadOptions = {},
+	): Promise<IUploadResult[]> {
 		return Promise.all(files.map((file) => this.uploadFile(file, options)));
 	}
 
@@ -110,7 +126,7 @@ export class S3Service {
 		try {
 			const command = new DeleteObjectCommand({
 				Bucket: this.bucket,
-				Key: key
+				Key: key,
 			});
 
 			await this.executeWithRetry(() => this.client.send(command));
@@ -130,10 +146,10 @@ export class S3Service {
 					return {
 						key,
 						success: false,
-						error: error instanceof Error ? error.message : String(error)
+						error: error instanceof Error ? error.message : String(error),
 					};
 				}
-			})
+			}),
 		);
 
 		return results.map((result, index) => {
@@ -144,37 +160,47 @@ export class S3Service {
 			return {
 				key: keys[index],
 				success: false,
-				error: result.reason?.message || "Unknown error"
+				error: result.reason?.message || "Unknown error",
 			};
 		});
 	}
 
-	public async createPresignedDownloadUrl(key: string, expiresIn = 3600): Promise<string> {
+	public async createPresignedDownloadUrl(
+		key: string,
+		expiresIn = 3600,
+	): Promise<string> {
 		try {
 			const command = new GetObjectCommand({
 				Bucket: this.bucket,
-				Key: key
+				Key: key,
 			});
 
 			const url = await getSignedUrl(this.client, command, { expiresIn });
 
-			this.logger.log(`Presigned download URL created successfully for key: ${key}`);
+			this.logger.log(
+				`Presigned download URL created successfully for key: ${key}`,
+			);
 
 			return url;
 		} catch (error) {
-			this.logger.error(`Failed to create presigned download URL for key ${key}: ${error}`);
-			throw new InternalServerErrorException("Failed to create presigned download URL");
+			this.logger.error(
+				`Failed to create presigned download URL for key ${key}: ${error}`,
+			);
+			throw new InternalServerErrorException(
+				"Failed to create presigned download URL",
+			);
 		}
 	}
 
 	public async createPresignedUploadUrl(
 		fileName: string,
 		options: IUploadOptions = {},
-		expiresIn = 3600
+		expiresIn = 3600,
 	): Promise<IPresignedUploadUrlResult> {
 		try {
 			const key = this.generateKey(fileName, options);
-			const contentType = options.contentType || this.getMimeTypeFromExtension(fileName);
+			const contentType =
+				options.contentType || this.getMimeTypeFromExtension(fileName);
 
 			const command = new PutObjectCommand({
 				Bucket: this.bucket,
@@ -182,24 +208,30 @@ export class S3Service {
 				ContentType: contentType,
 				ACL: options.acl || "private",
 				Metadata: options.metadata,
-				CacheControl: options.cacheControl
+				CacheControl: options.cacheControl,
 			});
 
 			const uploadUrl = await getSignedUrl(this.client, command, { expiresIn });
 			const publicUrl = this.getPublicUrl(key);
 
-			this.logger.log(`Presigned upload URL created successfully for key: ${key}`);
+			this.logger.log(
+				`Presigned upload URL created successfully for key: ${key}`,
+			);
 
 			return {
 				uploadUrl,
 				key,
 				publicUrl,
 				bucket: this.bucket,
-				expiresIn
+				expiresIn,
 			};
 		} catch (error) {
-			this.logger.error(`Failed to create presigned upload URL for file ${fileName}: ${error}`);
-			throw new InternalServerErrorException("Failed to create presigned upload URL");
+			this.logger.error(
+				`Failed to create presigned upload URL for file ${fileName}: ${error}`,
+			);
+			throw new InternalServerErrorException(
+				"Failed to create presigned upload URL",
+			);
 		}
 	}
 
@@ -207,10 +239,12 @@ export class S3Service {
 		try {
 			const command = new GetObjectCommand({
 				Bucket: this.bucket,
-				Key: key
+				Key: key,
 			});
 
-			const response = await this.executeWithRetry(() => this.client.send(command));
+			const response = await this.executeWithRetry(() =>
+				this.client.send(command),
+			);
 
 			if (!response.Body) {
 				throw new NotFoundException(`File with key ${key} has no content`);
@@ -238,16 +272,21 @@ export class S3Service {
 		try {
 			const command = new HeadObjectCommand({
 				Bucket: this.bucket,
-				Key: key
+				Key: key,
 			});
 
 			await this.executeWithRetry(() => this.client.send(command));
 			return true;
 		} catch (error) {
-			if (this.isS3Exception(error) && error.$metadata?.httpStatusCode === 404) {
+			if (
+				this.isS3Exception(error) &&
+				error.$metadata?.httpStatusCode === 404
+			) {
 				return false;
 			}
-			this.logger.error(`Failed to check if file exists with key ${key}: ${error}`);
+			this.logger.error(
+				`Failed to check if file exists with key ${key}: ${error}`,
+			);
 			throw new InternalServerErrorException("Failed to check file existence");
 		}
 	}
@@ -261,19 +300,24 @@ export class S3Service {
 		try {
 			const command = new HeadObjectCommand({
 				Bucket: this.bucket,
-				Key: key
+				Key: key,
 			});
 
-			const response = await this.executeWithRetry(() => this.client.send(command));
+			const response = await this.executeWithRetry(() =>
+				this.client.send(command),
+			);
 
 			return {
 				contentType: response.ContentType,
 				contentLength: response.ContentLength,
 				lastModified: response.LastModified,
-				metadata: response.Metadata
+				metadata: response.Metadata,
 			};
 		} catch (error) {
-			if (this.isS3Exception(error) && error.$metadata?.httpStatusCode === 404) {
+			if (
+				this.isS3Exception(error) &&
+				error.$metadata?.httpStatusCode === 404
+			) {
 				throw new NotFoundException(`File with key ${key} not found`);
 			}
 			this.logger.error(`Failed to get file metadata for key ${key}: ${error}`);
@@ -281,16 +325,24 @@ export class S3Service {
 		}
 	}
 
-	private validateFile(file: Express.Multer.File, options: IFileValidationOptions): void {
+	private validateFile(
+		file: Express.Multer.File,
+		options: IFileValidationOptions,
+	): void {
 		const maxSize = options.maxSize || this.defaultMaxFileSize;
 
 		if (file.size > maxSize) {
-			throw new BadRequestException(`File size ${file.size} exceeds maximum allowed size of ${maxSize} bytes.`);
+			throw new BadRequestException(
+				`File size ${file.size} exceeds maximum allowed size of ${maxSize} bytes.`,
+			);
 		}
 
-		if (options.allowedMimeTypes?.length > 0 && !options.allowedMimeTypes.includes(file.mimetype)) {
+		if (
+			options.allowedMimeTypes?.length > 0 &&
+			!options.allowedMimeTypes.includes(file.mimetype)
+		) {
 			throw new BadRequestException(
-				`File type ${file.mimetype} is not allowed. Allowed types: ${options.allowedMimeTypes.join(",")}`
+				`File type ${file.mimetype} is not allowed. Allowed types: ${options.allowedMimeTypes.join(",")}`,
 			);
 		}
 
@@ -299,13 +351,16 @@ export class S3Service {
 
 			if (!options.allowedExtensions.includes(extension)) {
 				throw new BadRequestException(
-					`File extension ${extension} is not allowed. Allowed extensions: ${options.allowedExtensions.join(",")}`
+					`File extension ${extension} is not allowed. Allowed extensions: ${options.allowedExtensions.join(",")}`,
 				);
 			}
 		}
 	}
 
-	private async executeWithRetry<T>(operation: () => Promise<T>, retries: number = this.maxRetries): Promise<T> {
+	private async executeWithRetry<T>(
+		operation: () => Promise<T>,
+		retries: number = this.maxRetries,
+	): Promise<T> {
 		let lastError: Error | S3ServiceException | unknown;
 
 		for (let attempt = 0; attempt < retries; attempt++) {
@@ -324,7 +379,9 @@ export class S3Service {
 
 				if (attempt < retries - 1) {
 					const delay = 2 ** attempt * 1000;
-					this.logger.warn(`Operation failed, retrying in ${delay}ms... (attempt ${attempt + 1}/${retries})`);
+					this.logger.warn(
+						`Operation failed, retrying in ${delay}ms... (attempt ${attempt + 1}/${retries})`,
+					);
 					await this.sleep(delay);
 				}
 			}
@@ -363,7 +420,8 @@ export class S3Service {
 		const mimeTypes: Record<string, string> = {
 			".pdf": "application/pdf",
 			".doc": "application/msword",
-			".docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+			".docx":
+				"application/vnd.openxmlformats-officedocument.wordprocessingml.document",
 			".txt": "text/plain",
 			".md": "text/markdown",
 			".jpg": "image/jpeg",
@@ -380,9 +438,11 @@ export class S3Service {
 			".xml": "application/xml",
 			".csv": "text/csv",
 			".ppt": "application/vnd.ms-powerpoint",
-			".pptx": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+			".pptx":
+				"application/vnd.openxmlformats-officedocument.presentationml.presentation",
 			".xls": "application/vnd.ms-excel",
-			".xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+			".xlsx":
+				"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
 		};
 		return mimeTypes[ext] || "application/octet-stream";
 	}
@@ -393,7 +453,8 @@ export class S3Service {
 			await this.executeWithRetry(() => this.client.send(command));
 			return "OK" as const;
 		} catch (error) {
-			const message = error instanceof Error ? error.message : "Unknown S3 error";
+			const message =
+				error instanceof Error ? error.message : "Unknown S3 error";
 			const stack = error instanceof Error ? error.stack : undefined;
 
 			this.logger.error(`S3 health check failed: ${message}`, stack);

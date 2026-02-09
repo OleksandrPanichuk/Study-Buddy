@@ -34,7 +34,6 @@ enum FileStatus {
 
 enum AttachmentScope {
   MESSAGE
-  CHAT_CONTEXT
 }
 
 enum MaterialType {
@@ -43,7 +42,6 @@ enum MaterialType {
   QUIZ
   FLASHCARD_DECK
   LESSON
-  CODE_LAB
 }
 
 // Models
@@ -264,20 +262,20 @@ model Material {
   summary String?      @db.Text
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId String @db.Uuid
+  userId String @map("user_id") @db.Uuid
 
   tutorChat   TutorChat? @relation(fields: [tutorChatId], references: [id], onDelete: SetNull)
-  tutorChatId String?    @db.Uuid
+  tutorChatId String?    @map("tutor_chat_id") @db.Uuid
 
   file   FileAsset? @relation(fields: [fileId], references: [id], onDelete: SetNull)
-  fileId String?    @db.Uuid
+  fileId String?    @map("file_id") @db.Uuid
 
   note Note?
   quiz Quiz?
   deck FlashcardDeck?
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@index([userId, tutorChatId])
   @@map("materials")

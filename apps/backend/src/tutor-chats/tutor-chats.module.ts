@@ -6,5 +6,6 @@ import { TutorChatsService } from "./tutor-chats.service";
 @Module({
 	providers: [TutorChatsRepository, TutorChatsService],
 	controllers: [TutorChatsController],
+	exports: [TutorChatsRepository]
 })
 export class TutorChatsModule {}

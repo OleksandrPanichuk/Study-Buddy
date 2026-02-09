@@ -260,6 +260,11 @@ export type UserWhereInput = {
   verificationCodes?: Prisma.VerificationCodeListRelationFilter
   resetPasswordTokens?: Prisma.ResetPasswordTokenListRelationFilter
   tutorChats?: Prisma.TutorChatListRelationFilter
+  messages?: Prisma.MessageListRelationFilter
+  files?: Prisma.FileAssetListRelationFilter
+  materials?: Prisma.MaterialListRelationFilter
+  quizResults?: Prisma.QuizResultListRelationFilter
+  flashcardReviews?: Prisma.FlashcardReviewListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -277,6 +282,11 @@ export type UserOrderByWithRelationInput = {
   verificationCodes?: Prisma.VerificationCodeOrderByRelationAggregateInput
   resetPasswordTokens?: Prisma.ResetPasswordTokenOrderByRelationAggregateInput
   tutorChats?: Prisma.TutorChatOrderByRelationAggregateInput
+  messages?: Prisma.MessageOrderByRelationAggregateInput
+  files?: Prisma.FileAssetOrderByRelationAggregateInput
+  materials?: Prisma.MaterialOrderByRelationAggregateInput
+  quizResults?: Prisma.QuizResultOrderByRelationAggregateInput
+  flashcardReviews?: Prisma.FlashcardReviewOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -297,6 +307,11 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   verificationCodes?: Prisma.VerificationCodeListRelationFilter
   resetPasswordTokens?: Prisma.ResetPasswordTokenListRelationFilter
   tutorChats?: Prisma.TutorChatListRelationFilter
+  messages?: Prisma.MessageListRelationFilter
+  files?: Prisma.FileAssetListRelationFilter
+  materials?: Prisma.MaterialListRelationFilter
+  quizResults?: Prisma.QuizResultListRelationFilter
+  flashcardReviews?: Prisma.FlashcardReviewListRelationFilter
 }, "id" | "email" | "username">
 
 export type UserOrderByWithAggregationInput = {
@@ -347,6 +362,11 @@ export type UserCreateInput = {
   verificationCodes?: Prisma.VerificationCodeCreateNestedManyWithoutUserInput
   resetPasswordTokens?: Prisma.ResetPasswordTokenCreateNestedManyWithoutUserInput
   tutorChats?: Prisma.TutorChatCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageCreateNestedManyWithoutUserInput
+  files?: Prisma.FileAssetCreateNestedManyWithoutUserInput
+  materials?: Prisma.MaterialCreateNestedManyWithoutUserInput
+  quizResults?: Prisma.QuizResultCreateNestedManyWithoutUserInput
+  flashcardReviews?: Prisma.FlashcardReviewCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -363,6 +383,11 @@ export type UserUncheckedCreateInput = {
   verificationCodes?: Prisma.VerificationCodeUncheckedCreateNestedManyWithoutUserInput
   resetPasswordTokens?: Prisma.ResetPasswordTokenUncheckedCreateNestedManyWithoutUserInput
   tutorChats?: Prisma.TutorChatUncheckedCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutUserInput
+  files?: Prisma.FileAssetUncheckedCreateNestedManyWithoutUserInput
+  materials?: Prisma.MaterialUncheckedCreateNestedManyWithoutUserInput
+  quizResults?: Prisma.QuizResultUncheckedCreateNestedManyWithoutUserInput
+  flashcardReviews?: Prisma.FlashcardReviewUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -379,6 +404,11 @@ export type UserUpdateInput = {
   verificationCodes?: Prisma.VerificationCodeUpdateManyWithoutUserNestedInput
   resetPasswordTokens?: Prisma.ResetPasswordTokenUpdateManyWithoutUserNestedInput
   tutorChats?: Prisma.TutorChatUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileAssetUpdateManyWithoutUserNestedInput
+  materials?: Prisma.MaterialUpdateManyWithoutUserNestedInput
+  quizResults?: Prisma.QuizResultUpdateManyWithoutUserNestedInput
+  flashcardReviews?: Prisma.FlashcardReviewUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -395,6 +425,11 @@ export type UserUncheckedUpdateInput = {
   verificationCodes?: Prisma.VerificationCodeUncheckedUpdateManyWithoutUserNestedInput
   resetPasswordTokens?: Prisma.ResetPasswordTokenUncheckedUpdateManyWithoutUserNestedInput
   tutorChats?: Prisma.TutorChatUncheckedUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileAssetUncheckedUpdateManyWithoutUserNestedInput
+  materials?: Prisma.MaterialUncheckedUpdateManyWithoutUserNestedInput
+  quizResults?: Prisma.QuizResultUncheckedUpdateManyWithoutUserNestedInput
+  flashcardReviews?: Prisma.FlashcardReviewUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -597,6 +632,76 @@ export type UserUpdateOneRequiredWithoutTutorChatsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutTutorChatsInput, Prisma.UserUpdateWithoutTutorChatsInput>, Prisma.UserUncheckedUpdateWithoutTutorChatsInput>
 }
 
+export type UserCreateNestedOneWithoutMessagesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutMessagesInput, Prisma.UserUncheckedCreateWithoutMessagesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutMessagesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutMessagesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutMessagesInput, Prisma.UserUncheckedCreateWithoutMessagesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutMessagesInput
+  upsert?: Prisma.UserUpsertWithoutMessagesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutMessagesInput, Prisma.UserUpdateWithoutMessagesInput>, Prisma.UserUncheckedUpdateWithoutMessagesInput>
+}
+
+export type UserCreateNestedOneWithoutFilesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutFilesInput, Prisma.UserUncheckedCreateWithoutFilesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutFilesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutFilesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutFilesInput, Prisma.UserUncheckedCreateWithoutFilesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutFilesInput
+  upsert?: Prisma.UserUpsertWithoutFilesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutFilesInput, Prisma.UserUpdateWithoutFilesInput>, Prisma.UserUncheckedUpdateWithoutFilesInput>
+}
+
+export type UserCreateNestedOneWithoutMaterialsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutMaterialsInput, Prisma.UserUncheckedCreateWithoutMaterialsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutMaterialsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutMaterialsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutMaterialsInput, Prisma.UserUncheckedCreateWithoutMaterialsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutMaterialsInput
+  upsert?: Prisma.UserUpsertWithoutMaterialsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutMaterialsInput, Prisma.UserUpdateWithoutMaterialsInput>, Prisma.UserUncheckedUpdateWithoutMaterialsInput>
+}
+
+export type UserCreateNestedOneWithoutQuizResultsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutQuizResultsInput, Prisma.UserUncheckedCreateWithoutQuizResultsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutQuizResultsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutQuizResultsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutQuizResultsInput, Prisma.UserUncheckedCreateWithoutQuizResultsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutQuizResultsInput
+  upsert?: Prisma.UserUpsertWithoutQuizResultsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutQuizResultsInput, Prisma.UserUpdateWithoutQuizResultsInput>, Prisma.UserUncheckedUpdateWithoutQuizResultsInput>
+}
+
+export type UserCreateNestedOneWithoutFlashcardReviewsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutFlashcardReviewsInput, Prisma.UserUncheckedCreateWithoutFlashcardReviewsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutFlashcardReviewsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutFlashcardReviewsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutFlashcardReviewsInput, Prisma.UserUncheckedCreateWithoutFlashcardReviewsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutFlashcardReviewsInput
+  upsert?: Prisma.UserUpsertWithoutFlashcardReviewsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutFlashcardReviewsInput, Prisma.UserUpdateWithoutFlashcardReviewsInput>, Prisma.UserUncheckedUpdateWithoutFlashcardReviewsInput>
+}
+
 export type UserCreateWithoutAvatarInput = {
   id?: string
   email: string
@@ -610,6 +715,11 @@ export type UserCreateWithoutAvatarInput = {
   verificationCodes?: Prisma.VerificationCodeCreateNestedManyWithoutUserInput
   resetPasswordTokens?: Prisma.ResetPasswordTokenCreateNestedManyWithoutUserInput
   tutorChats?: Prisma.TutorChatCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageCreateNestedManyWithoutUserInput
+  files?: Prisma.FileAssetCreateNestedManyWithoutUserInput
+  materials?: Prisma.MaterialCreateNestedManyWithoutUserInput
+  quizResults?: Prisma.QuizResultCreateNestedManyWithoutUserInput
+  flashcardReviews?: Prisma.FlashcardReviewCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAvatarInput = {
@@ -625,6 +735,11 @@ export type UserUncheckedCreateWithoutAvatarInput = {
   verificationCodes?: Prisma.VerificationCodeUncheckedCreateNestedManyWithoutUserInput
   resetPasswordTokens?: Prisma.ResetPasswordTokenUncheckedCreateNestedManyWithoutUserInput
   tutorChats?: Prisma.TutorChatUncheckedCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutUserInput
+  files?: Prisma.FileAssetUncheckedCreateNestedManyWithoutUserInput
+  materials?: Prisma.MaterialUncheckedCreateNestedManyWithoutUserInput
+  quizResults?: Prisma.QuizResultUncheckedCreateNestedManyWithoutUserInput
+  flashcardReviews?: Prisma.FlashcardReviewUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAvatarInput = {
@@ -682,6 +797,11 @@ export type UserCreateWithoutVerificationCodesInput = {
   avatar?: Prisma.FileCreateNestedOneWithoutUsersInput
   resetPasswordTokens?: Prisma.ResetPasswordTokenCreateNestedManyWithoutUserInput
   tutorChats?: Prisma.TutorChatCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageCreateNestedManyWithoutUserInput
+  files?: Prisma.FileAssetCreateNestedManyWithoutUserInput
+  materials?: Prisma.MaterialCreateNestedManyWithoutUserInput
+  quizResults?: Prisma.QuizResultCreateNestedManyWithoutUserInput
+  flashcardReviews?: Prisma.FlashcardReviewCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutVerificationCodesInput = {
@@ -697,6 +817,11 @@ export type UserUncheckedCreateWithoutVerificationCodesInput = {
   updatedAt?: Date | string
   resetPasswordTokens?: Prisma.ResetPasswordTokenUncheckedCreateNestedManyWithoutUserInput
   tutorChats?: Prisma.TutorChatUncheckedCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutUserInput
+  files?: Prisma.FileAssetUncheckedCreateNestedManyWithoutUserInput
+  materials?: Prisma.MaterialUncheckedCreateNestedManyWithoutUserInput
+  quizResults?: Prisma.QuizResultUncheckedCreateNestedManyWithoutUserInput
+  flashcardReviews?: Prisma.FlashcardReviewUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutVerificationCodesInput = {
@@ -728,6 +853,11 @@ export type UserUpdateWithoutVerificationCodesInput = {
   avatar?: Prisma.FileUpdateOneWithoutUsersNestedInput
   resetPasswordTokens?: Prisma.ResetPasswordTokenUpdateManyWithoutUserNestedInput
   tutorChats?: Prisma.TutorChatUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileAssetUpdateManyWithoutUserNestedInput
+  materials?: Prisma.MaterialUpdateManyWithoutUserNestedInput
+  quizResults?: Prisma.QuizResultUpdateManyWithoutUserNestedInput
+  flashcardReviews?: Prisma.FlashcardReviewUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutVerificationCodesInput = {
@@ -743,6 +873,11 @@ export type UserUncheckedUpdateWithoutVerificationCodesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resetPasswordTokens?: Prisma.ResetPasswordTokenUncheckedUpdateManyWithoutUserNestedInput
   tutorChats?: Prisma.TutorChatUncheckedUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileAssetUncheckedUpdateManyWithoutUserNestedInput
+  materials?: Prisma.MaterialUncheckedUpdateManyWithoutUserNestedInput
+  quizResults?: Prisma.QuizResultUncheckedUpdateManyWithoutUserNestedInput
+  flashcardReviews?: Prisma.FlashcardReviewUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutResetPasswordTokensInput = {
@@ -758,6 +893,11 @@ export type UserCreateWithoutResetPasswordTokensInput = {
   avatar?: Prisma.FileCreateNestedOneWithoutUsersInput
   verificationCodes?: Prisma.VerificationCodeCreateNestedManyWithoutUserInput
   tutorChats?: Prisma.TutorChatCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageCreateNestedManyWithoutUserInput
+  files?: Prisma.FileAssetCreateNestedManyWithoutUserInput
+  materials?: Prisma.MaterialCreateNestedManyWithoutUserInput
+  quizResults?: Prisma.QuizResultCreateNestedManyWithoutUserInput
+  flashcardReviews?: Prisma.FlashcardReviewCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutResetPasswordTokensInput = {
@@ -773,6 +913,11 @@ export type UserUncheckedCreateWithoutResetPasswordTokensInput = {
   updatedAt?: Date | string
   verificationCodes?: Prisma.VerificationCodeUncheckedCreateNestedManyWithoutUserInput
   tutorChats?: Prisma.TutorChatUncheckedCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutUserInput
+  files?: Prisma.FileAssetUncheckedCreateNestedManyWithoutUserInput
+  materials?: Prisma.MaterialUncheckedCreateNestedManyWithoutUserInput
+  quizResults?: Prisma.QuizResultUncheckedCreateNestedManyWithoutUserInput
+  flashcardReviews?: Prisma.FlashcardReviewUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutResetPasswordTokensInput = {
@@ -804,6 +949,11 @@ export type UserUpdateWithoutResetPasswordTokensInput = {
   avatar?: Prisma.FileUpdateOneWithoutUsersNestedInput
   verificationCodes?: Prisma.VerificationCodeUpdateManyWithoutUserNestedInput
   tutorChats?: Prisma.TutorChatUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileAssetUpdateManyWithoutUserNestedInput
+  materials?: Prisma.MaterialUpdateManyWithoutUserNestedInput
+  quizResults?: Prisma.QuizResultUpdateManyWithoutUserNestedInput
+  flashcardReviews?: Prisma.FlashcardReviewUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutResetPasswordTokensInput = {
@@ -819,6 +969,11 @@ export type UserUncheckedUpdateWithoutResetPasswordTokensInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   verificationCodes?: Prisma.VerificationCodeUncheckedUpdateManyWithoutUserNestedInput
   tutorChats?: Prisma.TutorChatUncheckedUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileAssetUncheckedUpdateManyWithoutUserNestedInput
+  materials?: Prisma.MaterialUncheckedUpdateManyWithoutUserNestedInput
+  quizResults?: Prisma.QuizResultUncheckedUpdateManyWithoutUserNestedInput
+  flashcardReviews?: Prisma.FlashcardReviewUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutTutorChatsInput = {
@@ -834,6 +989,11 @@ export type UserCreateWithoutTutorChatsInput = {
   avatar?: Prisma.FileCreateNestedOneWithoutUsersInput
   verificationCodes?: Prisma.VerificationCodeCreateNestedManyWithoutUserInput
   resetPasswordTokens?: Prisma.ResetPasswordTokenCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageCreateNestedManyWithoutUserInput
+  files?: Prisma.FileAssetCreateNestedManyWithoutUserInput
+  materials?: Prisma.MaterialCreateNestedManyWithoutUserInput
+  quizResults?: Prisma.QuizResultCreateNestedManyWithoutUserInput
+  flashcardReviews?: Prisma.FlashcardReviewCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTutorChatsInput = {
@@ -849,6 +1009,11 @@ export type UserUncheckedCreateWithoutTutorChatsInput = {
   updatedAt?: Date | string
   verificationCodes?: Prisma.VerificationCodeUncheckedCreateNestedManyWithoutUserInput
   resetPasswordTokens?: Prisma.ResetPasswordTokenUncheckedCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutUserInput
+  files?: Prisma.FileAssetUncheckedCreateNestedManyWithoutUserInput
+  materials?: Prisma.MaterialUncheckedCreateNestedManyWithoutUserInput
+  quizResults?: Prisma.QuizResultUncheckedCreateNestedManyWithoutUserInput
+  flashcardReviews?: Prisma.FlashcardReviewUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTutorChatsInput = {
@@ -880,6 +1045,11 @@ export type UserUpdateWithoutTutorChatsInput = {
   avatar?: Prisma.FileUpdateOneWithoutUsersNestedInput
   verificationCodes?: Prisma.VerificationCodeUpdateManyWithoutUserNestedInput
   resetPasswordTokens?: Prisma.ResetPasswordTokenUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileAssetUpdateManyWithoutUserNestedInput
+  materials?: Prisma.MaterialUpdateManyWithoutUserNestedInput
+  quizResults?: Prisma.QuizResultUpdateManyWithoutUserNestedInput
+  flashcardReviews?: Prisma.FlashcardReviewUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTutorChatsInput = {
@@ -895,6 +1065,491 @@ export type UserUncheckedUpdateWithoutTutorChatsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   verificationCodes?: Prisma.VerificationCodeUncheckedUpdateManyWithoutUserNestedInput
   resetPasswordTokens?: Prisma.ResetPasswordTokenUncheckedUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileAssetUncheckedUpdateManyWithoutUserNestedInput
+  materials?: Prisma.MaterialUncheckedUpdateManyWithoutUserNestedInput
+  quizResults?: Prisma.QuizResultUncheckedUpdateManyWithoutUserNestedInput
+  flashcardReviews?: Prisma.FlashcardReviewUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutMessagesInput = {
+  id?: string
+  email: string
+  emailVerified?: boolean
+  username: string
+  hash?: string | null
+  failedLoginAttempts?: number
+  lockedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  avatar?: Prisma.FileCreateNestedOneWithoutUsersInput
+  verificationCodes?: Prisma.VerificationCodeCreateNestedManyWithoutUserInput
+  resetPasswordTokens?: Prisma.ResetPasswordTokenCreateNestedManyWithoutUserInput
+  tutorChats?: Prisma.TutorChatCreateNestedManyWithoutUserInput
+  files?: Prisma.FileAssetCreateNestedManyWithoutUserInput
+  materials?: Prisma.MaterialCreateNestedManyWithoutUserInput
+  quizResults?: Prisma.QuizResultCreateNestedManyWithoutUserInput
+  flashcardReviews?: Prisma.FlashcardReviewCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutMessagesInput = {
+  id?: string
+  email: string
+  emailVerified?: boolean
+  username: string
+  hash?: string | null
+  failedLoginAttempts?: number
+  lockedUntil?: Date | string | null
+  avatarId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  verificationCodes?: Prisma.VerificationCodeUncheckedCreateNestedManyWithoutUserInput
+  resetPasswordTokens?: Prisma.ResetPasswordTokenUncheckedCreateNestedManyWithoutUserInput
+  tutorChats?: Prisma.TutorChatUncheckedCreateNestedManyWithoutUserInput
+  files?: Prisma.FileAssetUncheckedCreateNestedManyWithoutUserInput
+  materials?: Prisma.MaterialUncheckedCreateNestedManyWithoutUserInput
+  quizResults?: Prisma.QuizResultUncheckedCreateNestedManyWithoutUserInput
+  flashcardReviews?: Prisma.FlashcardReviewUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutMessagesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutMessagesInput, Prisma.UserUncheckedCreateWithoutMessagesInput>
+}
+
+export type UserUpsertWithoutMessagesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutMessagesInput, Prisma.UserUncheckedUpdateWithoutMessagesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutMessagesInput, Prisma.UserUncheckedCreateWithoutMessagesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutMessagesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutMessagesInput, Prisma.UserUncheckedUpdateWithoutMessagesInput>
+}
+
+export type UserUpdateWithoutMessagesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  hash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  failedLoginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  avatar?: Prisma.FileUpdateOneWithoutUsersNestedInput
+  verificationCodes?: Prisma.VerificationCodeUpdateManyWithoutUserNestedInput
+  resetPasswordTokens?: Prisma.ResetPasswordTokenUpdateManyWithoutUserNestedInput
+  tutorChats?: Prisma.TutorChatUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileAssetUpdateManyWithoutUserNestedInput
+  materials?: Prisma.MaterialUpdateManyWithoutUserNestedInput
+  quizResults?: Prisma.QuizResultUpdateManyWithoutUserNestedInput
+  flashcardReviews?: Prisma.FlashcardReviewUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutMessagesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  hash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  failedLoginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  avatarId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  verificationCodes?: Prisma.VerificationCodeUncheckedUpdateManyWithoutUserNestedInput
+  resetPasswordTokens?: Prisma.ResetPasswordTokenUncheckedUpdateManyWithoutUserNestedInput
+  tutorChats?: Prisma.TutorChatUncheckedUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileAssetUncheckedUpdateManyWithoutUserNestedInput
+  materials?: Prisma.MaterialUncheckedUpdateManyWithoutUserNestedInput
+  quizResults?: Prisma.QuizResultUncheckedUpdateManyWithoutUserNestedInput
+  flashcardReviews?: Prisma.FlashcardReviewUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutFilesInput = {
+  id?: string
+  email: string
+  emailVerified?: boolean
+  username: string
+  hash?: string | null
+  failedLoginAttempts?: number
+  lockedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  avatar?: Prisma.FileCreateNestedOneWithoutUsersInput
+  verificationCodes?: Prisma.VerificationCodeCreateNestedManyWithoutUserInput
+  resetPasswordTokens?: Prisma.ResetPasswordTokenCreateNestedManyWithoutUserInput
+  tutorChats?: Prisma.TutorChatCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageCreateNestedManyWithoutUserInput
+  materials?: Prisma.MaterialCreateNestedManyWithoutUserInput
+  quizResults?: Prisma.QuizResultCreateNestedManyWithoutUserInput
+  flashcardReviews?: Prisma.FlashcardReviewCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutFilesInput = {
+  id?: string
+  email: string
+  emailVerified?: boolean
+  username: string
+  hash?: string | null
+  failedLoginAttempts?: number
+  lockedUntil?: Date | string | null
+  avatarId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  verificationCodes?: Prisma.VerificationCodeUncheckedCreateNestedManyWithoutUserInput
+  resetPasswordTokens?: Prisma.ResetPasswordTokenUncheckedCreateNestedManyWithoutUserInput
+  tutorChats?: Prisma.TutorChatUncheckedCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutUserInput
+  materials?: Prisma.MaterialUncheckedCreateNestedManyWithoutUserInput
+  quizResults?: Prisma.QuizResultUncheckedCreateNestedManyWithoutUserInput
+  flashcardReviews?: Prisma.FlashcardReviewUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutFilesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutFilesInput, Prisma.UserUncheckedCreateWithoutFilesInput>
+}
+
+export type UserUpsertWithoutFilesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutFilesInput, Prisma.UserUncheckedUpdateWithoutFilesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutFilesInput, Prisma.UserUncheckedCreateWithoutFilesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutFilesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutFilesInput, Prisma.UserUncheckedUpdateWithoutFilesInput>
+}
+
+export type UserUpdateWithoutFilesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  hash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  failedLoginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  avatar?: Prisma.FileUpdateOneWithoutUsersNestedInput
+  verificationCodes?: Prisma.VerificationCodeUpdateManyWithoutUserNestedInput
+  resetPasswordTokens?: Prisma.ResetPasswordTokenUpdateManyWithoutUserNestedInput
+  tutorChats?: Prisma.TutorChatUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutUserNestedInput
+  materials?: Prisma.MaterialUpdateManyWithoutUserNestedInput
+  quizResults?: Prisma.QuizResultUpdateManyWithoutUserNestedInput
+  flashcardReviews?: Prisma.FlashcardReviewUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutFilesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  hash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  failedLoginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  avatarId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  verificationCodes?: Prisma.VerificationCodeUncheckedUpdateManyWithoutUserNestedInput
+  resetPasswordTokens?: Prisma.ResetPasswordTokenUncheckedUpdateManyWithoutUserNestedInput
+  tutorChats?: Prisma.TutorChatUncheckedUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutUserNestedInput
+  materials?: Prisma.MaterialUncheckedUpdateManyWithoutUserNestedInput
+  quizResults?: Prisma.QuizResultUncheckedUpdateManyWithoutUserNestedInput
+  flashcardReviews?: Prisma.FlashcardReviewUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutMaterialsInput = {
+  id?: string
+  email: string
+  emailVerified?: boolean
+  username: string
+  hash?: string | null
+  failedLoginAttempts?: number
+  lockedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  avatar?: Prisma.FileCreateNestedOneWithoutUsersInput
+  verificationCodes?: Prisma.VerificationCodeCreateNestedManyWithoutUserInput
+  resetPasswordTokens?: Prisma.ResetPasswordTokenCreateNestedManyWithoutUserInput
+  tutorChats?: Prisma.TutorChatCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageCreateNestedManyWithoutUserInput
+  files?: Prisma.FileAssetCreateNestedManyWithoutUserInput
+  quizResults?: Prisma.QuizResultCreateNestedManyWithoutUserInput
+  flashcardReviews?: Prisma.FlashcardReviewCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutMaterialsInput = {
+  id?: string
+  email: string
+  emailVerified?: boolean
+  username: string
+  hash?: string | null
+  failedLoginAttempts?: number
+  lockedUntil?: Date | string | null
+  avatarId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  verificationCodes?: Prisma.VerificationCodeUncheckedCreateNestedManyWithoutUserInput
+  resetPasswordTokens?: Prisma.ResetPasswordTokenUncheckedCreateNestedManyWithoutUserInput
+  tutorChats?: Prisma.TutorChatUncheckedCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutUserInput
+  files?: Prisma.FileAssetUncheckedCreateNestedManyWithoutUserInput
+  quizResults?: Prisma.QuizResultUncheckedCreateNestedManyWithoutUserInput
+  flashcardReviews?: Prisma.FlashcardReviewUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutMaterialsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutMaterialsInput, Prisma.UserUncheckedCreateWithoutMaterialsInput>
+}
+
+export type UserUpsertWithoutMaterialsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutMaterialsInput, Prisma.UserUncheckedUpdateWithoutMaterialsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutMaterialsInput, Prisma.UserUncheckedCreateWithoutMaterialsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutMaterialsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutMaterialsInput, Prisma.UserUncheckedUpdateWithoutMaterialsInput>
+}
+
+export type UserUpdateWithoutMaterialsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  hash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  failedLoginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  avatar?: Prisma.FileUpdateOneWithoutUsersNestedInput
+  verificationCodes?: Prisma.VerificationCodeUpdateManyWithoutUserNestedInput
+  resetPasswordTokens?: Prisma.ResetPasswordTokenUpdateManyWithoutUserNestedInput
+  tutorChats?: Prisma.TutorChatUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileAssetUpdateManyWithoutUserNestedInput
+  quizResults?: Prisma.QuizResultUpdateManyWithoutUserNestedInput
+  flashcardReviews?: Prisma.FlashcardReviewUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutMaterialsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  hash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  failedLoginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  avatarId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  verificationCodes?: Prisma.VerificationCodeUncheckedUpdateManyWithoutUserNestedInput
+  resetPasswordTokens?: Prisma.ResetPasswordTokenUncheckedUpdateManyWithoutUserNestedInput
+  tutorChats?: Prisma.TutorChatUncheckedUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileAssetUncheckedUpdateManyWithoutUserNestedInput
+  quizResults?: Prisma.QuizResultUncheckedUpdateManyWithoutUserNestedInput
+  flashcardReviews?: Prisma.FlashcardReviewUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutQuizResultsInput = {
+  id?: string
+  email: string
+  emailVerified?: boolean
+  username: string
+  hash?: string | null
+  failedLoginAttempts?: number
+  lockedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  avatar?: Prisma.FileCreateNestedOneWithoutUsersInput
+  verificationCodes?: Prisma.VerificationCodeCreateNestedManyWithoutUserInput
+  resetPasswordTokens?: Prisma.ResetPasswordTokenCreateNestedManyWithoutUserInput
+  tutorChats?: Prisma.TutorChatCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageCreateNestedManyWithoutUserInput
+  files?: Prisma.FileAssetCreateNestedManyWithoutUserInput
+  materials?: Prisma.MaterialCreateNestedManyWithoutUserInput
+  flashcardReviews?: Prisma.FlashcardReviewCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutQuizResultsInput = {
+  id?: string
+  email: string
+  emailVerified?: boolean
+  username: string
+  hash?: string | null
+  failedLoginAttempts?: number
+  lockedUntil?: Date | string | null
+  avatarId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  verificationCodes?: Prisma.VerificationCodeUncheckedCreateNestedManyWithoutUserInput
+  resetPasswordTokens?: Prisma.ResetPasswordTokenUncheckedCreateNestedManyWithoutUserInput
+  tutorChats?: Prisma.TutorChatUncheckedCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutUserInput
+  files?: Prisma.FileAssetUncheckedCreateNestedManyWithoutUserInput
+  materials?: Prisma.MaterialUncheckedCreateNestedManyWithoutUserInput
+  flashcardReviews?: Prisma.FlashcardReviewUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutQuizResultsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutQuizResultsInput, Prisma.UserUncheckedCreateWithoutQuizResultsInput>
+}
+
+export type UserUpsertWithoutQuizResultsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutQuizResultsInput, Prisma.UserUncheckedUpdateWithoutQuizResultsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutQuizResultsInput, Prisma.UserUncheckedCreateWithoutQuizResultsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutQuizResultsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutQuizResultsInput, Prisma.UserUncheckedUpdateWithoutQuizResultsInput>
+}
+
+export type UserUpdateWithoutQuizResultsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  hash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  failedLoginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  avatar?: Prisma.FileUpdateOneWithoutUsersNestedInput
+  verificationCodes?: Prisma.VerificationCodeUpdateManyWithoutUserNestedInput
+  resetPasswordTokens?: Prisma.ResetPasswordTokenUpdateManyWithoutUserNestedInput
+  tutorChats?: Prisma.TutorChatUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileAssetUpdateManyWithoutUserNestedInput
+  materials?: Prisma.MaterialUpdateManyWithoutUserNestedInput
+  flashcardReviews?: Prisma.FlashcardReviewUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutQuizResultsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  hash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  failedLoginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  avatarId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  verificationCodes?: Prisma.VerificationCodeUncheckedUpdateManyWithoutUserNestedInput
+  resetPasswordTokens?: Prisma.ResetPasswordTokenUncheckedUpdateManyWithoutUserNestedInput
+  tutorChats?: Prisma.TutorChatUncheckedUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileAssetUncheckedUpdateManyWithoutUserNestedInput
+  materials?: Prisma.MaterialUncheckedUpdateManyWithoutUserNestedInput
+  flashcardReviews?: Prisma.FlashcardReviewUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutFlashcardReviewsInput = {
+  id?: string
+  email: string
+  emailVerified?: boolean
+  username: string
+  hash?: string | null
+  failedLoginAttempts?: number
+  lockedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  avatar?: Prisma.FileCreateNestedOneWithoutUsersInput
+  verificationCodes?: Prisma.VerificationCodeCreateNestedManyWithoutUserInput
+  resetPasswordTokens?: Prisma.ResetPasswordTokenCreateNestedManyWithoutUserInput
+  tutorChats?: Prisma.TutorChatCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageCreateNestedManyWithoutUserInput
+  files?: Prisma.FileAssetCreateNestedManyWithoutUserInput
+  materials?: Prisma.MaterialCreateNestedManyWithoutUserInput
+  quizResults?: Prisma.QuizResultCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutFlashcardReviewsInput = {
+  id?: string
+  email: string
+  emailVerified?: boolean
+  username: string
+  hash?: string | null
+  failedLoginAttempts?: number
+  lockedUntil?: Date | string | null
+  avatarId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  verificationCodes?: Prisma.VerificationCodeUncheckedCreateNestedManyWithoutUserInput
+  resetPasswordTokens?: Prisma.ResetPasswordTokenUncheckedCreateNestedManyWithoutUserInput
+  tutorChats?: Prisma.TutorChatUncheckedCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutUserInput
+  files?: Prisma.FileAssetUncheckedCreateNestedManyWithoutUserInput
+  materials?: Prisma.MaterialUncheckedCreateNestedManyWithoutUserInput
+  quizResults?: Prisma.QuizResultUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutFlashcardReviewsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutFlashcardReviewsInput, Prisma.UserUncheckedCreateWithoutFlashcardReviewsInput>
+}
+
+export type UserUpsertWithoutFlashcardReviewsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutFlashcardReviewsInput, Prisma.UserUncheckedUpdateWithoutFlashcardReviewsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutFlashcardReviewsInput, Prisma.UserUncheckedCreateWithoutFlashcardReviewsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutFlashcardReviewsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutFlashcardReviewsInput, Prisma.UserUncheckedUpdateWithoutFlashcardReviewsInput>
+}
+
+export type UserUpdateWithoutFlashcardReviewsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  hash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  failedLoginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  avatar?: Prisma.FileUpdateOneWithoutUsersNestedInput
+  verificationCodes?: Prisma.VerificationCodeUpdateManyWithoutUserNestedInput
+  resetPasswordTokens?: Prisma.ResetPasswordTokenUpdateManyWithoutUserNestedInput
+  tutorChats?: Prisma.TutorChatUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileAssetUpdateManyWithoutUserNestedInput
+  materials?: Prisma.MaterialUpdateManyWithoutUserNestedInput
+  quizResults?: Prisma.QuizResultUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutFlashcardReviewsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  hash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  failedLoginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  avatarId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  verificationCodes?: Prisma.VerificationCodeUncheckedUpdateManyWithoutUserNestedInput
+  resetPasswordTokens?: Prisma.ResetPasswordTokenUncheckedUpdateManyWithoutUserNestedInput
+  tutorChats?: Prisma.TutorChatUncheckedUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileAssetUncheckedUpdateManyWithoutUserNestedInput
+  materials?: Prisma.MaterialUncheckedUpdateManyWithoutUserNestedInput
+  quizResults?: Prisma.QuizResultUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyAvatarInput = {
@@ -922,6 +1577,11 @@ export type UserUpdateWithoutAvatarInput = {
   verificationCodes?: Prisma.VerificationCodeUpdateManyWithoutUserNestedInput
   resetPasswordTokens?: Prisma.ResetPasswordTokenUpdateManyWithoutUserNestedInput
   tutorChats?: Prisma.TutorChatUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileAssetUpdateManyWithoutUserNestedInput
+  materials?: Prisma.MaterialUpdateManyWithoutUserNestedInput
+  quizResults?: Prisma.QuizResultUpdateManyWithoutUserNestedInput
+  flashcardReviews?: Prisma.FlashcardReviewUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAvatarInput = {
@@ -937,6 +1597,11 @@ export type UserUncheckedUpdateWithoutAvatarInput = {
   verificationCodes?: Prisma.VerificationCodeUncheckedUpdateManyWithoutUserNestedInput
   resetPasswordTokens?: Prisma.ResetPasswordTokenUncheckedUpdateManyWithoutUserNestedInput
   tutorChats?: Prisma.TutorChatUncheckedUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileAssetUncheckedUpdateManyWithoutUserNestedInput
+  materials?: Prisma.MaterialUncheckedUpdateManyWithoutUserNestedInput
+  quizResults?: Prisma.QuizResultUncheckedUpdateManyWithoutUserNestedInput
+  flashcardReviews?: Prisma.FlashcardReviewUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutAvatarInput = {
@@ -960,12 +1625,22 @@ export type UserCountOutputType = {
   verificationCodes: number
   resetPasswordTokens: number
   tutorChats: number
+  messages: number
+  files: number
+  materials: number
+  quizResults: number
+  flashcardReviews: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   verificationCodes?: boolean | UserCountOutputTypeCountVerificationCodesArgs
   resetPasswordTokens?: boolean | UserCountOutputTypeCountResetPasswordTokensArgs
   tutorChats?: boolean | UserCountOutputTypeCountTutorChatsArgs
+  messages?: boolean | UserCountOutputTypeCountMessagesArgs
+  files?: boolean | UserCountOutputTypeCountFilesArgs
+  materials?: boolean | UserCountOutputTypeCountMaterialsArgs
+  quizResults?: boolean | UserCountOutputTypeCountQuizResultsArgs
+  flashcardReviews?: boolean | UserCountOutputTypeCountFlashcardReviewsArgs
 }
 
 /**
@@ -999,6 +1674,41 @@ export type UserCountOutputTypeCountTutorChatsArgs<ExtArgs extends runtime.Types
   where?: Prisma.TutorChatWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountMessagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MessageWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountFilesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FileAssetWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountMaterialsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MaterialWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountQuizResultsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.QuizResultWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountFlashcardReviewsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FlashcardReviewWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1015,6 +1725,11 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   verificationCodes?: boolean | Prisma.User$verificationCodesArgs<ExtArgs>
   resetPasswordTokens?: boolean | Prisma.User$resetPasswordTokensArgs<ExtArgs>
   tutorChats?: boolean | Prisma.User$tutorChatsArgs<ExtArgs>
+  messages?: boolean | Prisma.User$messagesArgs<ExtArgs>
+  files?: boolean | Prisma.User$filesArgs<ExtArgs>
+  materials?: boolean | Prisma.User$materialsArgs<ExtArgs>
+  quizResults?: boolean | Prisma.User$quizResultsArgs<ExtArgs>
+  flashcardReviews?: boolean | Prisma.User$flashcardReviewsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1065,6 +1780,11 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   verificationCodes?: boolean | Prisma.User$verificationCodesArgs<ExtArgs>
   resetPasswordTokens?: boolean | Prisma.User$resetPasswordTokensArgs<ExtArgs>
   tutorChats?: boolean | Prisma.User$tutorChatsArgs<ExtArgs>
+  messages?: boolean | Prisma.User$messagesArgs<ExtArgs>
+  files?: boolean | Prisma.User$filesArgs<ExtArgs>
+  materials?: boolean | Prisma.User$materialsArgs<ExtArgs>
+  quizResults?: boolean | Prisma.User$quizResultsArgs<ExtArgs>
+  flashcardReviews?: boolean | Prisma.User$flashcardReviewsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1081,6 +1801,11 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     verificationCodes: Prisma.$VerificationCodePayload<ExtArgs>[]
     resetPasswordTokens: Prisma.$ResetPasswordTokenPayload<ExtArgs>[]
     tutorChats: Prisma.$TutorChatPayload<ExtArgs>[]
+    messages: Prisma.$MessagePayload<ExtArgs>[]
+    files: Prisma.$FileAssetPayload<ExtArgs>[]
+    materials: Prisma.$MaterialPayload<ExtArgs>[]
+    quizResults: Prisma.$QuizResultPayload<ExtArgs>[]
+    flashcardReviews: Prisma.$FlashcardReviewPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1491,6 +2216,11 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   verificationCodes<T extends Prisma.User$verificationCodesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$verificationCodesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$VerificationCodePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   resetPasswordTokens<T extends Prisma.User$resetPasswordTokensArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$resetPasswordTokensArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ResetPasswordTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   tutorChats<T extends Prisma.User$tutorChatsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$tutorChatsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TutorChatPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  messages<T extends Prisma.User$messagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$messagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  files<T extends Prisma.User$filesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$filesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FileAssetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  materials<T extends Prisma.User$materialsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$materialsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MaterialPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  quizResults<T extends Prisma.User$quizResultsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$quizResultsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$QuizResultPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  flashcardReviews<T extends Prisma.User$flashcardReviewsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$flashcardReviewsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FlashcardReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2014,6 +2744,126 @@ export type User$tutorChatsArgs<ExtArgs extends runtime.Types.Extensions.Interna
   take?: number
   skip?: number
   distinct?: Prisma.TutorChatScalarFieldEnum | Prisma.TutorChatScalarFieldEnum[]
+}
+
+/**
+ * User.messages
+ */
+export type User$messagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Message
+   */
+  select?: Prisma.MessageSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Message
+   */
+  omit?: Prisma.MessageOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MessageInclude<ExtArgs> | null
+  where?: Prisma.MessageWhereInput
+  orderBy?: Prisma.MessageOrderByWithRelationInput | Prisma.MessageOrderByWithRelationInput[]
+  cursor?: Prisma.MessageWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MessageScalarFieldEnum | Prisma.MessageScalarFieldEnum[]
+}
+
+/**
+ * User.files
+ */
+export type User$filesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the FileAsset
+   */
+  select?: Prisma.FileAssetSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the FileAsset
+   */
+  omit?: Prisma.FileAssetOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FileAssetInclude<ExtArgs> | null
+  where?: Prisma.FileAssetWhereInput
+  orderBy?: Prisma.FileAssetOrderByWithRelationInput | Prisma.FileAssetOrderByWithRelationInput[]
+  cursor?: Prisma.FileAssetWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FileAssetScalarFieldEnum | Prisma.FileAssetScalarFieldEnum[]
+}
+
+/**
+ * User.materials
+ */
+export type User$materialsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Material
+   */
+  select?: Prisma.MaterialSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Material
+   */
+  omit?: Prisma.MaterialOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MaterialInclude<ExtArgs> | null
+  where?: Prisma.MaterialWhereInput
+  orderBy?: Prisma.MaterialOrderByWithRelationInput | Prisma.MaterialOrderByWithRelationInput[]
+  cursor?: Prisma.MaterialWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MaterialScalarFieldEnum | Prisma.MaterialScalarFieldEnum[]
+}
+
+/**
+ * User.quizResults
+ */
+export type User$quizResultsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the QuizResult
+   */
+  select?: Prisma.QuizResultSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the QuizResult
+   */
+  omit?: Prisma.QuizResultOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.QuizResultInclude<ExtArgs> | null
+  where?: Prisma.QuizResultWhereInput
+  orderBy?: Prisma.QuizResultOrderByWithRelationInput | Prisma.QuizResultOrderByWithRelationInput[]
+  cursor?: Prisma.QuizResultWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.QuizResultScalarFieldEnum | Prisma.QuizResultScalarFieldEnum[]
+}
+
+/**
+ * User.flashcardReviews
+ */
+export type User$flashcardReviewsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the FlashcardReview
+   */
+  select?: Prisma.FlashcardReviewSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the FlashcardReview
+   */
+  omit?: Prisma.FlashcardReviewOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FlashcardReviewInclude<ExtArgs> | null
+  where?: Prisma.FlashcardReviewWhereInput
+  orderBy?: Prisma.FlashcardReviewOrderByWithRelationInput | Prisma.FlashcardReviewOrderByWithRelationInput[]
+  cursor?: Prisma.FlashcardReviewWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FlashcardReviewScalarFieldEnum | Prisma.FlashcardReviewScalarFieldEnum[]
 }
 
 /**

@@ -206,6 +206,10 @@ export type TutorChatWhereInput = {
   userId?: Prisma.UuidFilter<"TutorChat"> | string
   createdAt?: Prisma.DateTimeFilter<"TutorChat"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"TutorChat"> | Date | string
+  messages?: Prisma.MessageListRelationFilter
+  contextFiles?: Prisma.ContextFileListRelationFilter
+  materials?: Prisma.MaterialListRelationFilter
+  chatSummaries?: Prisma.ChatSummaryListRelationFilter
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
@@ -218,6 +222,10 @@ export type TutorChatOrderByWithRelationInput = {
   userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  messages?: Prisma.MessageOrderByRelationAggregateInput
+  contextFiles?: Prisma.ContextFileOrderByRelationAggregateInput
+  materials?: Prisma.MaterialOrderByRelationAggregateInput
+  chatSummaries?: Prisma.ChatSummaryOrderByRelationAggregateInput
   user?: Prisma.UserOrderByWithRelationInput
 }
 
@@ -233,6 +241,10 @@ export type TutorChatWhereUniqueInput = Prisma.AtLeast<{
   userId?: Prisma.UuidFilter<"TutorChat"> | string
   createdAt?: Prisma.DateTimeFilter<"TutorChat"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"TutorChat"> | Date | string
+  messages?: Prisma.MessageListRelationFilter
+  contextFiles?: Prisma.ContextFileListRelationFilter
+  materials?: Prisma.MaterialListRelationFilter
+  chatSummaries?: Prisma.ChatSummaryListRelationFilter
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id">
 
@@ -272,6 +284,10 @@ export type TutorChatCreateInput = {
   prompt?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  messages?: Prisma.MessageCreateNestedManyWithoutTutorChatInput
+  contextFiles?: Prisma.ContextFileCreateNestedManyWithoutTutorChatInput
+  materials?: Prisma.MaterialCreateNestedManyWithoutTutorChatInput
+  chatSummaries?: Prisma.ChatSummaryCreateNestedManyWithoutTutorChatInput
   user: Prisma.UserCreateNestedOneWithoutTutorChatsInput
 }
 
@@ -284,6 +300,10 @@ export type TutorChatUncheckedCreateInput = {
   userId: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutTutorChatInput
+  contextFiles?: Prisma.ContextFileUncheckedCreateNestedManyWithoutTutorChatInput
+  materials?: Prisma.MaterialUncheckedCreateNestedManyWithoutTutorChatInput
+  chatSummaries?: Prisma.ChatSummaryUncheckedCreateNestedManyWithoutTutorChatInput
 }
 
 export type TutorChatUpdateInput = {
@@ -294,6 +314,10 @@ export type TutorChatUpdateInput = {
   prompt?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  messages?: Prisma.MessageUpdateManyWithoutTutorChatNestedInput
+  contextFiles?: Prisma.ContextFileUpdateManyWithoutTutorChatNestedInput
+  materials?: Prisma.MaterialUpdateManyWithoutTutorChatNestedInput
+  chatSummaries?: Prisma.ChatSummaryUpdateManyWithoutTutorChatNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutTutorChatsNestedInput
 }
 
@@ -306,6 +330,10 @@ export type TutorChatUncheckedUpdateInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutTutorChatNestedInput
+  contextFiles?: Prisma.ContextFileUncheckedUpdateManyWithoutTutorChatNestedInput
+  materials?: Prisma.MaterialUncheckedUpdateManyWithoutTutorChatNestedInput
+  chatSummaries?: Prisma.ChatSummaryUncheckedUpdateManyWithoutTutorChatNestedInput
 }
 
 export type TutorChatCreateManyInput = {
@@ -383,6 +411,16 @@ export type TutorChatMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
 }
 
+export type TutorChatScalarRelationFilter = {
+  is?: Prisma.TutorChatWhereInput
+  isNot?: Prisma.TutorChatWhereInput
+}
+
+export type TutorChatNullableScalarRelationFilter = {
+  is?: Prisma.TutorChatWhereInput | null
+  isNot?: Prisma.TutorChatWhereInput | null
+}
+
 export type TutorChatCreateNestedManyWithoutUserInput = {
   create?: Prisma.XOR<Prisma.TutorChatCreateWithoutUserInput, Prisma.TutorChatUncheckedCreateWithoutUserInput> | Prisma.TutorChatCreateWithoutUserInput[] | Prisma.TutorChatUncheckedCreateWithoutUserInput[]
   connectOrCreate?: Prisma.TutorChatCreateOrConnectWithoutUserInput | Prisma.TutorChatCreateOrConnectWithoutUserInput[]
@@ -425,6 +463,64 @@ export type TutorChatUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.TutorChatScalarWhereInput | Prisma.TutorChatScalarWhereInput[]
 }
 
+export type TutorChatCreateNestedOneWithoutMessagesInput = {
+  create?: Prisma.XOR<Prisma.TutorChatCreateWithoutMessagesInput, Prisma.TutorChatUncheckedCreateWithoutMessagesInput>
+  connectOrCreate?: Prisma.TutorChatCreateOrConnectWithoutMessagesInput
+  connect?: Prisma.TutorChatWhereUniqueInput
+}
+
+export type TutorChatUpdateOneRequiredWithoutMessagesNestedInput = {
+  create?: Prisma.XOR<Prisma.TutorChatCreateWithoutMessagesInput, Prisma.TutorChatUncheckedCreateWithoutMessagesInput>
+  connectOrCreate?: Prisma.TutorChatCreateOrConnectWithoutMessagesInput
+  upsert?: Prisma.TutorChatUpsertWithoutMessagesInput
+  connect?: Prisma.TutorChatWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TutorChatUpdateToOneWithWhereWithoutMessagesInput, Prisma.TutorChatUpdateWithoutMessagesInput>, Prisma.TutorChatUncheckedUpdateWithoutMessagesInput>
+}
+
+export type TutorChatCreateNestedOneWithoutContextFilesInput = {
+  create?: Prisma.XOR<Prisma.TutorChatCreateWithoutContextFilesInput, Prisma.TutorChatUncheckedCreateWithoutContextFilesInput>
+  connectOrCreate?: Prisma.TutorChatCreateOrConnectWithoutContextFilesInput
+  connect?: Prisma.TutorChatWhereUniqueInput
+}
+
+export type TutorChatUpdateOneRequiredWithoutContextFilesNestedInput = {
+  create?: Prisma.XOR<Prisma.TutorChatCreateWithoutContextFilesInput, Prisma.TutorChatUncheckedCreateWithoutContextFilesInput>
+  connectOrCreate?: Prisma.TutorChatCreateOrConnectWithoutContextFilesInput
+  upsert?: Prisma.TutorChatUpsertWithoutContextFilesInput
+  connect?: Prisma.TutorChatWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TutorChatUpdateToOneWithWhereWithoutContextFilesInput, Prisma.TutorChatUpdateWithoutContextFilesInput>, Prisma.TutorChatUncheckedUpdateWithoutContextFilesInput>
+}
+
+export type TutorChatCreateNestedOneWithoutChatSummariesInput = {
+  create?: Prisma.XOR<Prisma.TutorChatCreateWithoutChatSummariesInput, Prisma.TutorChatUncheckedCreateWithoutChatSummariesInput>
+  connectOrCreate?: Prisma.TutorChatCreateOrConnectWithoutChatSummariesInput
+  connect?: Prisma.TutorChatWhereUniqueInput
+}
+
+export type TutorChatUpdateOneRequiredWithoutChatSummariesNestedInput = {
+  create?: Prisma.XOR<Prisma.TutorChatCreateWithoutChatSummariesInput, Prisma.TutorChatUncheckedCreateWithoutChatSummariesInput>
+  connectOrCreate?: Prisma.TutorChatCreateOrConnectWithoutChatSummariesInput
+  upsert?: Prisma.TutorChatUpsertWithoutChatSummariesInput
+  connect?: Prisma.TutorChatWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TutorChatUpdateToOneWithWhereWithoutChatSummariesInput, Prisma.TutorChatUpdateWithoutChatSummariesInput>, Prisma.TutorChatUncheckedUpdateWithoutChatSummariesInput>
+}
+
+export type TutorChatCreateNestedOneWithoutMaterialsInput = {
+  create?: Prisma.XOR<Prisma.TutorChatCreateWithoutMaterialsInput, Prisma.TutorChatUncheckedCreateWithoutMaterialsInput>
+  connectOrCreate?: Prisma.TutorChatCreateOrConnectWithoutMaterialsInput
+  connect?: Prisma.TutorChatWhereUniqueInput
+}
+
+export type TutorChatUpdateOneWithoutMaterialsNestedInput = {
+  create?: Prisma.XOR<Prisma.TutorChatCreateWithoutMaterialsInput, Prisma.TutorChatUncheckedCreateWithoutMaterialsInput>
+  connectOrCreate?: Prisma.TutorChatCreateOrConnectWithoutMaterialsInput
+  upsert?: Prisma.TutorChatUpsertWithoutMaterialsInput
+  disconnect?: Prisma.TutorChatWhereInput | boolean
+  delete?: Prisma.TutorChatWhereInput | boolean
+  connect?: Prisma.TutorChatWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TutorChatUpdateToOneWithWhereWithoutMaterialsInput, Prisma.TutorChatUpdateWithoutMaterialsInput>, Prisma.TutorChatUncheckedUpdateWithoutMaterialsInput>
+}
+
 export type TutorChatCreateWithoutUserInput = {
   id?: string
   name: string
@@ -433,6 +529,10 @@ export type TutorChatCreateWithoutUserInput = {
   prompt?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  messages?: Prisma.MessageCreateNestedManyWithoutTutorChatInput
+  contextFiles?: Prisma.ContextFileCreateNestedManyWithoutTutorChatInput
+  materials?: Prisma.MaterialCreateNestedManyWithoutTutorChatInput
+  chatSummaries?: Prisma.ChatSummaryCreateNestedManyWithoutTutorChatInput
 }
 
 export type TutorChatUncheckedCreateWithoutUserInput = {
@@ -443,6 +543,10 @@ export type TutorChatUncheckedCreateWithoutUserInput = {
   prompt?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutTutorChatInput
+  contextFiles?: Prisma.ContextFileUncheckedCreateNestedManyWithoutTutorChatInput
+  materials?: Prisma.MaterialUncheckedCreateNestedManyWithoutTutorChatInput
+  chatSummaries?: Prisma.ChatSummaryUncheckedCreateNestedManyWithoutTutorChatInput
 }
 
 export type TutorChatCreateOrConnectWithoutUserInput = {
@@ -485,6 +589,294 @@ export type TutorChatScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"TutorChat"> | Date | string
 }
 
+export type TutorChatCreateWithoutMessagesInput = {
+  id?: string
+  name: string
+  description?: string | null
+  topic?: string | null
+  prompt?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  contextFiles?: Prisma.ContextFileCreateNestedManyWithoutTutorChatInput
+  materials?: Prisma.MaterialCreateNestedManyWithoutTutorChatInput
+  chatSummaries?: Prisma.ChatSummaryCreateNestedManyWithoutTutorChatInput
+  user: Prisma.UserCreateNestedOneWithoutTutorChatsInput
+}
+
+export type TutorChatUncheckedCreateWithoutMessagesInput = {
+  id?: string
+  name: string
+  description?: string | null
+  topic?: string | null
+  prompt?: string
+  userId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  contextFiles?: Prisma.ContextFileUncheckedCreateNestedManyWithoutTutorChatInput
+  materials?: Prisma.MaterialUncheckedCreateNestedManyWithoutTutorChatInput
+  chatSummaries?: Prisma.ChatSummaryUncheckedCreateNestedManyWithoutTutorChatInput
+}
+
+export type TutorChatCreateOrConnectWithoutMessagesInput = {
+  where: Prisma.TutorChatWhereUniqueInput
+  create: Prisma.XOR<Prisma.TutorChatCreateWithoutMessagesInput, Prisma.TutorChatUncheckedCreateWithoutMessagesInput>
+}
+
+export type TutorChatUpsertWithoutMessagesInput = {
+  update: Prisma.XOR<Prisma.TutorChatUpdateWithoutMessagesInput, Prisma.TutorChatUncheckedUpdateWithoutMessagesInput>
+  create: Prisma.XOR<Prisma.TutorChatCreateWithoutMessagesInput, Prisma.TutorChatUncheckedCreateWithoutMessagesInput>
+  where?: Prisma.TutorChatWhereInput
+}
+
+export type TutorChatUpdateToOneWithWhereWithoutMessagesInput = {
+  where?: Prisma.TutorChatWhereInput
+  data: Prisma.XOR<Prisma.TutorChatUpdateWithoutMessagesInput, Prisma.TutorChatUncheckedUpdateWithoutMessagesInput>
+}
+
+export type TutorChatUpdateWithoutMessagesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  prompt?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  contextFiles?: Prisma.ContextFileUpdateManyWithoutTutorChatNestedInput
+  materials?: Prisma.MaterialUpdateManyWithoutTutorChatNestedInput
+  chatSummaries?: Prisma.ChatSummaryUpdateManyWithoutTutorChatNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutTutorChatsNestedInput
+}
+
+export type TutorChatUncheckedUpdateWithoutMessagesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  prompt?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  contextFiles?: Prisma.ContextFileUncheckedUpdateManyWithoutTutorChatNestedInput
+  materials?: Prisma.MaterialUncheckedUpdateManyWithoutTutorChatNestedInput
+  chatSummaries?: Prisma.ChatSummaryUncheckedUpdateManyWithoutTutorChatNestedInput
+}
+
+export type TutorChatCreateWithoutContextFilesInput = {
+  id?: string
+  name: string
+  description?: string | null
+  topic?: string | null
+  prompt?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  messages?: Prisma.MessageCreateNestedManyWithoutTutorChatInput
+  materials?: Prisma.MaterialCreateNestedManyWithoutTutorChatInput
+  chatSummaries?: Prisma.ChatSummaryCreateNestedManyWithoutTutorChatInput
+  user: Prisma.UserCreateNestedOneWithoutTutorChatsInput
+}
+
+export type TutorChatUncheckedCreateWithoutContextFilesInput = {
+  id?: string
+  name: string
+  description?: string | null
+  topic?: string | null
+  prompt?: string
+  userId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutTutorChatInput
+  materials?: Prisma.MaterialUncheckedCreateNestedManyWithoutTutorChatInput
+  chatSummaries?: Prisma.ChatSummaryUncheckedCreateNestedManyWithoutTutorChatInput
+}
+
+export type TutorChatCreateOrConnectWithoutContextFilesInput = {
+  where: Prisma.TutorChatWhereUniqueInput
+  create: Prisma.XOR<Prisma.TutorChatCreateWithoutContextFilesInput, Prisma.TutorChatUncheckedCreateWithoutContextFilesInput>
+}
+
+export type TutorChatUpsertWithoutContextFilesInput = {
+  update: Prisma.XOR<Prisma.TutorChatUpdateWithoutContextFilesInput, Prisma.TutorChatUncheckedUpdateWithoutContextFilesInput>
+  create: Prisma.XOR<Prisma.TutorChatCreateWithoutContextFilesInput, Prisma.TutorChatUncheckedCreateWithoutContextFilesInput>
+  where?: Prisma.TutorChatWhereInput
+}
+
+export type TutorChatUpdateToOneWithWhereWithoutContextFilesInput = {
+  where?: Prisma.TutorChatWhereInput
+  data: Prisma.XOR<Prisma.TutorChatUpdateWithoutContextFilesInput, Prisma.TutorChatUncheckedUpdateWithoutContextFilesInput>
+}
+
+export type TutorChatUpdateWithoutContextFilesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  prompt?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  messages?: Prisma.MessageUpdateManyWithoutTutorChatNestedInput
+  materials?: Prisma.MaterialUpdateManyWithoutTutorChatNestedInput
+  chatSummaries?: Prisma.ChatSummaryUpdateManyWithoutTutorChatNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutTutorChatsNestedInput
+}
+
+export type TutorChatUncheckedUpdateWithoutContextFilesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  prompt?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutTutorChatNestedInput
+  materials?: Prisma.MaterialUncheckedUpdateManyWithoutTutorChatNestedInput
+  chatSummaries?: Prisma.ChatSummaryUncheckedUpdateManyWithoutTutorChatNestedInput
+}
+
+export type TutorChatCreateWithoutChatSummariesInput = {
+  id?: string
+  name: string
+  description?: string | null
+  topic?: string | null
+  prompt?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  messages?: Prisma.MessageCreateNestedManyWithoutTutorChatInput
+  contextFiles?: Prisma.ContextFileCreateNestedManyWithoutTutorChatInput
+  materials?: Prisma.MaterialCreateNestedManyWithoutTutorChatInput
+  user: Prisma.UserCreateNestedOneWithoutTutorChatsInput
+}
+
+export type TutorChatUncheckedCreateWithoutChatSummariesInput = {
+  id?: string
+  name: string
+  description?: string | null
+  topic?: string | null
+  prompt?: string
+  userId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutTutorChatInput
+  contextFiles?: Prisma.ContextFileUncheckedCreateNestedManyWithoutTutorChatInput
+  materials?: Prisma.MaterialUncheckedCreateNestedManyWithoutTutorChatInput
+}
+
+export type TutorChatCreateOrConnectWithoutChatSummariesInput = {
+  where: Prisma.TutorChatWhereUniqueInput
+  create: Prisma.XOR<Prisma.TutorChatCreateWithoutChatSummariesInput, Prisma.TutorChatUncheckedCreateWithoutChatSummariesInput>
+}
+
+export type TutorChatUpsertWithoutChatSummariesInput = {
+  update: Prisma.XOR<Prisma.TutorChatUpdateWithoutChatSummariesInput, Prisma.TutorChatUncheckedUpdateWithoutChatSummariesInput>
+  create: Prisma.XOR<Prisma.TutorChatCreateWithoutChatSummariesInput, Prisma.TutorChatUncheckedCreateWithoutChatSummariesInput>
+  where?: Prisma.TutorChatWhereInput
+}
+
+export type TutorChatUpdateToOneWithWhereWithoutChatSummariesInput = {
+  where?: Prisma.TutorChatWhereInput
+  data: Prisma.XOR<Prisma.TutorChatUpdateWithoutChatSummariesInput, Prisma.TutorChatUncheckedUpdateWithoutChatSummariesInput>
+}
+
+export type TutorChatUpdateWithoutChatSummariesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  prompt?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  messages?: Prisma.MessageUpdateManyWithoutTutorChatNestedInput
+  contextFiles?: Prisma.ContextFileUpdateManyWithoutTutorChatNestedInput
+  materials?: Prisma.MaterialUpdateManyWithoutTutorChatNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutTutorChatsNestedInput
+}
+
+export type TutorChatUncheckedUpdateWithoutChatSummariesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  prompt?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutTutorChatNestedInput
+  contextFiles?: Prisma.ContextFileUncheckedUpdateManyWithoutTutorChatNestedInput
+  materials?: Prisma.MaterialUncheckedUpdateManyWithoutTutorChatNestedInput
+}
+
+export type TutorChatCreateWithoutMaterialsInput = {
+  id?: string
+  name: string
+  description?: string | null
+  topic?: string | null
+  prompt?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  messages?: Prisma.MessageCreateNestedManyWithoutTutorChatInput
+  contextFiles?: Prisma.ContextFileCreateNestedManyWithoutTutorChatInput
+  chatSummaries?: Prisma.ChatSummaryCreateNestedManyWithoutTutorChatInput
+  user: Prisma.UserCreateNestedOneWithoutTutorChatsInput
+}
+
+export type TutorChatUncheckedCreateWithoutMaterialsInput = {
+  id?: string
+  name: string
+  description?: string | null
+  topic?: string | null
+  prompt?: string
+  userId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutTutorChatInput
+  contextFiles?: Prisma.ContextFileUncheckedCreateNestedManyWithoutTutorChatInput
+  chatSummaries?: Prisma.ChatSummaryUncheckedCreateNestedManyWithoutTutorChatInput
+}
+
+export type TutorChatCreateOrConnectWithoutMaterialsInput = {
+  where: Prisma.TutorChatWhereUniqueInput
+  create: Prisma.XOR<Prisma.TutorChatCreateWithoutMaterialsInput, Prisma.TutorChatUncheckedCreateWithoutMaterialsInput>
+}
+
+export type TutorChatUpsertWithoutMaterialsInput = {
+  update: Prisma.XOR<Prisma.TutorChatUpdateWithoutMaterialsInput, Prisma.TutorChatUncheckedUpdateWithoutMaterialsInput>
+  create: Prisma.XOR<Prisma.TutorChatCreateWithoutMaterialsInput, Prisma.TutorChatUncheckedCreateWithoutMaterialsInput>
+  where?: Prisma.TutorChatWhereInput
+}
+
+export type TutorChatUpdateToOneWithWhereWithoutMaterialsInput = {
+  where?: Prisma.TutorChatWhereInput
+  data: Prisma.XOR<Prisma.TutorChatUpdateWithoutMaterialsInput, Prisma.TutorChatUncheckedUpdateWithoutMaterialsInput>
+}
+
+export type TutorChatUpdateWithoutMaterialsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  prompt?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  messages?: Prisma.MessageUpdateManyWithoutTutorChatNestedInput
+  contextFiles?: Prisma.ContextFileUpdateManyWithoutTutorChatNestedInput
+  chatSummaries?: Prisma.ChatSummaryUpdateManyWithoutTutorChatNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutTutorChatsNestedInput
+}
+
+export type TutorChatUncheckedUpdateWithoutMaterialsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  prompt?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutTutorChatNestedInput
+  contextFiles?: Prisma.ContextFileUncheckedUpdateManyWithoutTutorChatNestedInput
+  chatSummaries?: Prisma.ChatSummaryUncheckedUpdateManyWithoutTutorChatNestedInput
+}
+
 export type TutorChatCreateManyUserInput = {
   id?: string
   name: string
@@ -503,6 +895,10 @@ export type TutorChatUpdateWithoutUserInput = {
   prompt?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  messages?: Prisma.MessageUpdateManyWithoutTutorChatNestedInput
+  contextFiles?: Prisma.ContextFileUpdateManyWithoutTutorChatNestedInput
+  materials?: Prisma.MaterialUpdateManyWithoutTutorChatNestedInput
+  chatSummaries?: Prisma.ChatSummaryUpdateManyWithoutTutorChatNestedInput
 }
 
 export type TutorChatUncheckedUpdateWithoutUserInput = {
@@ -513,6 +909,10 @@ export type TutorChatUncheckedUpdateWithoutUserInput = {
   prompt?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutTutorChatNestedInput
+  contextFiles?: Prisma.ContextFileUncheckedUpdateManyWithoutTutorChatNestedInput
+  materials?: Prisma.MaterialUncheckedUpdateManyWithoutTutorChatNestedInput
+  chatSummaries?: Prisma.ChatSummaryUncheckedUpdateManyWithoutTutorChatNestedInput
 }
 
 export type TutorChatUncheckedUpdateManyWithoutUserInput = {
@@ -526,6 +926,62 @@ export type TutorChatUncheckedUpdateManyWithoutUserInput = {
 }
 
 
+/**
+ * Count Type TutorChatCountOutputType
+ */
+
+export type TutorChatCountOutputType = {
+  messages: number
+  contextFiles: number
+  materials: number
+  chatSummaries: number
+}
+
+export type TutorChatCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  messages?: boolean | TutorChatCountOutputTypeCountMessagesArgs
+  contextFiles?: boolean | TutorChatCountOutputTypeCountContextFilesArgs
+  materials?: boolean | TutorChatCountOutputTypeCountMaterialsArgs
+  chatSummaries?: boolean | TutorChatCountOutputTypeCountChatSummariesArgs
+}
+
+/**
+ * TutorChatCountOutputType without action
+ */
+export type TutorChatCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TutorChatCountOutputType
+   */
+  select?: Prisma.TutorChatCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * TutorChatCountOutputType without action
+ */
+export type TutorChatCountOutputTypeCountMessagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MessageWhereInput
+}
+
+/**
+ * TutorChatCountOutputType without action
+ */
+export type TutorChatCountOutputTypeCountContextFilesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ContextFileWhereInput
+}
+
+/**
+ * TutorChatCountOutputType without action
+ */
+export type TutorChatCountOutputTypeCountMaterialsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MaterialWhereInput
+}
+
+/**
+ * TutorChatCountOutputType without action
+ */
+export type TutorChatCountOutputTypeCountChatSummariesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ChatSummaryWhereInput
+}
+
 
 export type TutorChatSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -536,7 +992,12 @@ export type TutorChatSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   userId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  messages?: boolean | Prisma.TutorChat$messagesArgs<ExtArgs>
+  contextFiles?: boolean | Prisma.TutorChat$contextFilesArgs<ExtArgs>
+  materials?: boolean | Prisma.TutorChat$materialsArgs<ExtArgs>
+  chatSummaries?: boolean | Prisma.TutorChat$chatSummariesArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  _count?: boolean | Prisma.TutorChatCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["tutorChat"]>
 
 export type TutorChatSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -576,7 +1037,12 @@ export type TutorChatSelectScalar = {
 
 export type TutorChatOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "description" | "topic" | "prompt" | "userId" | "createdAt" | "updatedAt", ExtArgs["result"]["tutorChat"]>
 export type TutorChatInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  messages?: boolean | Prisma.TutorChat$messagesArgs<ExtArgs>
+  contextFiles?: boolean | Prisma.TutorChat$contextFilesArgs<ExtArgs>
+  materials?: boolean | Prisma.TutorChat$materialsArgs<ExtArgs>
+  chatSummaries?: boolean | Prisma.TutorChat$chatSummariesArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  _count?: boolean | Prisma.TutorChatCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type TutorChatIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -588,6 +1054,10 @@ export type TutorChatIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
 export type $TutorChatPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "TutorChat"
   objects: {
+    messages: Prisma.$MessagePayload<ExtArgs>[]
+    contextFiles: Prisma.$ContextFilePayload<ExtArgs>[]
+    materials: Prisma.$MaterialPayload<ExtArgs>[]
+    chatSummaries: Prisma.$ChatSummaryPayload<ExtArgs>[]
     user: Prisma.$UserPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -993,6 +1463,10 @@ readonly fields: TutorChatFieldRefs;
  */
 export interface Prisma__TutorChatClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  messages<T extends Prisma.TutorChat$messagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TutorChat$messagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  contextFiles<T extends Prisma.TutorChat$contextFilesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TutorChat$contextFilesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ContextFilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  materials<T extends Prisma.TutorChat$materialsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TutorChat$materialsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MaterialPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  chatSummaries<T extends Prisma.TutorChat$chatSummariesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TutorChat$chatSummariesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ChatSummaryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1424,6 +1898,102 @@ export type TutorChatDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Int
    * Limit how many TutorChats to delete.
    */
   limit?: number
+}
+
+/**
+ * TutorChat.messages
+ */
+export type TutorChat$messagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Message
+   */
+  select?: Prisma.MessageSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Message
+   */
+  omit?: Prisma.MessageOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MessageInclude<ExtArgs> | null
+  where?: Prisma.MessageWhereInput
+  orderBy?: Prisma.MessageOrderByWithRelationInput | Prisma.MessageOrderByWithRelationInput[]
+  cursor?: Prisma.MessageWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MessageScalarFieldEnum | Prisma.MessageScalarFieldEnum[]
+}
+
+/**
+ * TutorChat.contextFiles
+ */
+export type TutorChat$contextFilesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ContextFile
+   */
+  select?: Prisma.ContextFileSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ContextFile
+   */
+  omit?: Prisma.ContextFileOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ContextFileInclude<ExtArgs> | null
+  where?: Prisma.ContextFileWhereInput
+  orderBy?: Prisma.ContextFileOrderByWithRelationInput | Prisma.ContextFileOrderByWithRelationInput[]
+  cursor?: Prisma.ContextFileWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ContextFileScalarFieldEnum | Prisma.ContextFileScalarFieldEnum[]
+}
+
+/**
+ * TutorChat.materials
+ */
+export type TutorChat$materialsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Material
+   */
+  select?: Prisma.MaterialSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Material
+   */
+  omit?: Prisma.MaterialOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MaterialInclude<ExtArgs> | null
+  where?: Prisma.MaterialWhereInput
+  orderBy?: Prisma.MaterialOrderByWithRelationInput | Prisma.MaterialOrderByWithRelationInput[]
+  cursor?: Prisma.MaterialWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MaterialScalarFieldEnum | Prisma.MaterialScalarFieldEnum[]
+}
+
+/**
+ * TutorChat.chatSummaries
+ */
+export type TutorChat$chatSummariesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ChatSummary
+   */
+  select?: Prisma.ChatSummarySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ChatSummary
+   */
+  omit?: Prisma.ChatSummaryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ChatSummaryInclude<ExtArgs> | null
+  where?: Prisma.ChatSummaryWhereInput
+  orderBy?: Prisma.ChatSummaryOrderByWithRelationInput | Prisma.ChatSummaryOrderByWithRelationInput[]
+  cursor?: Prisma.ChatSummaryWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ChatSummaryScalarFieldEnum | Prisma.ChatSummaryScalarFieldEnum[]
 }
 
 /**

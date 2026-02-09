@@ -1,6 +1,6 @@
 import { PrismaService } from "@app/prisma";
 import { Injectable } from "@nestjs/common";
-import type { ICreateResetPasswordTokenData } from "@/auth/password/interfaces";
+import type { ICreateResetPasswordTokenData } from "./reset-password-token.interfaces";
 
 @Injectable()
 export class ResetPasswordTokenRepository {

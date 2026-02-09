@@ -1,11 +1,8 @@
-import type {
-	ICreateUserData,
-	IUpdateFailedLoginAttemptsData,
-} from "@/users/interfaces";
 import { PrismaService } from "@app/prisma";
 import { Injectable } from "@nestjs/common";
 import type { User } from "@prisma/generated/client";
 import type { TUserWithAvatar } from "@repo/schemas";
+import type { ICreateUserData, IUpdateFailedLoginAttemptsData } from "./users.interfaces";
 
 @Injectable()
 export class UsersRepository {
@@ -15,33 +12,30 @@ export class UsersRepository {
 		return this.db.user.findUnique({
 			where: { id: userId },
 			include: {
-				avatar: true,
-			},
+				avatar: true
+			}
 		});
 	}
 
 	public findByEmail(email: string): Promise<TUserWithAvatar | null> {
 		return this.db.user.findUnique({
 			where: { email },
-			include: { avatar: true },
+			include: { avatar: true }
 		});
 	}
 
-	public findByEmailOrUsername(
-		email: string,
-		username: string,
-	): Promise<User | null> {
+	public findByEmailOrUsername(email: string, username: string): Promise<User | null> {
 		return this.db.user.findFirst({
 			where: {
 				OR: [
 					{
-						email,
+						email
 					},
 					{
-						username,
-					},
-				],
-			},
+						username
+					}
+				]
+			}
 		});
 	}
 
@@ -55,71 +49,66 @@ export class UsersRepository {
 				avatar: data.avatarUrl
 					? {
 							create: {
-								url: data.avatarUrl,
-							},
+								url: data.avatarUrl
+							}
 						}
-					: undefined,
-			},
+					: undefined
+			}
 		});
 	}
 
-	public getFailedLoginAttempts(
-		userId: string,
-	): Promise<{ failedLoginAttempts: number } | null> {
+	public getFailedLoginAttempts(userId: string): Promise<{ failedLoginAttempts: number } | null> {
 		return this.db.user.findUnique({
 			where: {
-				id: userId,
+				id: userId
 			},
 			select: {
-				failedLoginAttempts: true,
-			},
+				failedLoginAttempts: true
+			}
 		});
 	}
-	public async updateFailedLoginAttempts(
-		userId: string,
-		data: IUpdateFailedLoginAttemptsData,
-	): Promise<User> {
+	public async updateFailedLoginAttempts(userId: string, data: IUpdateFailedLoginAttemptsData): Promise<User> {
 		return this.db.user.update({
 			where: {
-				id: userId,
+				id: userId
 			},
 			data: {
 				failedLoginAttempts: data.attempts,
-				lockedUntil: data.lockedUntil,
-			},
+				lockedUntil: data.lockedUntil
+			}
 		});
 	}
 
 	public resetFailedLoginAttempts(userId: string): Promise<User> {
 		return this.db.user.update({
 			where: {
-				id: userId,
+				id: userId
 			},
 			data: {
 				failedLoginAttempts: 0,
-				lockedUntil: null,
-			},
+				lockedUntil: null
+			}
 		});
 	}
 
 	public updatePassword(userId: string, hash: string): Promise<User> {
 		return this.db.user.update({
 			where: {
-				id: userId,
+				id: userId
 			},
 			data: {
-				hash,
-			},
+				hash
+			}
 		});
 	}
 	public updateVerificationStatus(userId: string): Promise<User> {
 		return this.db.user.update({
 			where: {
-				id: userId,
+				id: userId
 			},
 			data: {
-				emailVerified: true,
-			},
+				emailVerified: true
+			}
 		});
 	}
 }

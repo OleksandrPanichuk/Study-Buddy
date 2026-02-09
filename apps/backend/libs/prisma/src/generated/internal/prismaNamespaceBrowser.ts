@@ -55,7 +55,21 @@ export const ModelName = {
   User: 'User',
   VerificationCode: 'VerificationCode',
   ResetPasswordToken: 'ResetPasswordToken',
-  TutorChat: 'TutorChat'
+  TutorChat: 'TutorChat',
+  Message: 'Message',
+  MessageAttachment: 'MessageAttachment',
+  ContextFile: 'ContextFile',
+  ChatSummary: 'ChatSummary',
+  FileAsset: 'FileAsset',
+  FileChunk: 'FileChunk',
+  Material: 'Material',
+  Note: 'Note',
+  Quiz: 'Quiz',
+  QuizQuestion: 'QuizQuestion',
+  QuizResult: 'QuizResult',
+  FlashcardDeck: 'FlashcardDeck',
+  Flashcard: 'Flashcard',
+  FlashcardReview: 'FlashcardReview'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -139,12 +153,195 @@ export const TutorChatScalarFieldEnum = {
 export type TutorChatScalarFieldEnum = (typeof TutorChatScalarFieldEnum)[keyof typeof TutorChatScalarFieldEnum]
 
 
+export const MessageScalarFieldEnum = {
+  id: 'id',
+  role: 'role',
+  content: 'content',
+  model: 'model',
+  inputTokens: 'inputTokens',
+  outputTokens: 'outputTokens',
+  latencyMs: 'latencyMs',
+  tutorChatId: 'tutorChatId',
+  userId: 'userId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type MessageScalarFieldEnum = (typeof MessageScalarFieldEnum)[keyof typeof MessageScalarFieldEnum]
+
+
+export const MessageAttachmentScalarFieldEnum = {
+  id: 'id',
+  scope: 'scope',
+  messageId: 'messageId',
+  fileId: 'fileId',
+  createdAt: 'createdAt'
+} as const
+
+export type MessageAttachmentScalarFieldEnum = (typeof MessageAttachmentScalarFieldEnum)[keyof typeof MessageAttachmentScalarFieldEnum]
+
+
+export const ContextFileScalarFieldEnum = {
+  id: 'id',
+  priority: 'priority',
+  note: 'note',
+  tutorChatId: 'tutorChatId',
+  fileId: 'fileId',
+  createdAt: 'createdAt'
+} as const
+
+export type ContextFileScalarFieldEnum = (typeof ContextFileScalarFieldEnum)[keyof typeof ContextFileScalarFieldEnum]
+
+
+export const ChatSummaryScalarFieldEnum = {
+  id: 'id',
+  summary: 'summary',
+  tokenCount: 'tokenCount',
+  tutorChatId: 'tutorChatId',
+  createdAt: 'createdAt'
+} as const
+
+export type ChatSummaryScalarFieldEnum = (typeof ChatSummaryScalarFieldEnum)[keyof typeof ChatSummaryScalarFieldEnum]
+
+
+export const FileAssetScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  mimeType: 'mimeType',
+  sizeBytes: 'sizeBytes',
+  url: 'url',
+  storageKey: 'storageKey',
+  status: 'status',
+  textHash: 'textHash',
+  userId: 'userId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FileAssetScalarFieldEnum = (typeof FileAssetScalarFieldEnum)[keyof typeof FileAssetScalarFieldEnum]
+
+
+export const FileChunkScalarFieldEnum = {
+  id: 'id',
+  index: 'index',
+  content: 'content',
+  tokenCount: 'tokenCount',
+  fileId: 'fileId',
+  createdAt: 'createdAt'
+} as const
+
+export type FileChunkScalarFieldEnum = (typeof FileChunkScalarFieldEnum)[keyof typeof FileChunkScalarFieldEnum]
+
+
+export const MaterialScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  title: 'title',
+  summary: 'summary',
+  userId: 'userId',
+  tutorChatId: 'tutorChatId',
+  fileId: 'fileId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type MaterialScalarFieldEnum = (typeof MaterialScalarFieldEnum)[keyof typeof MaterialScalarFieldEnum]
+
+
+export const NoteScalarFieldEnum = {
+  id: 'id',
+  content: 'content',
+  materialId: 'materialId',
+  createdAt: 'createdAt'
+} as const
+
+export type NoteScalarFieldEnum = (typeof NoteScalarFieldEnum)[keyof typeof NoteScalarFieldEnum]
+
+
+export const QuizScalarFieldEnum = {
+  id: 'id',
+  difficulty: 'difficulty',
+  materialId: 'materialId',
+  createdAt: 'createdAt'
+} as const
+
+export type QuizScalarFieldEnum = (typeof QuizScalarFieldEnum)[keyof typeof QuizScalarFieldEnum]
+
+
+export const QuizQuestionScalarFieldEnum = {
+  id: 'id',
+  prompt: 'prompt',
+  type: 'type',
+  options: 'options',
+  answer: 'answer',
+  quizId: 'quizId',
+  createdAt: 'createdAt'
+} as const
+
+export type QuizQuestionScalarFieldEnum = (typeof QuizQuestionScalarFieldEnum)[keyof typeof QuizQuestionScalarFieldEnum]
+
+
+export const QuizResultScalarFieldEnum = {
+  id: 'id',
+  score: 'score',
+  total: 'total',
+  answers: 'answers',
+  quizId: 'quizId',
+  userId: 'userId',
+  createdAt: 'createdAt'
+} as const
+
+export type QuizResultScalarFieldEnum = (typeof QuizResultScalarFieldEnum)[keyof typeof QuizResultScalarFieldEnum]
+
+
+export const FlashcardDeckScalarFieldEnum = {
+  id: 'id',
+  materialId: 'materialId',
+  createdAt: 'createdAt'
+} as const
+
+export type FlashcardDeckScalarFieldEnum = (typeof FlashcardDeckScalarFieldEnum)[keyof typeof FlashcardDeckScalarFieldEnum]
+
+
+export const FlashcardScalarFieldEnum = {
+  id: 'id',
+  front: 'front',
+  back: 'back',
+  deckId: 'deckId',
+  createdAt: 'createdAt'
+} as const
+
+export type FlashcardScalarFieldEnum = (typeof FlashcardScalarFieldEnum)[keyof typeof FlashcardScalarFieldEnum]
+
+
+export const FlashcardReviewScalarFieldEnum = {
+  id: 'id',
+  easeFactor: 'easeFactor',
+  interval: 'interval',
+  nextReview: 'nextReview',
+  cardId: 'cardId',
+  userId: 'userId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FlashcardReviewScalarFieldEnum = (typeof FlashcardReviewScalarFieldEnum)[keyof typeof FlashcardReviewScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
 } as const
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
 export const QueryMode = {
@@ -161,4 +358,13 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 

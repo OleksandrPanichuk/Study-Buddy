@@ -3,8 +3,9 @@ export interface IUploadResult {
 	url: string;
 	bucket: string;
 	size: number;
-	mimetype: string;
+	mimeType: string;
 	etag?: string;
+	name: string;
 }
 
 export interface IPresignedUploadUrlResult {

@@ -9,7 +9,41 @@
 * 🟢 You can import this file directly.
 */
 
+export const MessageRole = {
+  USER: 'USER',
+  ASSISTANT: 'ASSISTANT',
+  SYSTEM: 'SYSTEM',
+  TOOL: 'TOOL'
+} as const
+
+export type MessageRole = (typeof MessageRole)[keyof typeof MessageRole]
 
 
-// This file is empty because there are no enums in the schema.
-export {}
+export const FileStatus = {
+  UPLOADING: 'UPLOADING',
+  PROCESSING: 'PROCESSING',
+  READY: 'READY',
+  FAILED: 'FAILED'
+} as const
+
+export type FileStatus = (typeof FileStatus)[keyof typeof FileStatus]
+
+
+export const AttachmentScope = {
+  MESSAGE: 'MESSAGE',
+  CHAT_CONTEXT: 'CHAT_CONTEXT'
+} as const
+
+export type AttachmentScope = (typeof AttachmentScope)[keyof typeof AttachmentScope]
+
+
+export const MaterialType = {
+  FILE: 'FILE',
+  NOTE: 'NOTE',
+  QUIZ: 'QUIZ',
+  FLASHCARD_DECK: 'FLASHCARD_DECK',
+  LESSON: 'LESSON',
+  CODE_LAB: 'CODE_LAB'
+} as const
+
+export type MaterialType = (typeof MaterialType)[keyof typeof MaterialType]

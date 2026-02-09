@@ -1,11 +1,11 @@
 import path from "node:path";
-import type {Readable} from "node:stream";
+import type { Readable } from "node:stream";
 import type {
 	IDeleteResult,
 	IFileValidationOptions,
 	IPresignedUploadUrlResult,
 	IUploadOptions,
-	IUploadResult,
+	IUploadResult
 } from "@app/s3/s3.interfaces";
 import {
 	DeleteObjectCommand,
@@ -14,20 +14,20 @@ import {
 	HeadObjectCommand,
 	PutObjectCommand,
 	S3Client,
-	type S3ServiceException,
+	type S3ServiceException
 } from "@aws-sdk/client-s3";
-import {getSignedUrl} from "@aws-sdk/s3-request-presigner";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import {
 	BadRequestException,
 	HttpException,
 	Injectable,
 	InternalServerErrorException,
 	Logger,
-	NotFoundException,
+	NotFoundException
 } from "@nestjs/common";
-import {ConfigService} from "@nestjs/config";
-import {v4 as uuid} from "uuid";
-import type {Env} from "@/shared/config";
+import { ConfigService } from "@nestjs/config";
+import { v4 as uuid } from "uuid";
+import type { Env } from "@/shared/config";
 
 @Injectable()
 export class S3Service {
@@ -89,8 +89,9 @@ export class S3Service {
 				key,
 				bucket: this.bucket,
 				size: file.size,
-				mimetype: contentType,
-				etag: result.ETag
+				mimeType: contentType,
+				etag: result.ETag,
+				name: file.originalname
 			};
 		} catch (error) {
 			if (error instanceof HttpException) {
@@ -220,8 +221,8 @@ export class S3Service {
 		} catch (error) {
 			if (error instanceof HttpException) {
 				throw error;
-      }
-      if (this.isS3Exception(error) && error.$metadata?.httpStatusCode === 404) {
+			}
+			if (this.isS3Exception(error) && error.$metadata?.httpStatusCode === 404) {
 				throw new NotFoundException(`File with key ${key} not found`);
 			}
 			this.logger.error(`Failed to download file with key ${key}: ${error}`);

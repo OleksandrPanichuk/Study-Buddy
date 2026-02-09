@@ -1,6 +1,6 @@
-import {PrismaService} from "@app/prisma";
-import {Injectable} from "@nestjs/common";
-import type {ICreateTutorCharInput, IFindAllTutorChatsInput, IUpdateTutorChatInput} from "./interfaces";
+import { PrismaService } from "@app/prisma";
+import { Injectable } from "@nestjs/common";
+import type { ICreateTutorCharInput, IFindAllTutorChatsInput, IUpdateTutorChatInput } from "./tutor-chats.interfaces";
 
 @Injectable()
 export class TutorChatsRepository {

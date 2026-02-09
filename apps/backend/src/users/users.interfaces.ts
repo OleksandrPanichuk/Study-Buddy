@@ -4,3 +4,8 @@ export interface ICreateUserData {
 	hash?: string;
 	avatarUrl?: string;
 }
+
+export interface IUpdateFailedLoginAttemptsData {
+	attempts: number;
+	lockedUntil: Date | null;
+}

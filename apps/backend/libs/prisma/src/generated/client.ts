@@ -62,3 +62,73 @@ export type ResetPasswordToken = Prisma.ResetPasswordTokenModel
  * 
  */
 export type TutorChat = Prisma.TutorChatModel
+/**
+ * Model Message
+ * 
+ */
+export type Message = Prisma.MessageModel
+/**
+ * Model MessageAttachment
+ * 
+ */
+export type MessageAttachment = Prisma.MessageAttachmentModel
+/**
+ * Model ContextFile
+ * 
+ */
+export type ContextFile = Prisma.ContextFileModel
+/**
+ * Model ChatSummary
+ * 
+ */
+export type ChatSummary = Prisma.ChatSummaryModel
+/**
+ * Model FileAsset
+ * 
+ */
+export type FileAsset = Prisma.FileAssetModel
+/**
+ * Model FileChunk
+ * 
+ */
+export type FileChunk = Prisma.FileChunkModel
+/**
+ * Model Material
+ * 
+ */
+export type Material = Prisma.MaterialModel
+/**
+ * Model Note
+ * 
+ */
+export type Note = Prisma.NoteModel
+/**
+ * Model Quiz
+ * 
+ */
+export type Quiz = Prisma.QuizModel
+/**
+ * Model QuizQuestion
+ * 
+ */
+export type QuizQuestion = Prisma.QuizQuestionModel
+/**
+ * Model QuizResult
+ * 
+ */
+export type QuizResult = Prisma.QuizResultModel
+/**
+ * Model FlashcardDeck
+ * 
+ */
+export type FlashcardDeck = Prisma.FlashcardDeckModel
+/**
+ * Model Flashcard
+ * 
+ */
+export type Flashcard = Prisma.FlashcardModel
+/**
+ * Model FlashcardReview
+ * 
+ */
+export type FlashcardReview = Prisma.FlashcardReviewModel

@@ -21,6 +21,12 @@
       "@/*": [
         "src/*"
       ],
+      "@app/ai": [
+        "libs/ai/src"
+      ],
+      "@app/ai/*": [
+        "libs/ai/src/*"
+      ],
       "@app/hashing": [
         "libs/hashing/src"
       ],

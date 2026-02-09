@@ -9,6 +9,15 @@
     "webpackConfigPath": "./webpack.config.js"
   },
   "projects": {
+    "ai": {
+      "type": "library",
+      "root": "libs/ai",
+      "entryFile": "index",
+      "sourceRoot": "libs/ai/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/ai/tsconfig.lib.json"
+      }
+    },
     "hashing": {
       "type": "library",
       "root": "libs/hashing",

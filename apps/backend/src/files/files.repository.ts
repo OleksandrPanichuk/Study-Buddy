@@ -64,33 +64,35 @@ export class FilesRepository {
 	}
 
 	public findSimilarChunks(embedding: number[], limit = 10, threshold = 0.7) {
+		const vectorStr = `[${embedding.join(",")}]`;
+
 		return this.db.$queryRaw`
-			SELECT
-			  id,
-			  "fileId",
-			  content,
-			  index,
-			  "tokenCount",
-			  embedding,
-			  1 - (embedding <=> ${embedding}::vector) as similarity
-			FROM "file_chunks"
-			WHERE 1 - (embedding <=> ${embedding}::vector) > ${threshold}
-			ORDER BY embedding <=> ${embedding}::vector
-			LIMIT ${limit}
-		  `;
+            SELECT
+              id,
+              "file_id" as "fileId",
+              content,
+              index,
+              "token_count" as "tokenCount",
+              1 - (embedding <=> ${vectorStr}::vector) as similarity
+            FROM "file_chunks"
+            WHERE 1 - (embedding <=> ${vectorStr}::vector) > ${threshold}
+            ORDER BY embedding <=> ${vectorStr}::vector
+            LIMIT ${limit}
+          `;
 	}
+	
 
 	public async createChunks(fileAssetId: string, data: ICreateFileChunkData[]) {
 		await this.db.$transaction(
-			data.map(
-				(chunk) =>
-					this.db.$executeRaw`
+			data.map((chunk) => {
+				return this.db.$executeRaw`
                     INSERT INTO "file_chunks" (id, index, content, token_count, embedding, file_id)
                     VALUES (${uuid()}, ${chunk.index}, ${chunk.content}, ${chunk.tokenCount}, ${chunk.embedding}::vector, ${fileAssetId})
-                `
-			)
+                `;
+			})
 		);
 	}
+
 
 	public deleteChunksByFileId(fileId: string) {
 		return this.db.fileChunk.deleteMany({

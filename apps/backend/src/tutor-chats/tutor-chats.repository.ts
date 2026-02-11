@@ -6,13 +6,13 @@ import type { ICreateTutorCharInput, IFindAllTutorChatsInput, IUpdateTutorChatIn
 export class TutorChatsRepository {
 	constructor(private readonly db: PrismaService) {}
 
-	public findByUserId(dto: IFindAllTutorChatsInput) {
+	public findByUserId(data: IFindAllTutorChatsInput) {
 		return this.db.tutorChat.findMany({
 			where: {
-				userId: dto.userId
+				userId: data.userId
 			},
-			take: dto.take,
-			cursor: dto.cursor ? { id: dto.cursor } : undefined,
+			take: data.take,
+			cursor: data.cursor ? { id: data.cursor } : undefined,
 			orderBy: {
 				createdAt: "desc"
 			}
@@ -25,28 +25,28 @@ export class TutorChatsRepository {
 		});
 	}
 
-	public create(dto: ICreateTutorCharInput) {
+	public create(data: ICreateTutorCharInput) {
 		return this.db.tutorChat.create({
 			data: {
-				userId: dto.userId,
-				name: dto.name,
-				description: dto.description,
-				topic: dto.topic,
-				prompt: dto.prompt
+				userId: data.userId,
+				name: data.name,
+				description: data.description,
+				topic: data.topic,
+				prompt: data.prompt
 			}
 		});
 	}
 
-	public update(dto: IUpdateTutorChatInput) {
+	public update(data: IUpdateTutorChatInput) {
 		return this.db.tutorChat.update({
 			where: {
-				id: dto.id
+				id: data.id
 			},
 			data: {
-				name: dto.name,
-				description: dto.description,
-				topic: dto.topic,
-				prompt: dto.prompt
+				name: data.name,
+				description: data.description,
+				topic: data.topic,
+				prompt: data.prompt
 			}
 		});
 	}

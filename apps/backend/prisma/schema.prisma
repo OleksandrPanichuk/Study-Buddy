@@ -25,6 +25,12 @@ enum MessageRole {
   TOOL
 }
 
+enum MessageStatus {
+  PROCESSING
+  COMPLETE
+  FAILED
+}
+
 enum FileStatus {
   UPLOADING
   PROCESSING
@@ -145,12 +151,13 @@ model TutorChat {
 model Message {
   id String @id @default(uuid()) @db.Uuid
 
-  role         MessageRole @default(USER)
-  content      String      @db.Text
+  role         MessageRole   @default(USER)
+  content      String        @db.Text
   model        String?
-  inputTokens  Int?        @map("input_tokens")
-  outputTokens Int?        @map("output_tokens")
-  latencyMs    Int?        @map("latency_ms")
+  inputTokens  Int?          @map("input_tokens")
+  outputTokens Int?          @map("output_tokens")
+  latencyMs    Int?          @map("latency_ms")
+  status       MessageStatus @default(COMPLETE)
 
   attachments MessageAttachment[]
 

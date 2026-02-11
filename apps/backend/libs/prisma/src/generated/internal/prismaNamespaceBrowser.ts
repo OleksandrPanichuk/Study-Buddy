@@ -161,6 +161,7 @@ export const MessageScalarFieldEnum = {
   inputTokens: 'inputTokens',
   outputTokens: 'outputTokens',
   latencyMs: 'latencyMs',
+  status: 'status',
   tutorChatId: 'tutorChatId',
   userId: 'userId',
   createdAt: 'createdAt',

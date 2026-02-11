@@ -1,4 +1,4 @@
-import {Injectable, NotFoundException} from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import {
 	CreateTutorChatInput,
 	CreateTutorChatResponse,
@@ -7,7 +7,7 @@ import {
 	UpdateTutorChatInput,
 	UpdateTutorChatResponse
 } from "./tutor-chats.dto";
-import {TutorChatsRepository} from "./tutor-chats.repository";
+import { TutorChatsRepository } from "./tutor-chats.repository";
 
 @Injectable()
 export class TutorChatsService {

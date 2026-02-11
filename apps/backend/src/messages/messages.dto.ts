@@ -6,7 +6,7 @@ import {
 } from "@repo/schemas";
 import { createZodDto } from "nestjs-zod";
 
-export class FindAllMessagesInput extends createZodDto(findAllMessagesInputSchema) {}
+export class FindAllMessagesQuery extends createZodDto(findAllMessagesInputSchema) {}
 
 export class FindAllMessagesResponse extends createZodDto(findAllMessagesResponseSchema) {}
 

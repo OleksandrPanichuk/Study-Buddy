@@ -46,6 +46,7 @@ export type MessageMinAggregateOutputType = {
   inputTokens: number | null
   outputTokens: number | null
   latencyMs: number | null
+  status: $Enums.MessageStatus | null
   tutorChatId: string | null
   userId: string | null
   createdAt: Date | null
@@ -60,6 +61,7 @@ export type MessageMaxAggregateOutputType = {
   inputTokens: number | null
   outputTokens: number | null
   latencyMs: number | null
+  status: $Enums.MessageStatus | null
   tutorChatId: string | null
   userId: string | null
   createdAt: Date | null
@@ -74,6 +76,7 @@ export type MessageCountAggregateOutputType = {
   inputTokens: number
   outputTokens: number
   latencyMs: number
+  status: number
   tutorChatId: number
   userId: number
   createdAt: number
@@ -102,6 +105,7 @@ export type MessageMinAggregateInputType = {
   inputTokens?: true
   outputTokens?: true
   latencyMs?: true
+  status?: true
   tutorChatId?: true
   userId?: true
   createdAt?: true
@@ -116,6 +120,7 @@ export type MessageMaxAggregateInputType = {
   inputTokens?: true
   outputTokens?: true
   latencyMs?: true
+  status?: true
   tutorChatId?: true
   userId?: true
   createdAt?: true
@@ -130,6 +135,7 @@ export type MessageCountAggregateInputType = {
   inputTokens?: true
   outputTokens?: true
   latencyMs?: true
+  status?: true
   tutorChatId?: true
   userId?: true
   createdAt?: true
@@ -231,6 +237,7 @@ export type MessageGroupByOutputType = {
   inputTokens: number | null
   outputTokens: number | null
   latencyMs: number | null
+  status: $Enums.MessageStatus
   tutorChatId: string
   userId: string
   createdAt: Date
@@ -268,6 +275,7 @@ export type MessageWhereInput = {
   inputTokens?: Prisma.IntNullableFilter<"Message"> | number | null
   outputTokens?: Prisma.IntNullableFilter<"Message"> | number | null
   latencyMs?: Prisma.IntNullableFilter<"Message"> | number | null
+  status?: Prisma.EnumMessageStatusFilter<"Message"> | $Enums.MessageStatus
   tutorChatId?: Prisma.UuidFilter<"Message"> | string
   userId?: Prisma.UuidFilter<"Message"> | string
   createdAt?: Prisma.DateTimeFilter<"Message"> | Date | string
@@ -285,6 +293,7 @@ export type MessageOrderByWithRelationInput = {
   inputTokens?: Prisma.SortOrderInput | Prisma.SortOrder
   outputTokens?: Prisma.SortOrderInput | Prisma.SortOrder
   latencyMs?: Prisma.SortOrderInput | Prisma.SortOrder
+  status?: Prisma.SortOrder
   tutorChatId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -305,6 +314,7 @@ export type MessageWhereUniqueInput = Prisma.AtLeast<{
   inputTokens?: Prisma.IntNullableFilter<"Message"> | number | null
   outputTokens?: Prisma.IntNullableFilter<"Message"> | number | null
   latencyMs?: Prisma.IntNullableFilter<"Message"> | number | null
+  status?: Prisma.EnumMessageStatusFilter<"Message"> | $Enums.MessageStatus
   tutorChatId?: Prisma.UuidFilter<"Message"> | string
   userId?: Prisma.UuidFilter<"Message"> | string
   createdAt?: Prisma.DateTimeFilter<"Message"> | Date | string
@@ -322,6 +332,7 @@ export type MessageOrderByWithAggregationInput = {
   inputTokens?: Prisma.SortOrderInput | Prisma.SortOrder
   outputTokens?: Prisma.SortOrderInput | Prisma.SortOrder
   latencyMs?: Prisma.SortOrderInput | Prisma.SortOrder
+  status?: Prisma.SortOrder
   tutorChatId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -344,6 +355,7 @@ export type MessageScalarWhereWithAggregatesInput = {
   inputTokens?: Prisma.IntNullableWithAggregatesFilter<"Message"> | number | null
   outputTokens?: Prisma.IntNullableWithAggregatesFilter<"Message"> | number | null
   latencyMs?: Prisma.IntNullableWithAggregatesFilter<"Message"> | number | null
+  status?: Prisma.EnumMessageStatusWithAggregatesFilter<"Message"> | $Enums.MessageStatus
   tutorChatId?: Prisma.UuidWithAggregatesFilter<"Message"> | string
   userId?: Prisma.UuidWithAggregatesFilter<"Message"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Message"> | Date | string
@@ -358,6 +370,7 @@ export type MessageCreateInput = {
   inputTokens?: number | null
   outputTokens?: number | null
   latencyMs?: number | null
+  status?: $Enums.MessageStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   attachments?: Prisma.MessageAttachmentCreateNestedManyWithoutMessageInput
@@ -373,6 +386,7 @@ export type MessageUncheckedCreateInput = {
   inputTokens?: number | null
   outputTokens?: number | null
   latencyMs?: number | null
+  status?: $Enums.MessageStatus
   tutorChatId: string
   userId: string
   createdAt?: Date | string
@@ -388,6 +402,7 @@ export type MessageUpdateInput = {
   inputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   outputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   latencyMs?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumMessageStatusFieldUpdateOperationsInput | $Enums.MessageStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attachments?: Prisma.MessageAttachmentUpdateManyWithoutMessageNestedInput
@@ -403,6 +418,7 @@ export type MessageUncheckedUpdateInput = {
   inputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   outputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   latencyMs?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumMessageStatusFieldUpdateOperationsInput | $Enums.MessageStatus
   tutorChatId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -418,6 +434,7 @@ export type MessageCreateManyInput = {
   inputTokens?: number | null
   outputTokens?: number | null
   latencyMs?: number | null
+  status?: $Enums.MessageStatus
   tutorChatId: string
   userId: string
   createdAt?: Date | string
@@ -432,6 +449,7 @@ export type MessageUpdateManyMutationInput = {
   inputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   outputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   latencyMs?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumMessageStatusFieldUpdateOperationsInput | $Enums.MessageStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -444,6 +462,7 @@ export type MessageUncheckedUpdateManyInput = {
   inputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   outputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   latencyMs?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumMessageStatusFieldUpdateOperationsInput | $Enums.MessageStatus
   tutorChatId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -468,6 +487,7 @@ export type MessageCountOrderByAggregateInput = {
   inputTokens?: Prisma.SortOrder
   outputTokens?: Prisma.SortOrder
   latencyMs?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   tutorChatId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -488,6 +508,7 @@ export type MessageMaxOrderByAggregateInput = {
   inputTokens?: Prisma.SortOrder
   outputTokens?: Prisma.SortOrder
   latencyMs?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   tutorChatId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -502,6 +523,7 @@ export type MessageMinOrderByAggregateInput = {
   inputTokens?: Prisma.SortOrder
   outputTokens?: Prisma.SortOrder
   latencyMs?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   tutorChatId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -615,6 +637,10 @@ export type NullableIntFieldUpdateOperationsInput = {
   divide?: number
 }
 
+export type EnumMessageStatusFieldUpdateOperationsInput = {
+  set?: $Enums.MessageStatus
+}
+
 export type MessageCreateNestedOneWithoutAttachmentsInput = {
   create?: Prisma.XOR<Prisma.MessageCreateWithoutAttachmentsInput, Prisma.MessageUncheckedCreateWithoutAttachmentsInput>
   connectOrCreate?: Prisma.MessageCreateOrConnectWithoutAttachmentsInput
@@ -637,6 +663,7 @@ export type MessageCreateWithoutUserInput = {
   inputTokens?: number | null
   outputTokens?: number | null
   latencyMs?: number | null
+  status?: $Enums.MessageStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   attachments?: Prisma.MessageAttachmentCreateNestedManyWithoutMessageInput
@@ -651,6 +678,7 @@ export type MessageUncheckedCreateWithoutUserInput = {
   inputTokens?: number | null
   outputTokens?: number | null
   latencyMs?: number | null
+  status?: $Enums.MessageStatus
   tutorChatId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -694,6 +722,7 @@ export type MessageScalarWhereInput = {
   inputTokens?: Prisma.IntNullableFilter<"Message"> | number | null
   outputTokens?: Prisma.IntNullableFilter<"Message"> | number | null
   latencyMs?: Prisma.IntNullableFilter<"Message"> | number | null
+  status?: Prisma.EnumMessageStatusFilter<"Message"> | $Enums.MessageStatus
   tutorChatId?: Prisma.UuidFilter<"Message"> | string
   userId?: Prisma.UuidFilter<"Message"> | string
   createdAt?: Prisma.DateTimeFilter<"Message"> | Date | string
@@ -708,6 +737,7 @@ export type MessageCreateWithoutTutorChatInput = {
   inputTokens?: number | null
   outputTokens?: number | null
   latencyMs?: number | null
+  status?: $Enums.MessageStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   attachments?: Prisma.MessageAttachmentCreateNestedManyWithoutMessageInput
@@ -722,6 +752,7 @@ export type MessageUncheckedCreateWithoutTutorChatInput = {
   inputTokens?: number | null
   outputTokens?: number | null
   latencyMs?: number | null
+  status?: $Enums.MessageStatus
   userId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -762,6 +793,7 @@ export type MessageCreateWithoutAttachmentsInput = {
   inputTokens?: number | null
   outputTokens?: number | null
   latencyMs?: number | null
+  status?: $Enums.MessageStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   tutorChat: Prisma.TutorChatCreateNestedOneWithoutMessagesInput
@@ -776,6 +808,7 @@ export type MessageUncheckedCreateWithoutAttachmentsInput = {
   inputTokens?: number | null
   outputTokens?: number | null
   latencyMs?: number | null
+  status?: $Enums.MessageStatus
   tutorChatId: string
   userId: string
   createdAt?: Date | string
@@ -806,6 +839,7 @@ export type MessageUpdateWithoutAttachmentsInput = {
   inputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   outputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   latencyMs?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumMessageStatusFieldUpdateOperationsInput | $Enums.MessageStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tutorChat?: Prisma.TutorChatUpdateOneRequiredWithoutMessagesNestedInput
@@ -820,6 +854,7 @@ export type MessageUncheckedUpdateWithoutAttachmentsInput = {
   inputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   outputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   latencyMs?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumMessageStatusFieldUpdateOperationsInput | $Enums.MessageStatus
   tutorChatId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -834,6 +869,7 @@ export type MessageCreateManyUserInput = {
   inputTokens?: number | null
   outputTokens?: number | null
   latencyMs?: number | null
+  status?: $Enums.MessageStatus
   tutorChatId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -847,6 +883,7 @@ export type MessageUpdateWithoutUserInput = {
   inputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   outputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   latencyMs?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumMessageStatusFieldUpdateOperationsInput | $Enums.MessageStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attachments?: Prisma.MessageAttachmentUpdateManyWithoutMessageNestedInput
@@ -861,6 +898,7 @@ export type MessageUncheckedUpdateWithoutUserInput = {
   inputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   outputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   latencyMs?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumMessageStatusFieldUpdateOperationsInput | $Enums.MessageStatus
   tutorChatId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -875,6 +913,7 @@ export type MessageUncheckedUpdateManyWithoutUserInput = {
   inputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   outputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   latencyMs?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumMessageStatusFieldUpdateOperationsInput | $Enums.MessageStatus
   tutorChatId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -888,6 +927,7 @@ export type MessageCreateManyTutorChatInput = {
   inputTokens?: number | null
   outputTokens?: number | null
   latencyMs?: number | null
+  status?: $Enums.MessageStatus
   userId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -901,6 +941,7 @@ export type MessageUpdateWithoutTutorChatInput = {
   inputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   outputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   latencyMs?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumMessageStatusFieldUpdateOperationsInput | $Enums.MessageStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attachments?: Prisma.MessageAttachmentUpdateManyWithoutMessageNestedInput
@@ -915,6 +956,7 @@ export type MessageUncheckedUpdateWithoutTutorChatInput = {
   inputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   outputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   latencyMs?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumMessageStatusFieldUpdateOperationsInput | $Enums.MessageStatus
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -929,6 +971,7 @@ export type MessageUncheckedUpdateManyWithoutTutorChatInput = {
   inputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   outputTokens?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   latencyMs?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumMessageStatusFieldUpdateOperationsInput | $Enums.MessageStatus
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -973,6 +1016,7 @@ export type MessageSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   inputTokens?: boolean
   outputTokens?: boolean
   latencyMs?: boolean
+  status?: boolean
   tutorChatId?: boolean
   userId?: boolean
   createdAt?: boolean
@@ -991,6 +1035,7 @@ export type MessageSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   inputTokens?: boolean
   outputTokens?: boolean
   latencyMs?: boolean
+  status?: boolean
   tutorChatId?: boolean
   userId?: boolean
   createdAt?: boolean
@@ -1007,6 +1052,7 @@ export type MessageSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   inputTokens?: boolean
   outputTokens?: boolean
   latencyMs?: boolean
+  status?: boolean
   tutorChatId?: boolean
   userId?: boolean
   createdAt?: boolean
@@ -1023,13 +1069,14 @@ export type MessageSelectScalar = {
   inputTokens?: boolean
   outputTokens?: boolean
   latencyMs?: boolean
+  status?: boolean
   tutorChatId?: boolean
   userId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type MessageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "role" | "content" | "model" | "inputTokens" | "outputTokens" | "latencyMs" | "tutorChatId" | "userId" | "createdAt" | "updatedAt", ExtArgs["result"]["message"]>
+export type MessageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "role" | "content" | "model" | "inputTokens" | "outputTokens" | "latencyMs" | "status" | "tutorChatId" | "userId" | "createdAt" | "updatedAt", ExtArgs["result"]["message"]>
 export type MessageInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   attachments?: boolean | Prisma.Message$attachmentsArgs<ExtArgs>
   tutorChat?: boolean | Prisma.TutorChatDefaultArgs<ExtArgs>
@@ -1060,6 +1107,7 @@ export type $MessagePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     inputTokens: number | null
     outputTokens: number | null
     latencyMs: number | null
+    status: $Enums.MessageStatus
     tutorChatId: string
     userId: string
     createdAt: Date
@@ -1497,6 +1545,7 @@ export interface MessageFieldRefs {
   readonly inputTokens: Prisma.FieldRef<"Message", 'Int'>
   readonly outputTokens: Prisma.FieldRef<"Message", 'Int'>
   readonly latencyMs: Prisma.FieldRef<"Message", 'Int'>
+  readonly status: Prisma.FieldRef<"Message", 'MessageStatus'>
   readonly tutorChatId: Prisma.FieldRef<"Message", 'String'>
   readonly userId: Prisma.FieldRef<"Message", 'String'>
   readonly createdAt: Prisma.FieldRef<"Message", 'DateTime'>

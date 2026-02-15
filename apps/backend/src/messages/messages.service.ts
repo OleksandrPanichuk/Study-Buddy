@@ -1,9 +1,11 @@
 import {MessageRole, MessageStatus} from "@app/prisma";
 import {InjectQueue} from "@nestjs/bullmq";
 import {ForbiddenException, Injectable, NotFoundException} from "@nestjs/common";
+import {ConfigService} from "@nestjs/config";
 import {Queue} from "bullmq";
 import type {IGenerateResponseJobData} from "@/messages/messages.interfaces";
 import {MessagesRepository} from "@/messages/messages.repository";
+import {Env} from "@/shared/config";
 import {TutorChatsRepository} from "@/tutor-chats/tutor-chats.repository";
 import {CreateMessageInput, CreateMessageResponse, FindAllMessagesQuery, FindAllMessagesResponse} from "./messages.dto";
 
@@ -12,7 +14,8 @@ export class MessagesService {
 	constructor(
 		@InjectQueue("messages") private readonly messagesQueue: Queue,
 		private readonly messagesRepository: MessagesRepository,
-		private readonly tutorChatsRepository: TutorChatsRepository
+		private readonly tutorChatsRepository: TutorChatsRepository,
+		private readonly config: ConfigService<Env>
 	) {}
 
 	public async findAll(
@@ -45,7 +48,7 @@ export class MessagesService {
 	}
 
 	public async create(dto: CreateMessageInput, tutorChatId: string, userId: string): Promise<CreateMessageResponse> {
-		const { content, model = "gemini-3.0-flash" } = dto;
+		const { content, model = this.config.get("AI_DEFAULT_MODEL") } = dto;
 
 		const tutorChat = await this.tutorChatsRepository.findById(tutorChatId);
 
@@ -57,27 +60,28 @@ export class MessagesService {
 			throw new ForbiddenException("You do not have permission to send messages in this tutor chat");
 		}
 
-		const userMessage = await this.messagesRepository.create({
-			role: MessageRole.USER,
-			tutorChatId,
-			userId,
-			content
-		});
-
-		const assistantMessage = await this.messagesRepository.create({
-			content: "Response is being generated...",
-			role: MessageRole.ASSISTANT,
-			status: MessageStatus.PROCESSING,
-			tutorChatId,
-			userId,
-			model
-		});
+		const [userMessage, assistantMessage] = await this.messagesRepository.createMessagePair(
+			{
+				role: MessageRole.USER,
+				tutorChatId,
+				userId,
+				content
+			},
+			{
+				content: "Response is being generated...",
+				role: MessageRole.ASSISTANT,
+				status: MessageStatus.PROCESSING,
+				tutorChatId,
+				userId,
+				model
+			}
+		);
 
 		const jobData = {
 			assistantMessageId: assistantMessage.id,
 			userMessageId: userMessage.id,
 			tutorChatId,
-			userId,
+			userId
 		} satisfies IGenerateResponseJobData;
 
 		await this.messagesQueue.add("generate-response", jobData, {

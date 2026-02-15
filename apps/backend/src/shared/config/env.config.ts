@@ -1,4 +1,4 @@
-import { z } from "zod";
+import {z} from "zod";
 
 export const envSchema = z.object({
 	NODE_ENV: z.enum(["development", "production", "test"]),
@@ -32,7 +32,8 @@ export const envSchema = z.object({
 	AWS_S3_FORCE_PATH_STYLE: z.union([z.literal("true"), z.literal("false")]).transform((v) => v === "true"),
 
 	GOOGLE_GENERATIVE_AI_API_KEY: z.string(),
-	AI_EMBEDDING_MODEL: z.string()
+	AI_EMBEDDING_MODEL: z.string(),
+	AI_DEFAULT_MODEL: z.string()
 });
 
 export type Env = z.infer<typeof envSchema>;

@@ -1,8 +1,9 @@
-import { google } from "@ai-sdk/google";
-import { HttpException, Injectable, InternalServerErrorException, Logger } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
-import { embedMany } from "ai";
-import type { Env } from "@/shared/config";
+import {google} from "@ai-sdk/google";
+import {IGenerateOptions} from "@app/ai/ai.interfaces";
+import {HttpException, Injectable, InternalServerErrorException, Logger} from "@nestjs/common";
+import {ConfigService} from "@nestjs/config";
+import {embedMany, generateText, streamText} from "ai";
+import type {Env} from "@/shared/config";
 
 @Injectable()
 export class AIService {
@@ -44,5 +45,31 @@ export class AIService {
 				error instanceof Error ? error.message : undefined
 			);
 		}
+	}
+
+	public streamText(options: IGenerateOptions): ReturnType<typeof streamText> {
+		const { maxOutputTokens = 4096, temperature = 0.7, model, ...rest } = options;
+
+		const modelSpec = model ?? this.config.get("AI_DEFAULT_MODEL");
+
+		return streamText({
+			model: google(modelSpec),
+			maxOutputTokens,
+			temperature,
+			...rest
+		});
+	}
+
+	public generateText(options: IGenerateOptions): ReturnType<typeof generateText> {
+		const { maxOutputTokens = 4096, temperature = 0.7, model, ...rest } = options;
+
+		const modelSpec = model ?? this.config.get("AI_DEFAULT_MODEL");
+
+		return generateText({
+			model: google(modelSpec),
+			maxOutputTokens,
+			temperature,
+			...rest
+		});
 	}
 }

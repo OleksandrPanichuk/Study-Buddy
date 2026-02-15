@@ -1,6 +1,6 @@
-import { PrismaService } from "@app/prisma";
-import { Injectable } from "@nestjs/common";
-import type { ICreateMessageData, IFindAllMessagesData, IUpdateMessageData } from "./messages.interfaces";
+import {PrismaService} from "@app/prisma";
+import {Injectable} from "@nestjs/common";
+import type {ICreateMessageData, IFindAllMessagesData, IUpdateMessageData} from "./messages.interfaces";
 
 @Injectable()
 export class MessagesRepository {
@@ -26,17 +26,29 @@ export class MessagesRepository {
 		});
 	}
 
-	public create(data: ICreateMessageData) {
-		return this.db.message.create({
-			data: {
-				tutorChatId: data.tutorChatId,
-				userId: data.userId,
-				content: data.content,
-				role: data.role,
-				model: data.model,
-				status: data.status
-			}
-		});
+	public createMessagePair(userMessageData: ICreateMessageData, assistantMessageData: ICreateMessageData) {
+		return this.db.$transaction([
+			this.db.message.create({
+				data: {
+					tutorChatId: userMessageData.tutorChatId,
+					userId: userMessageData.userId,
+					content: userMessageData.content,
+					role: userMessageData.role,
+					model: userMessageData.model,
+					status: userMessageData.status
+				}
+			}),
+			this.db.message.create({
+				data: {
+					tutorChatId: assistantMessageData.tutorChatId,
+					userId: assistantMessageData.userId,
+					content: assistantMessageData.content,
+					role: assistantMessageData.role,
+					model: assistantMessageData.model,
+					status: assistantMessageData.status
+				}
+			})
+		]);
 	}
 
 	public update(data: IUpdateMessageData) {

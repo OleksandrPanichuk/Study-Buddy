@@ -1,5 +1,5 @@
-import { zDate } from "src/utils";
 import z from "zod";
+import {zDate} from "../utils";
 
 export const messageRoles = ["SYSTEM", "USER", "ASSISTANT", "TOOL"] as const;
 
@@ -16,7 +16,7 @@ export const messageSchema = z.object({
 	userId: z.uuidv4(),
 
 	createdAt: zDate,
-	updatedAt: zDate
+	updatedAt: zDate,
 });
 
 export type TMessage = z.infer<typeof messageSchema>;

@@ -1,18 +1,18 @@
-import { google } from "@ai-sdk/google";
-import { Processor, WorkerHost } from "@nestjs/bullmq";
-import { Logger } from "@nestjs/common";
-import { EventEmitter2 } from "@nestjs/event-emitter";
-import { MessageStatus } from "@prisma/generated/enums";
-import { generateText, streamText } from "ai";
-import { Job } from "bullmq";
-import { max } from "rxjs";
+import {google} from "@ai-sdk/google";
+import {AIService} from "@app/ai";
+import {Processor, WorkerHost} from "@nestjs/bullmq";
+import {Logger} from "@nestjs/common";
+import {EventEmitter2} from "@nestjs/event-emitter";
+import {MessageStatus} from "@prisma/generated/enums";
+import {Job} from "bullmq";
 import type {
 	IGenerateResponseJobData,
 	IGenerateWithStreamingData,
 	IMessageStreamEventData
 } from "@/messages/messages.interfaces";
-import { MessagesRepository } from "@/messages/messages.repository";
-import { TutorChatsRepository } from "@/tutor-chats/tutor-chats.repository";
+import {MessagesRepository} from "@/messages/messages.repository";
+import {SYSTEM_PROMPT} from "@/shared/prompts";
+import {TutorChatsRepository} from "@/tutor-chats/tutor-chats.repository";
 
 @Processor("messages")
 export class MessagesProcessor extends WorkerHost {
@@ -21,7 +21,8 @@ export class MessagesProcessor extends WorkerHost {
 	constructor(
 		private readonly eventEmitter: EventEmitter2,
 		private readonly messagesRepository: MessagesRepository,
-		private readonly tutorChatsRepository: TutorChatsRepository
+		private readonly tutorChatsRepository: TutorChatsRepository,
+		private readonly aiService: AIService
 	) {
 		super();
 	}
@@ -127,14 +128,14 @@ export class MessagesProcessor extends WorkerHost {
 		tutorChatId
 	}: IGenerateWithStreamingData) {
 		const options = {
-			model: google(model),
 			system: systemPrompt,
 			maxOutputTokens: 4096,
 			temperature: 0.7,
+			model,
 			prompt
 		};
 		try {
-			const result = streamText(options);
+			const result = this.aiService.streamText(options);
 
 			let fullText = "";
 
@@ -158,7 +159,7 @@ export class MessagesProcessor extends WorkerHost {
 		} catch (error) {
 			this.logger.warn(`Streaming failed for message ${assistantMessageId}, falling back to non-streaming`, error);
 
-			const result = await generateText(options);
+			const result = await this.aiService.generateText(options);
 
 			this.eventEmitter.emit("message.stream", {
 				tutorChatId,
@@ -176,8 +177,11 @@ export class MessagesProcessor extends WorkerHost {
 	}
 
 	private buildSystemPrompt(tutorChatPrompt?: string, chatTopic?: string): string {
-		// TODO: get base system prompt with full instructions, then append tutorChatPrompt and chatTopic
-		let systemPrompt = tutorChatPrompt;
+		let systemPrompt = SYSTEM_PROMPT;
+
+		if (tutorChatPrompt) {
+			systemPrompt += `\n\n${tutorChatPrompt}`;
+		}
 
 		if (chatTopic) {
 			systemPrompt += `\n\nCurrent topic: ${chatTopic}`;

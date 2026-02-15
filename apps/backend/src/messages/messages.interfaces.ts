@@ -1,4 +1,5 @@
 import {MessageRole, MessageStatus} from "@app/prisma";
+import {MessageStreamStatus} from "@/messages/messages.constants";
 
 export interface IFindAllMessagesData {
 	tutorChatId: string;
@@ -36,7 +37,7 @@ export interface IMessageStreamEventData {
 	tutorChatId: string;
 	assistantMessageId: string;
 	content?: string;
-	status: "STREAMING" | "COMPLETE" | "FAILED";
+	status: MessageStreamStatus;
 	error?: string;
 	userId: string;
 }

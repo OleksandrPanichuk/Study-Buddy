@@ -4,6 +4,7 @@ import {Logger} from "@nestjs/common";
 import {EventEmitter2} from "@nestjs/event-emitter";
 import {MessageStatus} from "@prisma/generated/enums";
 import {Job} from "bullmq";
+import {MessagesSSEEvents, MessageStreamStatus} from "@/messages/messages.constants";
 import type {
 	IGenerateResponseJobData,
 	IGenerateWithStreamingData,
@@ -36,6 +37,7 @@ export class MessagesProcessor extends WorkerHost {
 
 			if (!tutorChat || tutorChat.userId !== userId) {
 				this.logger.error(`Tutor chat with ID ${tutorChatId} not found`);
+				await this.failMessage(assistantMessageId, tutorChatId, userId, "Tutor chat not found");
 				return;
 			}
 
@@ -46,16 +48,19 @@ export class MessagesProcessor extends WorkerHost {
 				this.logger.error(
 					`User message with ID ${userMessageId} or assistant message with ID ${assistantMessageId} not found`
 				);
+				await this.failMessage(assistantMessageId, tutorChatId, userId, "Message not found");
 				return;
 			}
 
 			if (userMessage.userId !== userId) {
 				this.logger.error(`User message with ID ${userMessageId} does not belong to user ${userId}`);
+				await this.failMessage(assistantMessageId, tutorChatId, userId, "Message not found");
 				return;
 			}
 
 			if (assistantMessage.userId !== userId) {
 				this.logger.error(`Assistant message with ID ${assistantMessageId} does not belong to user ${userId}`);
+				await this.failMessage(assistantMessageId, tutorChatId, userId, "Message not found");
 				return;
 			}
 
@@ -63,6 +68,7 @@ export class MessagesProcessor extends WorkerHost {
 				this.logger.error(
 					`User message with ID ${userMessageId} or assistant message with ID ${assistantMessageId} does not belong to tutor chat ${tutorChatId}`
 				);
+				await this.failMessage(assistantMessageId, tutorChatId, userId, "Message not found");
 				return;
 			}
 
@@ -91,10 +97,10 @@ export class MessagesProcessor extends WorkerHost {
 				latencyMs
 			});
 
-			this.eventEmitter.emit("message.stream", {
+			this.eventEmitter.emit(MessagesSSEEvents.STREAM, {
 				tutorChatId,
 				assistantMessageId,
-				status: "COMPLETE",
+				status: MessageStreamStatus.COMPLETE,
 				userId
 			} satisfies IMessageStreamEventData);
 
@@ -107,19 +113,12 @@ export class MessagesProcessor extends WorkerHost {
 			const isFinalAttempt = job.attemptsMade >= (job.opts.attempts ?? 1) - 1;
 
 			if (isFinalAttempt) {
-				await this.messagesRepository.update({
-					id: assistantMessageId,
-					content: "Failed to generate response. Please try again.",
-					status: MessageStatus.FAILED
-				});
-
-				this.eventEmitter.emit("message.stream", {
-					status: "FAILED",
-					error: error instanceof Error ? error.message : "Unknown error",
-					tutorChatId,
+				await this.failMessage(
 					assistantMessageId,
-					userId
-				} satisfies IMessageStreamEventData);
+					tutorChatId,
+					userId,
+					error instanceof Error ? error.message : "Failed to generate response after multiple attempts"
+				);
 			}
 
 			throw error;
@@ -148,9 +147,9 @@ export class MessagesProcessor extends WorkerHost {
 
 			for await (const chunk of result.textStream) {
 				fullText += chunk;
-				this.eventEmitter.emit("message.stream", {
+				this.eventEmitter.emit(MessagesSSEEvents.STREAM, {
 					content: chunk,
-					status: "STREAMING",
+					status: MessageStreamStatus.STREAMING,
 					tutorChatId,
 					assistantMessageId,
 					userId
@@ -169,9 +168,9 @@ export class MessagesProcessor extends WorkerHost {
 
 			const result = await this.aiService.generateText(options);
 
-			this.eventEmitter.emit("message.stream", {
+			this.eventEmitter.emit(MessagesSSEEvents.STREAM, {
 				content: result.text,
-				status: "STREAMING",
+				status: MessageStreamStatus.STREAMING,
 				tutorChatId,
 				assistantMessageId,
 				userId
@@ -197,5 +196,21 @@ export class MessagesProcessor extends WorkerHost {
 		}
 
 		return systemPrompt;
+	}
+
+	private async failMessage(assistantMessageId: string, tutorChatId: string, userId: string, reason: string) {
+		await this.messagesRepository.update({
+			id: assistantMessageId,
+			content: "Failed to generate response. Please try again.",
+			status: MessageStatus.FAILED
+		});
+
+		this.eventEmitter.emit(MessagesSSEEvents.STREAM, {
+			status: MessageStreamStatus.FAILED,
+			error: reason,
+			assistantMessageId,
+			tutorChatId,
+			userId
+		} satisfies IMessageStreamEventData);
 	}
 }

@@ -4,6 +4,7 @@ import {ApiTags} from "@nestjs/swagger";
 import {Throttle, ThrottlerGuard} from "@nestjs/throttler";
 import {ZodResponse} from "nestjs-zod";
 import {filter, fromEvent, map, Observable, Subject, takeUntil} from "rxjs";
+import {MessagesSSEEvents} from "@/messages/messages.constants";
 import type {IMessageStreamEventData} from "@/messages/messages.interfaces";
 import {MessagesService} from "@/messages/messages.service";
 import {RATE_LIMITS} from "@/shared/constants";
@@ -59,7 +60,7 @@ export class MessagesController {
 	): Observable<MessageEvent> {
 		const destroy$ = new Subject<void>();
 
-		return fromEvent(this.eventEmitter, "message.stream").pipe(
+		return fromEvent(this.eventEmitter, MessagesSSEEvents.STREAM).pipe(
 			map((payload) => payload as IMessageStreamEventData),
 			filter(
 				(payload) =>

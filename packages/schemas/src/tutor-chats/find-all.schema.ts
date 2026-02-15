@@ -9,7 +9,7 @@ export const findAllTutorChatsInputSchema = z.object({
 
 export const findAllTutorChatsResponseSchema = z.object({
 	data: z.array(tutorChatSchema),
-	nextCursor: z.string().nullish(),
+	nextCursor: z.uuidv4().nullish(),
 });
 
 export type TFindAllTutorChatsInput = z.infer<

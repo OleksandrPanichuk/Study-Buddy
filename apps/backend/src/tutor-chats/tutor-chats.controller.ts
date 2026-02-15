@@ -32,7 +32,8 @@ import {
 	ApiBulkDeleteTutorChats,
 	ApiCreateTutorChat,
 	ApiDeleteTutorChat,
-	ApiFindAllTutorChats
+	ApiFindAllTutorChats,
+	ApiUpdateTutorChat
 } from "./tutor-chats.swagger";
 
 @ApiTags("Tutor Chats")
@@ -62,6 +63,7 @@ export class TutorChatsController {
 		return this.tutorChatsService.create(dto, userId);
 	}
 
+	@ApiUpdateTutorChat()
 	@ZodResponse({
 		type: UpdateTutorChatResponse
 	})

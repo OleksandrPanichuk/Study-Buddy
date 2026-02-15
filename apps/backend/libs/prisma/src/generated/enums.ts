@@ -19,6 +19,15 @@ export const MessageRole = {
 export type MessageRole = (typeof MessageRole)[keyof typeof MessageRole]
 
 
+export const MessageStatus = {
+  PROCESSING: 'PROCESSING',
+  COMPLETE: 'COMPLETE',
+  FAILED: 'FAILED'
+} as const
+
+export type MessageStatus = (typeof MessageStatus)[keyof typeof MessageStatus]
+
+
 export const FileStatus = {
   UPLOADING: 'UPLOADING',
   PROCESSING: 'PROCESSING',
@@ -30,8 +39,7 @@ export type FileStatus = (typeof FileStatus)[keyof typeof FileStatus]
 
 
 export const AttachmentScope = {
-  MESSAGE: 'MESSAGE',
-  CHAT_CONTEXT: 'CHAT_CONTEXT'
+  MESSAGE: 'MESSAGE'
 } as const
 
 export type AttachmentScope = (typeof AttachmentScope)[keyof typeof AttachmentScope]
@@ -42,8 +50,7 @@ export const MaterialType = {
   NOTE: 'NOTE',
   QUIZ: 'QUIZ',
   FLASHCARD_DECK: 'FLASHCARD_DECK',
-  LESSON: 'LESSON',
-  CODE_LAB: 'CODE_LAB'
+  LESSON: 'LESSON'
 } as const
 
 export type MaterialType = (typeof MaterialType)[keyof typeof MaterialType]

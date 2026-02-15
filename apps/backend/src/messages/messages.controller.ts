@@ -52,12 +52,19 @@ export class MessagesController {
 
 	@ApiStreamMessage()
 	@Sse(":messageId/stream")
-	stream(@Param("tutorChatId") tutorChatId: string, @Param("messageId") messageId: string): Observable<MessageEvent> {
+	stream(
+		@Param("tutorChatId") tutorChatId: string,
+		@Param("messageId") messageId: string,
+		@CurrentUser("id") userId: string
+	): Observable<MessageEvent> {
 		const destroy$ = new Subject<void>();
 
 		return fromEvent(this.eventEmitter, "message.stream").pipe(
 			map((payload) => payload as IMessageStreamEventData),
-			filter((payload) => payload.assistantMessageId === messageId && payload.tutorChatId === tutorChatId),
+			filter(
+				(payload) =>
+					payload.assistantMessageId === messageId && payload.tutorChatId === tutorChatId && payload.userId === userId
+			),
 			map((payload) => {
 				if (payload.status === "COMPLETE" || payload.status === "FAILED") {
 					setTimeout(() => destroy$.next(), 100);

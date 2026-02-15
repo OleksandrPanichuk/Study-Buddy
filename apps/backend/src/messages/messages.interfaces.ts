@@ -1,4 +1,4 @@
-import { MessageRole, MessageStatus } from "@app/prisma";
+import {MessageRole, MessageStatus} from "@app/prisma";
 
 export interface IFindAllMessagesData {
 	tutorChatId: string;
@@ -38,6 +38,7 @@ export interface IMessageStreamEventData {
 	content?: string;
 	status: "STREAMING" | "COMPLETE" | "FAILED";
 	error?: string;
+	userId: string;
 }
 
 export interface IGenerateWithStreamingData {
@@ -46,4 +47,5 @@ export interface IGenerateWithStreamingData {
 	model: string;
 	systemPrompt: string;
 	prompt: string;
+	userId: string;
 }

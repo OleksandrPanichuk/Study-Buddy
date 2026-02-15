@@ -1,4 +1,3 @@
-import {google} from "@ai-sdk/google";
 import {AIService} from "@app/ai";
 import {Processor, WorkerHost} from "@nestjs/bullmq";
 import {Logger} from "@nestjs/common";
@@ -77,7 +76,8 @@ export class MessagesProcessor extends WorkerHost {
 				systemPrompt: enhancedSystemPrompt,
 				prompt: userMessage.content,
 				assistantMessageId,
-				tutorChatId
+				tutorChatId,
+				userId
 			});
 
 			const latencyMs = Date.now() - startTime;
@@ -94,7 +94,8 @@ export class MessagesProcessor extends WorkerHost {
 			this.eventEmitter.emit("message.stream", {
 				tutorChatId,
 				assistantMessageId,
-				status: "COMPLETE"
+				status: "COMPLETE",
+				userId
 			} satisfies IMessageStreamEventData);
 
 			this.logger.log(`Message ${assistantMessageId} processed successfully in ${latencyMs}ms`);
@@ -103,18 +104,23 @@ export class MessagesProcessor extends WorkerHost {
 		} catch (error) {
 			this.logger.error(`Failed to process message ${assistantMessageId}`, error);
 
-			await this.messagesRepository.update({
-				id: assistantMessageId,
-				content: "Failed to generate response. Please try again.",
-				status: MessageStatus.FAILED
-			});
+			const isFinalAttempt = job.attemptsMade >= (job.opts.attempts ?? 1) - 1;
 
-			this.eventEmitter.emit("message.stream", {
-				tutorChatId,
-				assistantMessageId,
-				status: "FAILED",
-				error: error instanceof Error ? error.message : "Unknown error"
-			} satisfies IMessageStreamEventData);
+			if (isFinalAttempt) {
+				await this.messagesRepository.update({
+					id: assistantMessageId,
+					content: "Failed to generate response. Please try again.",
+					status: MessageStatus.FAILED
+				});
+
+				this.eventEmitter.emit("message.stream", {
+					status: "FAILED",
+					error: error instanceof Error ? error.message : "Unknown error",
+					tutorChatId,
+					assistantMessageId,
+					userId
+				} satisfies IMessageStreamEventData);
+			}
 
 			throw error;
 		}
@@ -125,7 +131,8 @@ export class MessagesProcessor extends WorkerHost {
 		model,
 		prompt,
 		systemPrompt,
-		tutorChatId
+		tutorChatId,
+		userId
 	}: IGenerateWithStreamingData) {
 		const options = {
 			system: systemPrompt,
@@ -142,10 +149,11 @@ export class MessagesProcessor extends WorkerHost {
 			for await (const chunk of result.textStream) {
 				fullText += chunk;
 				this.eventEmitter.emit("message.stream", {
+					content: chunk,
+					status: "STREAMING",
 					tutorChatId,
 					assistantMessageId,
-					content: chunk,
-					status: "STREAMING"
+					userId
 				} satisfies IMessageStreamEventData);
 			}
 
@@ -162,10 +170,11 @@ export class MessagesProcessor extends WorkerHost {
 			const result = await this.aiService.generateText(options);
 
 			this.eventEmitter.emit("message.stream", {
+				content: result.text,
+				status: "STREAMING",
 				tutorChatId,
 				assistantMessageId,
-				content: result.text,
-				status: "STREAMING"
+				userId
 			} satisfies IMessageStreamEventData);
 
 			return {

@@ -1,5 +1,6 @@
 import {createFileRoute} from "@tanstack/react-router";
 import z from "zod";
+import {TutorChatView} from "@/features/tutor-chat";
 
 export const Route = createFileRoute("/(platform)/p/tutor-chats/$tutorChatId")({
 	component: RouteComponent,
@@ -7,12 +8,13 @@ export const Route = createFileRoute("/(platform)/p/tutor-chats/$tutorChatId")({
 		parse: (params) =>
 			z
 				.object({
-					tutorChatId: z.uuidv4(),
+					tutorChatId: z.uuidv4()
 				})
-				.parse(params),
-	},
+				.parse(params)
+	}
 });
 
 function RouteComponent() {
-	return <div></div>;
+	const { tutorChatId } = Route.useParams();
+	return <TutorChatView tutorChatId={tutorChatId} />;
 }

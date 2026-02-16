@@ -1,3 +1,4 @@
+import {AIModule} from "@app/ai";
 import {BullModule} from "@nestjs/bullmq";
 import {Module} from "@nestjs/common";
 import {EventEmitterModule} from "@nestjs/event-emitter";
@@ -8,7 +9,7 @@ import {MessagesService} from "@/messages/messages.service";
 import {TutorChatsModule} from "@/tutor-chats/tutor-chats.module";
 
 @Module({
-	imports: [TutorChatsModule, BullModule.registerQueue({ name: "messages" }), EventEmitterModule.forRoot()],
+	imports: [TutorChatsModule, AIModule, BullModule.registerQueue({ name: "messages" }), EventEmitterModule.forRoot()],
 	providers: [MessagesService, MessagesRepository, MessagesProcessor],
 	controllers: [MessagesController]
 })

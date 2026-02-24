@@ -1,19 +1,28 @@
-import { FileStatus, PrismaService } from "@app/prisma";
-import { Injectable } from "@nestjs/common";
-import { v4 as uuid } from "uuid";
-import type { ICreateFileAssetData, ICreateFileChunkData } from "./files.interfaces";
+import {FileStatus, PrismaService} from "@app/prisma";
+import {Injectable} from "@nestjs/common";
+import {v4 as uuid} from "uuid";
+import type {ICreateFileAssetData, ICreateFileChunkData} from "./files.interfaces";
 
 @Injectable()
 export class FilesRepository {
 	constructor(private readonly db: PrismaService) {}
 
 	// FileAsset Operations
+
+	public findFileAssetById(id: string) {
+		return this.db.fileAsset.findUnique({
+			where: {
+				id,
+			},
+		});
+	}
+
 	public findFileAssetByIdAndUserId(id: string, userId: string) {
 		return this.db.fileAsset.findUnique({
 			where: {
 				id,
-				userId
-			}
+				userId,
+			},
 		});
 	}
 
@@ -26,39 +35,39 @@ export class FilesRepository {
 				sizeBytes: file.sizeBytes,
 				url: file.url,
 				status: file.status,
-				storageKey: file.storageKey
-			}))
+				storageKey: file.storageKey,
+			})),
 		});
 	}
 
 	public updateFileAssetStatus(id: string, status: FileStatus) {
 		return this.db.fileAsset.update({
 			where: {
-				id
+				id,
 			},
 			data: {
-				status
-			}
+				status,
+			},
 		});
 	}
 
 	public updateFileAssetTextHash(id: string, textHash: string) {
 		return this.db.fileAsset.update({
 			where: {
-				id
+				id,
 			},
 			data: {
 				textHash,
-				status: FileStatus.READY
-			}
+				status: FileStatus.READY,
+			},
 		});
 	}
 
 	public deleteFileAsset(id: string) {
 		return this.db.fileAsset.delete({
 			where: {
-				id
-			}
+				id,
+			},
 		});
 	}
 
@@ -67,8 +76,8 @@ export class FilesRepository {
 	public findChunksByFileId(fileId: string) {
 		return this.db.fileChunk.findMany({
 			where: {
-				fileId
-			}
+				fileId,
+			},
 		});
 	}
 
@@ -97,15 +106,15 @@ export class FilesRepository {
                     INSERT INTO "file_chunks" (id, index, content, token_count, embedding, file_id)
                     VALUES (${uuid()}, ${chunk.index}, ${chunk.content}, ${chunk.tokenCount}, ${chunk.embedding}::vector, ${fileAssetId})
                 `;
-			})
+			}),
 		);
 	}
 
 	public deleteChunksByFileId(fileId: string) {
 		return this.db.fileChunk.deleteMany({
 			where: {
-				fileId
-			}
+				fileId,
+			},
 		});
 	}
 }

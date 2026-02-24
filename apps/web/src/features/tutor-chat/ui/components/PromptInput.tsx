@@ -1,18 +1,11 @@
+import {AI_DEFAULT_MODEL, ALLOWED_MIME_TYPES, MAX_FILE_SIZE,} from "@repo/constants";
+import {createMessageInputSchema, type TCreateMessageInput,} from "@repo/schemas";
 import {
-	AI_DEFAULT_MODEL,
-	ALLOWED_MIME_TYPES,
-	MAX_FILE_SIZE,
-} from "@repo/constants";
-import {
-	createMessageInputSchema,
-	type TCreateMessageInput,
-} from "@repo/schemas";
-import {
+	PromptInput as PromptInputBase,
 	PromptInputActionAddAttachments,
 	PromptInputActionMenu,
 	PromptInputActionMenuContent,
 	PromptInputActionMenuTrigger,
-	PromptInput as PromptInputBase,
 	PromptInputBody,
 	PromptInputFooter,
 	PromptInputProvider,
@@ -21,12 +14,9 @@ import {
 	PromptInputTools,
 	usePromptInputController,
 } from "@repo/ui";
-import { useForm } from "@tanstack/react-form";
-import { toast } from "sonner";
-import {
-	ModelSelect,
-	PromptInputAttachmentsPreview,
-} from "@/features/tutor-chat";
+import {useForm} from "@tanstack/react-form";
+import {toast} from "sonner";
+import {ModelSelect, PromptInputAttachmentsPreview,} from "@/features/tutor-chat";
 
 interface IPromptInputProps {
 	tutorChatId: string;
@@ -37,15 +27,17 @@ const PromptInputInner = ({ tutorChatId }: IPromptInputProps) => {
 
 	const form = useForm({
 		validators: {
-			onSubmit: createMessageInputSchema,
+			onSubmit: createMessageInputSchema
 		},
 		defaultValues: {
 			content: "",
-			model: AI_DEFAULT_MODEL,
+			model: AI_DEFAULT_MODEL
 		} as TCreateMessageInput,
 		onSubmit: async ({ value, formApi }) => {
 			controller.textInput.clear();
-		},
+
+			console.log({ value });
+		}
 	});
 
 	return (
@@ -53,8 +45,7 @@ const PromptInputInner = ({ tutorChatId }: IPromptInputProps) => {
 			accept={ALLOWED_MIME_TYPES.join(",")}
 			maxFileSize={MAX_FILE_SIZE}
 			onError={(error) => toast.error(error.message)}
-			onSubmit={form.handleSubmit}
-		>
+			onSubmit={form.handleSubmit}>
 			<PromptInputAttachmentsPreview />
 
 			<PromptInputBody>
@@ -82,12 +73,7 @@ const PromptInputInner = ({ tutorChatId }: IPromptInputProps) => {
 					</PromptInputActionMenu>
 
 					<form.Field name="model">
-						{(field) => (
-							<ModelSelect
-								value={field.state.value}
-								onChange={(val) => field.handleChange(val)}
-							/>
-						)}
+						{(field) => <ModelSelect value={field.state.value} onChange={(val) => field.handleChange(val)} />}
 					</form.Field>
 				</PromptInputTools>
 

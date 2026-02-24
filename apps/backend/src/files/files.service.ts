@@ -1,13 +1,13 @@
-import { FileStatus } from "@app/prisma";
-import { S3Service } from "@app/s3";
-import { InjectQueue } from "@nestjs/bullmq";
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { MAX_FILE_SIZE } from "@repo/constants";
-import { Queue } from "bullmq";
-import { FilesRepository } from "@/files/files.repository";
-import { TutorChatsRepository } from "@/tutor-chats/tutor-chats.repository";
-import { UploadFilesResponse } from "./files.dto";
-import { IFileProcessingJobData } from "./files.interfaces";
+import {FileStatus} from "@app/prisma";
+import {S3Service} from "@app/s3";
+import {InjectQueue} from "@nestjs/bullmq";
+import {Injectable, NotFoundException} from "@nestjs/common";
+import {MAX_FILE_SIZE} from "@repo/constants";
+import {Queue} from "bullmq";
+import {FilesRepository} from "@/files/files.repository";
+import {TutorChatsRepository} from "@/tutor-chats/tutor-chats.repository";
+import {UploadFilesResponse} from "./files.dto";
+import {IFileProcessingJobData} from "./files.interfaces";
 
 @Injectable()
 export class FilesService {
@@ -47,7 +47,6 @@ export class FilesService {
 			maxSize: MAX_FILE_SIZE,
 			folder: folder
 		});
-
 		const fileAssets = await this.filesRepository.createFileAssets(
 			uploadedFiles.map((file) => ({
 				name: file.name,

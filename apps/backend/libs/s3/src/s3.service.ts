@@ -1,5 +1,5 @@
 import path from "node:path";
-import type { Readable } from "node:stream";
+import type {Readable} from "node:stream";
 import type {
 	IDeleteResult,
 	IFileValidationOptions,
@@ -8,6 +8,7 @@ import type {
 	IUploadResult
 } from "@app/s3/s3.interfaces";
 import {
+	CreateBucketCommand,
 	DeleteObjectCommand,
 	GetObjectCommand,
 	HeadBucketCommand,
@@ -16,21 +17,23 @@ import {
 	S3Client,
 	type S3ServiceException
 } from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import {getSignedUrl} from "@aws-sdk/s3-request-presigner";
 import {
 	BadRequestException,
 	HttpException,
 	Injectable,
 	InternalServerErrorException,
 	Logger,
-	NotFoundException
+	NotFoundException,
+	OnModuleInit
 } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
-import { v4 as uuid } from "uuid";
-import type { Env } from "@/shared/config";
+import {ConfigService} from "@nestjs/config";
+import {v4 as uuid} from "uuid";
+import type {Env} from "@/shared/config";
+import {Upload} from "@aws-sdk/lib-storage";
 
 @Injectable()
-export class S3Service {
+export class S3Service implements OnModuleInit {
 	private readonly client: S3Client;
 	private readonly logger: Logger = new Logger(S3Service.name);
 	private readonly bucket: string;
@@ -38,9 +41,12 @@ export class S3Service {
 	private readonly maxRetries: number = 3;
 	private readonly defaultMaxFileSize: number = 10 * 1024 * 1024; // 10 MB
 
+
+
 	constructor(private readonly config: ConfigService<Env>) {
 		this.bucket = config.get("AWS_S3_BUCKET_NAME");
 		this.region = config.get("AWS_S3_REGION");
+
 
 		this.client = new S3Client({
 			region: this.region,
@@ -49,9 +55,17 @@ export class S3Service {
 				accessKeyId: this.config.get("AWS_S3_ACCESS_KEY_ID"),
 				secretAccessKey: this.config.get("AWS_S3_SECRET_ACCESS_KEY")
 			},
-			forcePathStyle: this.config.get("AWS_S3_FORCE_PATH_STYLE") === "true",
-			maxAttempts: 1
+			forcePathStyle: this.config.get("AWS_S3_FORCE_PATH_STYLE"),
+			maxAttempts: 1,
 		});
+	}
+
+	async onModuleInit() {
+		try {
+			await this.createBucketIfNotExists();
+		} catch (err) {
+			this.logger.error(`S3 bucket initialization failed: ${err}`);
+		}
 	}
 
 	public getClient(): S3Client {
@@ -68,18 +82,23 @@ export class S3Service {
 			const key = this.generateKey(file.originalname, options);
 			const contentType = options.contentType || file.mimetype;
 
-			const command = new PutObjectCommand({
-				Bucket: this.bucket,
-				Key: key,
-				Body: file.buffer,
-				ContentType: contentType,
-				ACL: options.acl || "private",
-				Metadata: options.metadata,
-				CacheControl: options.cacheControl
+			const body = this.toBuffer(file.buffer);
+
+			const upload = new Upload({
+				client: this.client,
+				params: {
+					Bucket: this.bucket,
+					Key: key,
+					Body: body,
+					ContentType: contentType,
+					ContentLength: body.length,
+					ACL:  options.acl || "private",
+					Metadata: options.metadata,
+					CacheControl: options.cacheControl
+				}
 			});
 
-			const result = await this.executeWithRetry(() => this.client.send(command));
-
+			const result = await upload.done();
 			const url = this.getPublicUrl(key);
 
 			this.logger.log(`File uploaded successfully: ${key}`);
@@ -342,10 +361,24 @@ export class S3Service {
 		return new Promise((resolve) => setTimeout(resolve, ms));
 	}
 
+
+	private toBuffer(value: Buffer): Buffer {
+		if (Buffer.isBuffer(value)) return value;
+
+		const raw = value as any;
+
+		if (raw instanceof Uint8Array) return Buffer.from(raw);
+
+		if (raw?.type === "Buffer" && Array.isArray(raw.data)) return Buffer.from(raw.data);
+
+		return Buffer.from(Object.values(raw) as number[]);
+	}
+
 	private generateKey(originalName: string, options: IUploadOptions): string {
 		const extension = path.extname(originalName).toLowerCase();
 		const filename = options.filename || `${uuid()}${extension}`;
 		const folder = options.folder ? `${options.folder}/` : "";
+
 		return `${folder}${filename}`;
 	}
 
@@ -399,6 +432,21 @@ export class S3Service {
 
 			this.logger.error(`S3 health check failed: ${message}`, stack);
 			throw error;
+		}
+	}
+
+
+	private	async createBucketIfNotExists() {
+		try {
+			await this.client.send(new CreateBucketCommand({ Bucket: this.bucket }));
+			this.logger.log(`Bucket '${this.bucket}' created.`);
+		} catch (err) {
+			if (this.isS3Exception(err) && (err?.name === 'BucketAlreadyOwnedByYou' || err?.name === 'BucketAlreadyExists')) {
+				this.logger.log(`Bucket '${this.bucket}' already exists.`);
+			} else {
+				this.logger.error(`Error creating bucket: ${err}`);
+				throw err;
+			}
 		}
 	}
 }

@@ -102,9 +102,10 @@ export class FilesRepository {
 	public async createChunks(fileAssetId: string, data: ICreateFileChunkData[]) {
 		await this.db.$transaction(
 			data.map((chunk) => {
+				const vectorStr = `[${chunk.embedding.join(",")}]`;
 				return this.db.$executeRaw`
                     INSERT INTO "file_chunks" (id, index, content, token_count, embedding, file_id)
-                    VALUES (${uuid()}, ${chunk.index}, ${chunk.content}, ${chunk.tokenCount}, ${chunk.embedding}::vector, ${fileAssetId})
+                    VALUES (${uuid()}, ${chunk.index}, ${chunk.content}, ${chunk.tokenCount}, ${vectorStr}::vector, ${fileAssetId})
                 `;
 			}),
 		);

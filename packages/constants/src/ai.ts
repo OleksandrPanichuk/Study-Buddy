@@ -8,4 +8,4 @@ export enum AIModels {
 
 export const AI_DEFAULT_MODEL = AIModels.GEMINI_3_FLASH;
 
-export const AI_EMBEDDINGS_MODEL = ""
+export const AI_EMBEDDINGS_MODEL = "gemini-embedding-001"

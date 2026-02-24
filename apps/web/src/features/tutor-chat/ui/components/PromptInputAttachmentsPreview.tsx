@@ -5,10 +5,15 @@ import {
 	AttachmentRemove,
 	Attachments,
 	PromptInputHeader,
-	usePromptInputAttachments,
+	Spinner,
+	usePromptInputAttachments
 } from "@repo/ui";
 
-export const PromptInputAttachmentsPreview = () => {
+interface IPromptInputAttachmentsPreviewProps {
+	uploadingIds: Set<string>;
+}
+
+export const PromptInputAttachmentsPreview = ({ uploadingIds }: IPromptInputAttachmentsPreviewProps) => {
 	const attachments = usePromptInputAttachments();
 
 	if (attachments.files.length === 0) return null;
@@ -24,11 +29,10 @@ export const PromptInputAttachmentsPreview = () => {
 					<Attachment
 						key={file.id}
 						data={file}
-						onRemove={() => handleRemove(file.id)}
-					>
-						<AttachmentPreview />
+						onRemove={uploadingIds.has(file.id) ? undefined : () => handleRemove(file.id)}>
+						{uploadingIds.has(file.id) ? <Spinner className="size-3" /> : <AttachmentPreview />}
 						<AttachmentInfo />
-						<AttachmentRemove />
+						{!uploadingIds.has(file.id) && <AttachmentRemove />}
 					</Attachment>
 				))}
 			</Attachments>

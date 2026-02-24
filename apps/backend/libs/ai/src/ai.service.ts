@@ -26,7 +26,12 @@ export class AIService {
 				model: google.embeddingModel(modelSpec),
 				values: inputs,
 				maxRetries: 3,
-				maxParallelCalls: 4
+				maxParallelCalls: 4,
+				providerOptions: {
+					google: {
+						outputDimensionality: 768
+					}
+				}
 			});
 
 			if (!result.embeddings) {

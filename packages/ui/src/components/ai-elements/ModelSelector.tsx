@@ -1,20 +1,20 @@
 import type {ComponentProps, ReactNode} from "react";
+import {cn} from "../../lib";
 import {
-  Command,
-  CommandDialog,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-  CommandSeparator,
-  CommandShortcut,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components";
-import {cn} from "@/lib/utils";
+	Command,
+	CommandDialog,
+	CommandEmpty,
+	CommandGroup,
+	CommandInput,
+	CommandItem,
+	CommandList,
+	CommandSeparator,
+	CommandShortcut,
+	Dialog,
+	DialogContent,
+	DialogTitle,
+	DialogTrigger,
+} from "../";
 
 export type ModelSelectorProps = ComponentProps<typeof Dialog>;
 

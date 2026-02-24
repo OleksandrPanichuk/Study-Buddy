@@ -11,16 +11,16 @@ import {SentryGlobalFilter, SentryModule} from "@sentry/nestjs/setup";
 import {CsrfFilter} from "ncsrf";
 import {ZodSerializerInterceptor, ZodValidationPipe} from "nestjs-zod";
 import {AuthModule} from "@/auth/auth.module";
-import {Env, envSchema} from "@/shared/config";
+import {FilesModule} from '@/files/files.module';
+import {MessagesModule} from '@/messages/messages.module';
+import {type Env, envSchema} from "@/shared/config";
 import {RATE_LIMITS} from "@/shared/constants";
 import {ThrottlerExceptionFilter} from "@/shared/filters";
 import {LoggingInterceptor} from "@/shared/interceptors";
 import {SecurityHeadersMiddleware} from "@/shared/middlewares";
 import {SanitizationPipe} from "@/shared/pipes";
+import {TutorChatsModule} from "@/tutor-chats/tutor-chats.module";
 import {UsersModule} from "@/users/users.module";
-import {FilesModule} from './files/files.module';
-import {MessagesModule} from './messages/messages.module';
-import {TutorChatsModule} from "./tutor-chats/tutor-chats.module";
 
 @Module({
 	imports: [

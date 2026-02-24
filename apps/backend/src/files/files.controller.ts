@@ -1,5 +1,6 @@
 import {
 	Controller,
+	Delete,
 	HttpCode,
 	HttpStatus,
 	MaxFileSizeValidator,
@@ -10,16 +11,18 @@ import {
 	UseGuards,
 	UseInterceptors
 } from "@nestjs/common";
-import {FilesInterceptor} from "@nestjs/platform-express";
-import {ApiTags} from "@nestjs/swagger";
-import {Throttle, ThrottlerGuard} from "@nestjs/throttler";
-import {RATE_LIMITS} from "@/shared/constants";
-import {CurrentUser} from "@/shared/decorators";
-import {AuthenticatedGuard} from "@/shared/guards";
-import {MAX_FILE_SIZE} from "./files.constants";
-import {fileFilter} from "./files.helpers";
-import {FilesService} from "./files.service";
-import {ApiUploadTutorChat} from "./files.swagger";
+import { FilesInterceptor } from "@nestjs/platform-express";
+import { ApiTags } from "@nestjs/swagger";
+import { Throttle, ThrottlerGuard } from "@nestjs/throttler";
+import { MAX_FILE_SIZE } from "@repo/constants";
+import { ZodResponse } from "nestjs-zod";
+import { RATE_LIMITS } from "@/shared/constants";
+import { CurrentUser } from "@/shared/decorators";
+import { AuthenticatedGuard } from "@/shared/guards";
+import { DeleteFileAssetParams, UploadFilesResponse } from "./files.dto";
+import { fileFilter } from "./files.helpers";
+import { FilesService } from "./files.service";
+import { ApiDeleteFileAsset, ApiUploadTutorChat } from "./files.swagger";
 
 @ApiTags("files")
 @UseGuards(AuthenticatedGuard, ThrottlerGuard)
@@ -29,6 +32,9 @@ export class FilesController {
 	constructor(private readonly filesService: FilesService) {}
 
 	@ApiUploadTutorChat()
+	@ZodResponse({
+		type: UploadFilesResponse
+	})
 	@UseInterceptors(
 		FilesInterceptor("files", 10, {
 			fileFilter: fileFilter
@@ -47,5 +53,12 @@ export class FilesController {
 		@CurrentUser("id") userId: string
 	) {
 		return this.filesService.uploadTutorChat(files, tutorChatId, userId);
+	}
+
+	@ApiDeleteFileAsset()
+	@HttpCode(HttpStatus.NO_CONTENT)
+	@Delete(":fileAssetId")
+	deleteFileAsset(@Param() params: DeleteFileAssetParams, @CurrentUser("id") userId: string) {
+		return this.filesService.delete(params.fileAssetId, userId);
 	}
 }

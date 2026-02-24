@@ -1,3 +1,4 @@
+import {AIModels} from "@repo/constants";
 import z from "zod";
 import {messageSchema} from "../models";
 
@@ -7,7 +8,7 @@ export const createMessageInputSchema = z.object({
 		.trim()
 		.min(1, "Content cannot be empty")
 		.max(10000, "Content cannot exceed 10,000 characters"),
-	model: z.string().optional(),
+	model: z.nativeEnum(AIModels).optional(),
 });
 
 export const createMessageResponseSchema = z.object({

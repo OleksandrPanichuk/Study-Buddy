@@ -3,6 +3,7 @@ import {Processor, WorkerHost} from "@nestjs/bullmq";
 import {Logger} from "@nestjs/common";
 import {EventEmitter2} from "@nestjs/event-emitter";
 import {MessageStatus} from "@prisma/generated/enums";
+import {AIModels} from "@repo/constants";
 import {Job} from "bullmq";
 import {MessagesSSEEvents, MessageStreamStatus} from "@/messages/messages.constants";
 import type {
@@ -78,7 +79,7 @@ export class MessagesProcessor extends WorkerHost {
 			const enhancedSystemPrompt = this.buildSystemPrompt(tutorChat.prompt, tutorChat.topic);
 
 			const result = await this.generateWithStreaming({
-				model: assistantMessage.model,
+				model: assistantMessage.model as AIModels,
 				systemPrompt: enhancedSystemPrompt,
 				prompt: userMessage.content,
 				assistantMessageId,

@@ -2,10 +2,11 @@ import { FileStatus } from "@app/prisma";
 import { S3Service } from "@app/s3";
 import { InjectQueue } from "@nestjs/bullmq";
 import { Injectable, NotFoundException } from "@nestjs/common";
+import { MAX_FILE_SIZE } from "@repo/constants";
 import { Queue } from "bullmq";
 import { FilesRepository } from "@/files/files.repository";
 import { TutorChatsRepository } from "@/tutor-chats/tutor-chats.repository";
-import { MAX_FILE_SIZE } from "./files.constants";
+import { UploadFilesResponse } from "./files.dto";
 import { IFileProcessingJobData } from "./files.interfaces";
 
 @Injectable()
@@ -27,7 +28,21 @@ export class FilesService {
 		return await this.upload(files, `tutor-chats/${tutorChatId}`, userId);
 	}
 
-	private async upload(files: Express.Multer.File[], folder: string, userId: string) {
+	public async delete(fileAssetId: string, userId: string) {
+		const fileAsset = await this.filesRepository.findFileAssetByIdAndUserId(fileAssetId, userId);
+
+		if (!fileAsset) {
+			throw new NotFoundException("File asset not found");
+		}
+
+		if (fileAsset.storageKey) {
+			await this.s3Service.deleteFile(fileAsset.storageKey);
+		}
+
+		await this.filesRepository.deleteFileAsset(fileAssetId);
+	}
+
+	private async upload(files: Express.Multer.File[], folder: string, userId: string): Promise<UploadFilesResponse> {
 		const uploadedFiles = await this.s3Service.uploadFiles(files, {
 			maxSize: MAX_FILE_SIZE,
 			folder: folder

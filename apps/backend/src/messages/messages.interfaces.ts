@@ -1,4 +1,5 @@
 import {MessageRole, MessageStatus} from "@app/prisma";
+import {AIModels} from "@repo/constants";
 import {MessageStreamStatus} from "@/messages/messages.constants";
 
 export interface IFindAllMessagesData {
@@ -12,7 +13,7 @@ export interface ICreateMessageData {
 	tutorChatId: string;
 	userId: string;
 	content: string;
-	model?: string;
+	model?: AIModels;
 	role: MessageRole;
 	status?: MessageStatus;
 }
@@ -45,7 +46,7 @@ export interface IMessageStreamEventData {
 export interface IGenerateWithStreamingData {
 	assistantMessageId: string;
 	tutorChatId: string;
-	model: string;
+	model: AIModels;
 	systemPrompt: string;
 	prompt: string;
 	userId: string;

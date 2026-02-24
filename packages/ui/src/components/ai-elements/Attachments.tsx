@@ -4,8 +4,8 @@ import type {FileUIPart, SourceDocumentUIPart} from "ai";
 import {FileTextIcon, GlobeIcon, ImageIcon, Music2Icon, PaperclipIcon, VideoIcon, XIcon,} from "lucide-react";
 import type {ComponentProps, HTMLAttributes, ReactNode} from "react";
 import {createContext, useCallback, useContext, useMemo} from "react";
-import {Button, HoverCard, HoverCardContent, HoverCardTrigger,} from "@/components";
-import {cn} from "@/lib/utils"; // ============================================================================
+import {Button, HoverCard, HoverCardContent, HoverCardTrigger,} from "../../components";
+import {cn} from "../../lib"; // ============================================================================
 
 // ============================================================================
 // Types

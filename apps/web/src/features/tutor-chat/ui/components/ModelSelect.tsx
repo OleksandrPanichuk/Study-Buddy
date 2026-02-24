@@ -1,3 +1,4 @@
+import {AI_DEFAULT_MODEL, AIModels} from "@repo/constants";
 import {
 	Button,
 	ModelSelector,
@@ -12,12 +13,12 @@ import {
 } from "@repo/ui";
 import {CheckIcon} from "lucide-react";
 import {memo, useCallback, useState} from "react";
-import {DEFAULT_MODEL, models} from "@/features/tutor-chat";
+import {models} from "@/features/tutor-chat";
 
 interface IModelItemProps {
 	model: (typeof models)[0];
-	selectedModel: string;
-	onSelect: (id: string) => void;
+	selectedModel: AIModels;
+	onSelect: (id: AIModels) => void;
 }
 
 const ModelItem = memo(({ model, selectedModel, onSelect }: IModelItemProps) => {
@@ -37,16 +38,16 @@ const ModelItem = memo(({ model, selectedModel, onSelect }: IModelItemProps) => 
 });
 
 interface IModelSelectProps {
-	value?: string;
-	onChange: (value: string) => void;
+	value?: AIModels;
+	onChange: (value: AIModels) => void;
 }
 
 export const ModelSelect = ({ value, onChange }: IModelSelectProps) => {
 	const [open, setOpen] = useState(false);
-	const [selected, setSelected] = useState(value || DEFAULT_MODEL);
+	const [selected, setSelected] = useState(value || AI_DEFAULT_MODEL);
 
 	const handleSelect = useCallback(
-		(id: string) => {
+		(id: AIModels) => {
 			setSelected(id);
 			onChange(id);
 			setOpen(false);

@@ -37,6 +37,7 @@
 		"clear": "rimraf ./dist"
 	},
 	"dependencies": {
+		"@repo/constants": "workspace:*",
 		"zod": "^4.3.4"
 	}
 }

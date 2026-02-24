@@ -7,16 +7,8 @@ import {ChevronLeftIcon, ChevronRightIcon} from "lucide-react";
 import type {ComponentProps, HTMLAttributes, ReactElement} from "react";
 import {createContext, memo, useContext, useEffect, useState} from "react";
 import {Streamdown} from "streamdown";
-import {
-	Button,
-	ButtonGroup,
-	ButtonGroupText,
-	Tooltip,
-	TooltipContent,
-	TooltipProvider,
-	TooltipTrigger,
-} from "@/components";
-import {cn} from "@/lib/utils";
+import {cn} from "../../lib";
+import {Button, ButtonGroup, ButtonGroupText, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger,} from "../";
 
 export type MessageProps = HTMLAttributes<HTMLDivElement> & {
 	from: UIMessage["role"];

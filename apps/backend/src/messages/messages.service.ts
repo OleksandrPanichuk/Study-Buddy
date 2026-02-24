@@ -2,6 +2,7 @@ import {MessageRole, MessageStatus} from "@app/prisma";
 import {InjectQueue} from "@nestjs/bullmq";
 import {ForbiddenException, Injectable, NotFoundException} from "@nestjs/common";
 import {ConfigService} from "@nestjs/config";
+import {AI_DEFAULT_MODEL} from "@repo/constants";
 import {Queue} from "bullmq";
 import type {IGenerateResponseJobData} from "@/messages/messages.interfaces";
 import {MessagesRepository} from "@/messages/messages.repository";
@@ -48,7 +49,7 @@ export class MessagesService {
 	}
 
 	public async create(dto: CreateMessageInput, tutorChatId: string, userId: string): Promise<CreateMessageResponse> {
-		const { content, model = this.config.get("AI_DEFAULT_MODEL") } = dto;
+		const { content, model = AI_DEFAULT_MODEL } = dto;
 
 		const tutorChat = await this.tutorChatsRepository.findById(tutorChatId);
 

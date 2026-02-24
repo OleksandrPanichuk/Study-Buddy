@@ -8,10 +8,11 @@ export class FilesRepository {
 	constructor(private readonly db: PrismaService) {}
 
 	// FileAsset Operations
-	public findFileAssetById(id: string) {
+	public findFileAssetByIdAndUserId(id: string, userId: string) {
 		return this.db.fileAsset.findUnique({
 			where: {
-				id
+				id,
+				userId
 			}
 		});
 	}
@@ -53,6 +54,14 @@ export class FilesRepository {
 		});
 	}
 
+	public deleteFileAsset(id: string) {
+		return this.db.fileAsset.delete({
+			where: {
+				id
+			}
+		});
+	}
+
 	// FileChunk Operations
 
 	public findChunksByFileId(fileId: string) {
@@ -80,7 +89,6 @@ export class FilesRepository {
             LIMIT ${limit}
           `;
 	}
-	
 
 	public async createChunks(fileAssetId: string, data: ICreateFileChunkData[]) {
 		await this.db.$transaction(
@@ -92,7 +100,6 @@ export class FilesRepository {
 			})
 		);
 	}
-
 
 	public deleteChunksByFileId(fileId: string) {
 		return this.db.fileChunk.deleteMany({

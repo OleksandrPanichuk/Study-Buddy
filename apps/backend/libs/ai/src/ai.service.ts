@@ -72,7 +72,7 @@ export class AIService {
 		const modelSpec = model ?? AI_DEFAULT_MODEL;
 
 		return generateText({
-			model: google(modelSpec),
+			model: google(model),
 			maxOutputTokens,
 			temperature,
 			...rest

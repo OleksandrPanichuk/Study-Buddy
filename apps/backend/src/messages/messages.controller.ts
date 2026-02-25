@@ -1,17 +1,22 @@
-import {Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Query, Sse, UseGuards} from "@nestjs/common";
-import {EventEmitter2} from "@nestjs/event-emitter";
-import {ApiTags} from "@nestjs/swagger";
-import {Throttle, ThrottlerGuard} from "@nestjs/throttler";
-import {ZodResponse} from "nestjs-zod";
-import {filter, fromEvent, map, Observable, Subject, takeUntil} from "rxjs";
-import {MessagesSSEEvents} from "@/messages/messages.constants";
-import type {IMessageStreamEventData} from "@/messages/messages.interfaces";
-import {MessagesService} from "@/messages/messages.service";
-import {RATE_LIMITS} from "@/shared/constants";
-import {CurrentUser} from "@/shared/decorators";
-import {AuthenticatedGuard} from "@/shared/guards";
-import {CreateMessageInput, CreateMessageResponse, FindAllMessagesQuery, FindAllMessagesResponse} from "./messages.dto";
-import {ApiCreateMessage, ApiFindAllMessages, ApiStreamMessage} from "./messages.swagger";
+import { MessagesSSEEvents } from "@/messages/messages.constants";
+import type { IMessageStreamEventData } from "@/messages/messages.interfaces";
+import { MessagesService } from "@/messages/messages.service";
+import { RATE_LIMITS } from "@/shared/constants";
+import { CurrentUser } from "@/shared/decorators";
+import { AuthenticatedGuard } from "@/shared/guards";
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Query, Sse, UseGuards } from "@nestjs/common";
+import { EventEmitter2 } from "@nestjs/event-emitter";
+import { ApiTags } from "@nestjs/swagger";
+import { Throttle, ThrottlerGuard } from "@nestjs/throttler";
+import { ZodResponse } from "nestjs-zod";
+import { filter, fromEvent, map, Observable, Subject, takeUntil } from "rxjs";
+import {
+	CreateMessageInput,
+	CreateMessageResponse,
+	FindAllMessagesQuery,
+	FindAllMessagesResponse
+} from "./messages.dto";
+import { ApiCreateMessage, ApiFindAllMessages, ApiStreamMessage } from "./messages.swagger";
 
 @ApiTags("Messages")
 @UseGuards(AuthenticatedGuard, ThrottlerGuard)

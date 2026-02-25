@@ -12,7 +12,9 @@ export const PlatformLayout = ({ defaultSidebarOpen }: IPlatformLayoutProps) => 
 			<PlatformSidebar />
 			<SidebarInset>
 				<Header />
-				<Outlet />
+				<div className={"max-h-[calc(100vh-67px)] overflow-hidden h-full"}>
+					<Outlet />
+				</div>
 			</SidebarInset>
 		</SidebarProvider>
 	);

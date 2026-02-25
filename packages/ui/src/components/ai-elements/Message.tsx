@@ -1,14 +1,29 @@
-import {cjk} from "@streamdown/cjk";
-import {code} from "@streamdown/code";
-import {math} from "@streamdown/math";
-import {mermaid} from "@streamdown/mermaid";
-import type {UIMessage} from "ai";
-import {ChevronLeftIcon, ChevronRightIcon} from "lucide-react";
-import type {ComponentProps, HTMLAttributes, ReactElement} from "react";
-import {createContext, memo, useContext, useEffect, useState} from "react";
-import {Streamdown} from "streamdown";
-import {cn} from "../../lib";
-import {Button, ButtonGroup, ButtonGroupText, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger,} from "../";
+import { cjk } from "@streamdown/cjk";
+import { code } from "@streamdown/code";
+import { mermaid } from "@streamdown/mermaid";
+import type { UIMessage } from "ai";
+import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+import type { ComponentProps, HTMLAttributes, ReactElement } from "react";
+import { createContext, memo, useContext, useEffect, useState } from "react";
+import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import rehypeKatex from "rehype-katex";
+import rehypeSlug from "rehype-slug";
+import remarkDirective from "remark-directive";
+import remarkGfm from "remark-gfm";
+import remarkMath from "remark-math";
+import { Streamdown } from "streamdown";
+import {
+	Button,
+	ButtonGroup,
+	ButtonGroupText,
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+} from "../";
+import { cn } from "../../lib";
+
+import "katex/dist/katex.min.css";
 
 export type MessageProps = HTMLAttributes<HTMLDivElement> & {
 	from: UIMessage["role"];
@@ -299,7 +314,9 @@ export const MessageResponse = memo(
 				"size-full [&>*:first-child]:mt-0 [&>*:last-child]:mb-0",
 				className,
 			)}
-			plugins={{ code, mermaid, math, cjk }}
+			plugins={{ code, mermaid, cjk }}
+			remarkPlugins={[remarkGfm, remarkMath, remarkDirective]}
+			rehypePlugins={[rehypeKatex, rehypeSlug, rehypeAutolinkHeadings]}
 			{...props}
 		/>
 	),

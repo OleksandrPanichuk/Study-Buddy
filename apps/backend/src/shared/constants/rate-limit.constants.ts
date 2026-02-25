@@ -17,9 +17,9 @@ export const RATE_LIMITS = {
 	EMAIL_VERIFICATION: {
 		SEND_CODE: { ttl: 60_000, limit: 3 },
 		VERIFY: { ttl: 60_000, limit: 5 }
-  },
-  MESSAGES: {
-    ttl: 60_000,
-    limit: 3
+	},
+	MESSAGES: {
+		ttl: 60_000,
+		limit: 10
 	}
 } as const;

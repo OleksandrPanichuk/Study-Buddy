@@ -17,7 +17,7 @@
     "lint": "turbo run lint",
     "check-types": "turbo run check-types",
     "build:schemas": "cd packages/schemas && bun run build",
-    "build:constants": "cd packages/constants && bun run build",
+    "build:constants": "cd packages/constants && bun run build"
   },
   "workspaces": [
     "apps/*",

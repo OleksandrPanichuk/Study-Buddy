@@ -49,7 +49,7 @@ export class MessagesService {
 	}
 
 	public async create(dto: CreateMessageInput, tutorChatId: string, userId: string): Promise<CreateMessageResponse> {
-		const { content, model = AI_DEFAULT_MODEL } = dto;
+		const { content, model = AI_DEFAULT_MODEL , files} = dto;
 
 		const tutorChat = await this.tutorChatsRepository.findById(tutorChatId);
 

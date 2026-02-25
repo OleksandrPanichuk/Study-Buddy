@@ -1,5 +1,5 @@
 import {mutationOptions} from "@tanstack/react-query";
-import {deleteFileAssetFn, uploadTutorChatFilesFn} from "./functions";
+import {deleteFileAssetFn, uploadTutorChatFilesFn} from "./functions.ts";
 
 export const getUploadTutorChatFilesMutationOptions = (tutorChatId: string) =>
 	mutationOptions({

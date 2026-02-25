@@ -2,7 +2,7 @@ import {uploadFilesInputSchema} from "@repo/schemas";
 import {deleteFileAssetInputSchema, type TDeleteFileAssetInput, type TUploadFilesResponse} from "@repo/schemas/files";
 import {createServerFn} from "@tanstack/react-start";
 import {FILES_API_ROUTES} from "@/features/files";
-import {fetcher} from "@/lib/fetcher";
+import {fetcher} from "@/lib/fetcher.ts";
 
 export const uploadTutorChatFilesFn = createServerFn({ method: "POST" })
 	.inputValidator((data: FormData) =>

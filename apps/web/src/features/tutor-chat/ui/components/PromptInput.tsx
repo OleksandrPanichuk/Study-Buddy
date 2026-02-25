@@ -1,30 +1,16 @@
-import {AI_DEFAULT_MODEL, type AIModels, ALLOWED_MIME_TYPES, MAX_FILE_SIZE} from "@repo/constants";
-import {createMessageInputSchema, type  TCreateMessageInput} from "@repo/schemas";
-import type {TUploadFilesResponse} from "@repo/schemas/files";
-import {
-	PromptInput as PromptInputBase,
-	PromptInputActionAddAttachments,
-	PromptInputActionMenu,
-	PromptInputActionMenuContent,
-	PromptInputActionMenuTrigger,
-	PromptInputBody,
-	PromptInputFooter,
-	PromptInputProvider,
-	PromptInputSubmit,
-	PromptInputTextarea,
-	PromptInputTools,
-	usePromptInputController
-} from "@repo/ui";
-import {useForm} from "@tanstack/react-form";
+import type {TCreateMessageInput, TUploadFilesResponse} from "@repo/schemas";
+import {PromptInputProvider} from "@repo/ui";
 import {useMutation} from "@tanstack/react-query";
 import {useCallback, useEffect, useRef, useState} from "react";
 import {toast} from "sonner";
-import {ModelSelect, PromptInputAttachmentsPreview} from "@/features/tutor-chat";
 import {
 	deleteFileAssetFn,
 	getDeleteFileAssetMutationOptions,
 	getUploadTutorChatFilesMutationOptions
-} from "@/features/tutor-chat/api";
+} from "@/features/files";
+import {getCreateMessageMutationOptions} from "@/features/messages";
+import {PromptInputInner} from "@/features/tutor-chat";
+import {tryCatch} from "@/lib";
 
 interface IPromptInputProps {
 	tutorChatId: string;
@@ -32,87 +18,15 @@ interface IPromptInputProps {
 
 type UploadedFilesMap = Map<string, TUploadFilesResponse[number][]>;
 
-interface PromptInputInnerProps extends IPromptInputProps {
-	uploadingIds: Set<string>;
-	uploadedFiles: TUploadFilesResponse;
-}
-
-const PromptInputInner = ({ uploadingIds, uploadedFiles }: PromptInputInnerProps) => {
-	const controller = usePromptInputController();
-
-	const form = useForm({
-		validators: { onSubmit: createMessageInputSchema },
-		defaultValues: {
-			content: "",
-			model: AI_DEFAULT_MODEL,
-			files: undefined
-		} as TCreateMessageInput,
-		onSubmit: async ({ value }) => {
-			controller.textInput.clear();
-			console.log({ value });
-		}
-	});
-
-	useEffect(() => {
-		form.setFieldValue("files", uploadedFiles.length > 0 ? uploadedFiles : undefined);
-	}, [uploadedFiles, form]);
-
-	return (
-		<PromptInputBase
-			accept={ALLOWED_MIME_TYPES.join(",")}
-			maxFileSize={MAX_FILE_SIZE}
-			onError={(error) => toast.error(error.message)}
-			onSubmit={form.handleSubmit}>
-			<PromptInputAttachmentsPreview uploadingIds={uploadingIds} />
-
-			<PromptInputBody>
-				<form.Field name="content">
-					{(field) => (
-						<PromptInputTextarea
-							placeholder="Ask your study buddy anything…"
-							value={field.state.value}
-							onChange={(e) => {
-								field.handleChange(e.target.value);
-								controller.textInput.setInput(e.target.value);
-							}}
-						/>
-					)}
-				</form.Field>
-			</PromptInputBody>
-
-			<PromptInputFooter>
-				<PromptInputTools>
-					<PromptInputActionMenu>
-						<PromptInputActionMenuTrigger />
-						<PromptInputActionMenuContent>
-							<PromptInputActionAddAttachments />
-						</PromptInputActionMenuContent>
-					</PromptInputActionMenu>
-
-					<form.Field name="model">
-						{(field) => (
-							<ModelSelect
-								value={field.state.value as AIModels | undefined}
-								onChange={(val) => field.handleChange(val)}
-							/>
-						)}
-					</form.Field>
-				</PromptInputTools>
-
-				<PromptInputSubmit />
-			</PromptInputFooter>
-		</PromptInputBase>
-	);
-};
-
 export const PromptInput = ({ tutorChatId }: IPromptInputProps) => {
 	const uploadedFilesRef = useRef<UploadedFilesMap>(new Map());
 
 	const [uploadingIds, setUploadingIds] = useState<Set<string>>(new Set());
 	const [uploadedFiles, setUploadedFiles] = useState<TUploadFilesResponse>([]);
 
-	const uploadMutation = useMutation(getUploadTutorChatFilesMutationOptions(tutorChatId));
-	const deleteMutation = useMutation(getDeleteFileAssetMutationOptions());
+	const { mutateAsync: createMessage } = useMutation(getCreateMessageMutationOptions());
+	const { mutate: uploadFiles } = useMutation(getUploadTutorChatFilesMutationOptions(tutorChatId));
+	const { mutate: deleteFile } = useMutation(getDeleteFileAssetMutationOptions());
 
 	const deleteAllUploaded = useCallback(() => {
 		const allAssets = Array.from(uploadedFilesRef.current.values()).flat();
@@ -142,7 +56,7 @@ export const PromptInput = ({ tutorChatId }: IPromptInputProps) => {
 				return next;
 			});
 
-			uploadMutation.mutate(files, {
+			uploadFiles(files, {
 				onSuccess: (uploaded) => {
 					for (let i = 0; i < localIds.length; i++) {
 						const localId = localIds[i];
@@ -174,7 +88,7 @@ export const PromptInput = ({ tutorChatId }: IPromptInputProps) => {
 				}
 			});
 		},
-		[uploadMutation]
+		[uploadFiles]
 	);
 
 	const handleFileRemoved = useCallback(
@@ -188,17 +102,36 @@ export const PromptInput = ({ tutorChatId }: IPromptInputProps) => {
 			setUploadedFiles(Array.from(uploadedFilesRef.current.values()).flat());
 
 			for (const asset of assets) {
-				deleteMutation.mutate(asset.id, {
+				deleteFile(asset.id, {
 					onError: () => toast.error("Failed to delete file from storage")
 				});
 			}
 		},
-		[deleteMutation]
+		[deleteFile]
+	);
+
+	const handleSubmit = useCallback(
+		async (values: TCreateMessageInput) => {
+			const [_, error] = await tryCatch(createMessage(values));
+
+			if (error) {
+				toast.error(error.message);
+				return false;
+			}
+
+			return true;
+		},
+		[createMessage]
 	);
 
 	return (
 		<PromptInputProvider onFilesAdded={handleFilesAdded} onFileRemoved={handleFileRemoved}>
-			<PromptInputInner tutorChatId={tutorChatId} uploadingIds={uploadingIds} uploadedFiles={uploadedFiles} />
+			<PromptInputInner
+				tutorChatId={tutorChatId}
+				uploadingIds={uploadingIds}
+				uploadedFiles={uploadedFiles}
+				onSubmit={handleSubmit}
+			/>
 		</PromptInputProvider>
 	);
 };

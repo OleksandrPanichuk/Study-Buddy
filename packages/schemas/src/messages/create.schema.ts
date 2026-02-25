@@ -4,6 +4,7 @@ import {uploadFilesResponseSchema} from "../files";
 import {messageSchema} from "../models";
 
 export const createMessageInputSchema = z.object({
+	tutorChatId: z.uuidv4("Invalid ID"),
 	content: z
 		.string()
 		.trim()

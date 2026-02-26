@@ -1,17 +1,9 @@
-import { DEFAULT_MESSAGES_LIMIT, getInfiniteMessagesQueryOptions } from "@/features/messages";
-import { useInfiniteQueryRef } from "@/features/shared";
-import {
-	cn,
-	Conversation,
-	ConversationContent,
-	ConversationEmptyState,
-	ConversationScrollButton,
-	Message,
-	MessageContent,
-	MessageResponse
-} from "@repo/ui";
+import { Conversation, ConversationContent, ConversationEmptyState, ConversationScrollButton, cn } from "@repo/ui";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { MessageSquareIcon } from "lucide-react";
+import { DEFAULT_MESSAGES_LIMIT, getInfiniteMessagesQueryOptions, useMessageStream } from "@/features/messages";
+import { useInfiniteQueryRef } from "@/features/shared";
+import { MessageItem } from "./MessageItem";
 
 interface IMessagesListProps {
 	tutorChatId: string;
@@ -29,7 +21,18 @@ export const MessagesList = ({ tutorChatId }: IMessagesListProps) => {
 		isFetching
 	});
 
-	const messages = data?.pages.flatMap((page) => page.data).reverse() ?? [];
+	const rawMessages = data?.pages.flatMap((page) => page.data) ?? [];
+	const streamingAssistantMessageId = rawMessages.find(
+		(message) => message.role === "ASSISTANT" && message.status === "PROCESSING"
+	)?.id;
+
+
+	useMessageStream({
+		tutorChatId,
+		assistantMessageId: streamingAssistantMessageId
+	});
+
+	const messages = [...rawMessages].reverse();
 
 	return (
 		<Conversation className="relative size-full">
@@ -49,17 +52,7 @@ export const MessagesList = ({ tutorChatId }: IMessagesListProps) => {
 						title="Start a conversation"
 					/>
 				) : (
-					messages.map((message) => {
-						const isAssistant = message.role === "ASSISTANT";
-
-						return (
-							<Message from={isAssistant ? "assistant" : "user"} key={message.id}>
-								<MessageContent>
-									{isAssistant ? <MessageResponse>{message.content}</MessageResponse> : message.content}
-								</MessageContent>
-							</Message>
-						);
-					})
+					messages.map((message) => <MessageItem key={message.id} message={message} />)
 				)}
 			</ConversationContent>
 			<ConversationScrollButton />

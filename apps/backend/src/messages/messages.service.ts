@@ -1,22 +1,24 @@
-import {MessageRole, MessageStatus} from "@app/prisma";
-import {InjectQueue} from "@nestjs/bullmq";
-import {ForbiddenException, Injectable, NotFoundException} from "@nestjs/common";
-import {ConfigService} from "@nestjs/config";
-import {AI_DEFAULT_MODEL} from "@repo/constants";
-import {Queue} from "bullmq";
-import type {IGenerateResponseJobData} from "@/messages/messages.interfaces";
-import {MessagesRepository} from "@/messages/messages.repository";
-import {Env} from "@/shared/config";
-import {TutorChatsRepository} from "@/tutor-chats/tutor-chats.repository";
-import {CreateMessageInput, CreateMessageResponse, FindAllMessagesQuery, FindAllMessagesResponse} from "./messages.dto";
+import { MessageRole, MessageStatus } from "@app/prisma";
+import { InjectQueue } from "@nestjs/bullmq";
+import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
+import { AI_DEFAULT_MODEL } from "@repo/constants";
+import { Queue } from "bullmq";
+import type { IGenerateResponseJobData } from "@/messages/messages.interfaces";
+import { MessagesRepository } from "@/messages/messages.repository";
+import { TutorChatsRepository } from "@/tutor-chats/tutor-chats.repository";
+import {
+	CreateMessageInput,
+	CreateMessageResponse,
+	FindAllMessagesQuery,
+	FindAllMessagesResponse
+} from "./messages.dto";
 
 @Injectable()
 export class MessagesService {
 	constructor(
 		@InjectQueue("messages") private readonly messagesQueue: Queue,
 		private readonly messagesRepository: MessagesRepository,
-		private readonly tutorChatsRepository: TutorChatsRepository,
-		private readonly config: ConfigService<Env>
+		private readonly tutorChatsRepository: TutorChatsRepository
 	) {}
 
 	public async findAll(
@@ -49,7 +51,7 @@ export class MessagesService {
 	}
 
 	public async create(dto: CreateMessageInput, tutorChatId: string, userId: string): Promise<CreateMessageResponse> {
-		const { content, model = AI_DEFAULT_MODEL , files} = dto;
+		const { content, model = AI_DEFAULT_MODEL, files } = dto;
 
 		const tutorChat = await this.tutorChatsRepository.findById(tutorChatId);
 

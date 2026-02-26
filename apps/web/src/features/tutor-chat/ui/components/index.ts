@@ -1,3 +1,4 @@
+export * from "./MessageItem";
 export * from "./MessagesList";
 export * from "./ModelSelect";
 export * from "./PromptInput";

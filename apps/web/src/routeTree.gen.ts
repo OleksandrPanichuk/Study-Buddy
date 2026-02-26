@@ -22,6 +22,7 @@ import { Route as authResetPasswordIndexRouteImport } from './routes/(auth)/rese
 import { Route as authForgotPasswordIndexRouteImport } from './routes/(auth)/forgot-password/index'
 import { Route as platformPTutorChatsIndexRouteImport } from './routes/(platform)/p/tutor-chats/index'
 import { Route as platformPTutorChatsTutorChatIdRouteImport } from './routes/(platform)/p/tutor-chats/$tutorChatId'
+import { Route as ApiTutorChatTutorChatIdMessagesMessageIdStreamRouteImport } from './routes/api/tutor-chat/$tutorChatId/messages/$messageId/stream'
 
 const platformRouteRoute = platformRouteRouteImport.update({
   id: '/(platform)',
@@ -87,6 +88,12 @@ const platformPTutorChatsTutorChatIdRoute =
     path: '/p/tutor-chats/$tutorChatId',
     getParentRoute: () => platformRouteRoute,
   } as any)
+const ApiTutorChatTutorChatIdMessagesMessageIdStreamRoute =
+  ApiTutorChatTutorChatIdMessagesMessageIdStreamRouteImport.update({
+    id: '/api/tutor-chat/$tutorChatId/messages/$messageId/stream',
+    path: '/api/tutor-chat/$tutorChatId/messages/$messageId/stream',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/about': typeof marketingAboutRoute
@@ -99,6 +106,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/': typeof platformDashboardIndexRoute
   '/p/tutor-chats/$tutorChatId': typeof platformPTutorChatsTutorChatIdRoute
   '/p/tutor-chats/': typeof platformPTutorChatsIndexRoute
+  '/api/tutor-chat/$tutorChatId/messages/$messageId/stream': typeof ApiTutorChatTutorChatIdMessagesMessageIdStreamRoute
 }
 export interface FileRoutesByTo {
   '/about': typeof marketingAboutRoute
@@ -111,6 +119,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof platformDashboardIndexRoute
   '/p/tutor-chats/$tutorChatId': typeof platformPTutorChatsTutorChatIdRoute
   '/p/tutor-chats': typeof platformPTutorChatsIndexRoute
+  '/api/tutor-chat/$tutorChatId/messages/$messageId/stream': typeof ApiTutorChatTutorChatIdMessagesMessageIdStreamRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -127,6 +136,7 @@ export interface FileRoutesById {
   '/(platform)/dashboard/': typeof platformDashboardIndexRoute
   '/(platform)/p/tutor-chats/$tutorChatId': typeof platformPTutorChatsTutorChatIdRoute
   '/(platform)/p/tutor-chats/': typeof platformPTutorChatsIndexRoute
+  '/api/tutor-chat/$tutorChatId/messages/$messageId/stream': typeof ApiTutorChatTutorChatIdMessagesMessageIdStreamRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -141,6 +151,7 @@ export interface FileRouteTypes {
     | '/dashboard/'
     | '/p/tutor-chats/$tutorChatId'
     | '/p/tutor-chats/'
+    | '/api/tutor-chat/$tutorChatId/messages/$messageId/stream'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/about'
@@ -153,6 +164,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/p/tutor-chats/$tutorChatId'
     | '/p/tutor-chats'
+    | '/api/tutor-chat/$tutorChatId/messages/$messageId/stream'
   id:
     | '__root__'
     | '/(auth)'
@@ -168,12 +180,14 @@ export interface FileRouteTypes {
     | '/(platform)/dashboard/'
     | '/(platform)/p/tutor-chats/$tutorChatId'
     | '/(platform)/p/tutor-chats/'
+    | '/api/tutor-chat/$tutorChatId/messages/$messageId/stream'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   authRouteRoute: typeof authRouteRouteWithChildren
   marketingRouteRoute: typeof marketingRouteRouteWithChildren
   platformRouteRoute: typeof platformRouteRouteWithChildren
+  ApiTutorChatTutorChatIdMessagesMessageIdStreamRoute: typeof ApiTutorChatTutorChatIdMessagesMessageIdStreamRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -269,6 +283,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof platformPTutorChatsTutorChatIdRouteImport
       parentRoute: typeof platformRouteRoute
     }
+    '/api/tutor-chat/$tutorChatId/messages/$messageId/stream': {
+      id: '/api/tutor-chat/$tutorChatId/messages/$messageId/stream'
+      path: '/api/tutor-chat/$tutorChatId/messages/$messageId/stream'
+      fullPath: '/api/tutor-chat/$tutorChatId/messages/$messageId/stream'
+      preLoaderRoute: typeof ApiTutorChatTutorChatIdMessagesMessageIdStreamRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -326,6 +347,8 @@ const rootRouteChildren: RootRouteChildren = {
   authRouteRoute: authRouteRouteWithChildren,
   marketingRouteRoute: marketingRouteRouteWithChildren,
   platformRouteRoute: platformRouteRouteWithChildren,
+  ApiTutorChatTutorChatIdMessagesMessageIdStreamRoute:
+    ApiTutorChatTutorChatIdMessagesMessageIdStreamRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

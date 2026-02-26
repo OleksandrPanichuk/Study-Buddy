@@ -1,7 +1,8 @@
 import type { TFindAllMessagesInput } from "@repo/schemas/messages";
 
 export const MESSAGES_API_ROUTES = {
-	root: (tutorChatId: string) => `tutor-chat/${tutorChatId}/messages`
+	root: (tutorChatId: string) => `tutor-chat/${tutorChatId}/messages`,
+	stream: (tutorChatId: string, messageId: string) => `tutor-chat/${tutorChatId}/messages/${messageId}/stream`
 } as const;
 
 export const MESSAGES_QUERY_KEYS = {

@@ -9,7 +9,7 @@ export const TutorChatView = ({ tutorChatId }: ITutorChatViewProps) => {
 		<div className={"relative h-full w-full flex flex-col overflow-hidden"}>
 			<div className="flex-1 min-h-0">
 				<MessagesList tutorChatId={tutorChatId} />
-			</div>
+      </div>
 			<div
 				className={"shrink-0 px-4 pb-4 pt-2 bg-background/80 backdrop-blur-sm"}
 			>

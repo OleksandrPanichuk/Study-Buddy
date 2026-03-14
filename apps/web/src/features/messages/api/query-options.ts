@@ -1,13 +1,19 @@
-import type { TCreateMessageInput, TFindAllMessagesInput, TFindAllMessagesResponse } from "@repo/schemas";
-import { type InfiniteData, infiniteQueryOptions, mutationOptions } from "@tanstack/react-query";
-import { createMessageFn, DEFAULT_MESSAGES_LIMIT, getAllMessagesFn, MESSAGES_QUERY_KEYS } from "@/features/messages";
+import type {
+	TCreateMessageInput,
+	TFindAllMessagesInput,
+	TFindAllMessagesResponse,
+	TMessageWithAttachments
+} from "@repo/schemas";
+import {type InfiniteData, infiniteQueryOptions, mutationOptions} from "@tanstack/react-query";
+import {createMessageFn, DEFAULT_MESSAGES_LIMIT, getAllMessagesFn, MESSAGES_QUERY_KEYS} from "@/features/messages";
 
 export const getInfiniteMessagesQueryOptions = (data: TFindAllMessagesInput) =>
 	infiniteQueryOptions({
 		queryKey: MESSAGES_QUERY_KEYS.getAll(data),
-		queryFn: async ({ pageParam }) => getAllMessagesFn({ data: { ...data, cursor: pageParam } }),
+		queryFn: async ({ pageParam }) =>
+			getAllMessagesFn({ data: { ...data, cursor: pageParam } }),
 		getNextPageParam: (lastPage) => lastPage.nextCursor,
-		initialPageParam: data.cursor
+		initialPageParam: data.cursor,
 	});
 
 export const getCreateMessageMutationOptions = () =>
@@ -16,8 +22,11 @@ export const getCreateMessageMutationOptions = () =>
 		onSuccess: (response, variables, _onMutationResult, { client }) => {
 			client.setQueriesData(
 				{
-					queryKey: MESSAGES_QUERY_KEYS.getAll({ tutorChatId: variables.tutorChatId, limit: DEFAULT_MESSAGES_LIMIT }),
-					exact: false
+					queryKey: MESSAGES_QUERY_KEYS.getAll({
+						tutorChatId: variables.tutorChatId,
+						limit: DEFAULT_MESSAGES_LIMIT,
+					}),
+					exact: false,
 				},
 				(old) => {
 					if (!old) return old;
@@ -30,19 +39,34 @@ export const getCreateMessageMutationOptions = () =>
 
 					if (!firstPage) return old;
 
-					const newMessages = [response.assistantMessage, response.userMessage, ...firstPage.data];
+					const userMessageWithAttachments: TMessageWithAttachments = {
+						...response.userMessage,
+						attachments: variables.files?.map((file) => ({
+							url: file.url,
+							id: file.id,
+							mimeType: file.mimeType,
+							sizeBytes: file.sizeBytes,
+							name: file.name,
+						})),
+					};
+
+					const newMessages = [
+						response.assistantMessage,
+						userMessageWithAttachments,
+						...firstPage.data,
+					];
 
 					return {
 						...oldData,
 						pages: [
 							{
 								...firstPage,
-								data: newMessages
+								data: newMessages,
 							},
-							...oldData.pages.slice(1)
-						]
+							...oldData.pages.slice(1),
+						],
 					} satisfies InfiniteData<TFindAllMessagesResponse>;
-				}
+				},
 			);
-		}
+		},
 	});

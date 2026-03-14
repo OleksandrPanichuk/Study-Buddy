@@ -1,9 +1,10 @@
-import type { TMessage } from "@repo/schemas";
+import type { TMessageWithAttachments } from "@repo/schemas";
 import { cn, Message, MessageContent, MessageResponse } from "@repo/ui";
 import { AlertCircleIcon, Loader2Icon } from "lucide-react";
+import { MessageAttachments } from "./MessageAttachments";
 
 interface IMessageItemProps {
-	message: TMessage;
+	message: TMessageWithAttachments;
 }
 
 export const MessageItem = ({ message }: IMessageItemProps) => {
@@ -14,7 +15,8 @@ export const MessageItem = ({ message }: IMessageItemProps) => {
 	return (
 		<Message from={isAssistant ? "assistant" : "user"}>
 			<MessageContent>
-				{isAssistant ? <MessageResponse>{message.content}</MessageResponse> : message.content}
+				{message.content && isAssistant ? <MessageResponse>{message.content}</MessageResponse> : message.content}
+				<MessageAttachments attachments={message.attachments} />
 
 				{isProcessing && (
 					<div className="mt-1 inline-flex items-center gap-1 text-xs text-muted-foreground">

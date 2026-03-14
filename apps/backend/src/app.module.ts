@@ -42,7 +42,7 @@ import { SanitizationPipe } from "./shared/pipes";
 					url: config.get("REDIS_URL")
 				}
 			})
-		}),
+    }),
 		ScheduleModule.forRoot(),
 		SentryModule.forRoot(),
 		LoggerModule,

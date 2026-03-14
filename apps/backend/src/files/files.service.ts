@@ -43,6 +43,7 @@ export class FilesService {
 	}
 
 	private async upload(files: Express.Multer.File[], folder: string, userId: string): Promise<UploadFilesResponse> {
+		console.log(files[0].filename, files[0].originalname);
 		const uploadedFiles = await this.s3Service.uploadFiles(files, {
 			maxSize: MAX_FILE_SIZE,
 			folder: folder
@@ -82,7 +83,10 @@ export class FilesService {
 					id: fileAsset.id,
 					jobId: job.id,
 					url: fileAsset.url,
-					key: fileAsset.storageKey
+					name: fileAsset.name,
+					storageKey: fileAsset.storageKey,
+					sizeBytes: fileAsset.sizeBytes,
+					mimeType: fileAsset.mimeType
 				};
 			})
 		);

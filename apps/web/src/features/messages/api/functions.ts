@@ -1,5 +1,3 @@
-import { MESSAGES_API_ROUTES } from "@/features/messages";
-import { fetcher } from "@/lib/fetcher";
 import {
 	createMessageInputSchema,
 	findAllMessagesInputSchema,
@@ -8,33 +6,37 @@ import {
 	type TFindAllMessagesInput,
 	TFindAllMessagesResponse
 } from "@repo/schemas";
-import { createServerFn } from "@tanstack/react-start";
+import {createServerFn} from "@tanstack/react-start";
 import qs from "query-string";
+import {MESSAGES_API_ROUTES} from "@/features/messages";
+import {fetcher} from "@/lib/fetcher";
 
 export const getAllMessagesFn = createServerFn({
-	method: "POST"
+	method: "POST",
 })
-	.inputValidator((data: TFindAllMessagesInput) => findAllMessagesInputSchema.parse(data))
+	.inputValidator((data: TFindAllMessagesInput) =>
+		findAllMessagesInputSchema.parse(data),
+	)
 	.handler(async ({ data }) => {
 		const { tutorChatId, ...rest } = data;
 
-		
-
 		const url = qs.stringifyUrl({
 			url: MESSAGES_API_ROUTES.root(tutorChatId),
-			query: rest
+			query: rest,
 		});
 
 		return await fetcher.get(url).json<TFindAllMessagesResponse>();
 	});
 
 export const createMessageFn = createServerFn({ method: "POST" })
-	.inputValidator((data: TCreateMessageInput) => createMessageInputSchema.parse(data))
+	.inputValidator((data: TCreateMessageInput) =>
+		createMessageInputSchema.parse(data),
+	)
 	.handler(async ({ data }) => {
 		const { tutorChatId, ...rest } = data;
 		return await fetcher
 			.post(MESSAGES_API_ROUTES.root(tutorChatId), {
-				json: rest
+				json: rest,
 			})
 			.json<TCreateMessageResponse>();
 	});

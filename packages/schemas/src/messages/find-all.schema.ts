@@ -1,5 +1,5 @@
 import z from "zod";
-import { messageSchema } from "../models";
+import { messageWithAttachmentsSchema } from "../models";
 
 export const findAllMessagesInputSchema = z.object({
 	cursor: z.uuidv4("Invalid cursor").optional(),
@@ -8,7 +8,7 @@ export const findAllMessagesInputSchema = z.object({
 });
 
 export const findAllMessagesResponseSchema = z.object({
-	data: z.array(messageSchema),
+	data: z.array(messageWithAttachmentsSchema),
 	nextCursor: z.uuidv4().nullish()
 });
 

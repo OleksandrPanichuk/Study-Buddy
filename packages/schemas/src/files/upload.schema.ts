@@ -1,4 +1,5 @@
 import z from "zod";
+import {fileAssetSchema} from "../models";
 
 export const uploadFilesInputSchema = z.instanceof(FormData).refine(
 	(data) => {
@@ -13,12 +14,17 @@ export const uploadFilesInputSchema = z.instanceof(FormData).refine(
 export type TUploadFilesInput = z.infer<typeof uploadFilesInputSchema>;
 
 export const uploadFilesResponseSchema = z.array(
-	z.object({
-		id: z.uuidv4(),
-		jobId: z.string(),
-		url: z.url(),
-		key: z.string(),
-	}),
+	fileAssetSchema
+		.omit({
+			status: true,
+			textHash: true,
+			userId: true,
+			createdAt: true,
+			updatedAt: true,
+		})
+		.extend({
+			jobId: z.string(),
+		}),
 );
 
 export type TUploadFilesResponse = z.infer<typeof uploadFilesResponseSchema>;

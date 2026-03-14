@@ -1,4 +1,4 @@
-import type { TFindAllMessagesInput } from "@repo/schemas/messages";
+import type {TFindAllMessagesInput} from "@repo/schemas/messages";
 
 export const MESSAGES_API_ROUTES = {
 	root: (tutorChatId: string) => `tutor-chat/${tutorChatId}/messages`,

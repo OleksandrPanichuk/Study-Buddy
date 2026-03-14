@@ -1,5 +1,6 @@
 import z from "zod";
-import { zDate } from "../utils";
+import {zDate} from "../utils";
+import {fileAssetSchema} from "./file-asset.schema";
 
 export const messageRoles = ["SYSTEM", "USER", "ASSISTANT", "TOOL"] as const;
 export const messageStatuses = ["PROCESSING", "COMPLETE", "FAILED"] as const;
@@ -18,7 +19,25 @@ export const messageSchema = z.object({
 	userId: z.uuidv4(),
 
 	createdAt: zDate,
-	updatedAt: zDate
+	updatedAt: zDate,
 });
 
 export type TMessage = z.infer<typeof messageSchema>;
+
+export const messageWithAttachmentsSchema = messageSchema.extend({
+	attachments: z
+		.array(
+			fileAssetSchema.pick({
+				id: true,
+				name: true,
+				mimeType: true,
+				sizeBytes: true,
+				url: true,
+			}),
+		)
+		.optional(),
+});
+
+export type TMessageWithAttachments = z.infer<
+	typeof messageWithAttachmentsSchema
+>;

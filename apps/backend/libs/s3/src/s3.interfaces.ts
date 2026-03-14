@@ -25,6 +25,14 @@ export interface IUploadOptions {
 	maxSize?: number;
 	allowedMimeTypes?: string[];
 	cacheControl?: string;
+	contentDisposition?: string;
+}
+
+export interface IPresignedDownloadUrlOptions {
+	expiresIn?: number;
+	fileName?: string;
+	dispositionType?: "inline" | "attachment";
+	contentType?: string;
 }
 
 export interface IFileValidationOptions {

@@ -1,25 +1,27 @@
-import {AIService} from "@app/ai";
-import {Processor, WorkerHost} from "@nestjs/bullmq";
-import {Logger} from "@nestjs/common";
-import {EventEmitter2} from "@nestjs/event-emitter";
-import {MessageStatus} from "@prisma/generated/enums";
-import {AIModels} from "@repo/constants";
-import {Job} from "bullmq";
-import {MessagesSSEEvents, MessageStreamStatus} from "@/messages/messages.constants";
+import { AIService } from "@app/ai";
+import { Processor, WorkerHost } from "@nestjs/bullmq";
+import { Logger } from "@nestjs/common";
+import { EventEmitter2 } from "@nestjs/event-emitter";
+import { MessageStatus } from "@prisma/generated/enums";
+import { AIModels } from "@repo/constants";
+import { InjectQueue } from "@nestjs/bullmq";
+import { Job, Queue } from "bullmq";
+import { MessageStreamStatus, MessagesSSEEvents } from "@/messages/messages.constants";
 import type {
 	IGenerateResponseJobData,
 	IGenerateWithStreamingData,
 	IMessageStreamEventData
 } from "@/messages/messages.interfaces";
-import {MessagesRepository} from "@/messages/messages.repository";
-import {SYSTEM_PROMPT} from "@/shared/prompts";
-import {TutorChatsRepository} from "@/tutor-chats/tutor-chats.repository";
+import { MessagesRepository } from "@/messages/messages.repository";
+import { SYSTEM_PROMPT } from "@/shared/prompts";
+import { TutorChatsRepository } from "@/tutor-chats/tutor-chats.repository";
 
 @Processor("messages")
 export class MessagesProcessor extends WorkerHost {
 	private readonly logger = new Logger(MessagesProcessor.name);
 
 	constructor(
+		@InjectQueue("file-processing") private readonly fileProcessingQueue: Queue,
 		private readonly eventEmitter: EventEmitter2,
 		private readonly messagesRepository: MessagesRepository,
 		private readonly tutorChatsRepository: TutorChatsRepository,
@@ -29,7 +31,7 @@ export class MessagesProcessor extends WorkerHost {
 	}
 
 	async process(job: Job<IGenerateResponseJobData>) {
-		const { assistantMessageId, tutorChatId, userMessageId, userId } = job.data;
+		const { assistantMessageId, tutorChatId, userMessageId, userId, fileJobs } = job.data;
 
 		const startTime = Date.now();
 
@@ -71,6 +73,11 @@ export class MessagesProcessor extends WorkerHost {
 				);
 				await this.failMessage(assistantMessageId, tutorChatId, userId, "Message not found");
 				return;
+			}
+
+			if (fileJobs?.length) {
+				this.logger.log(`Waiting for ${fileJobs.length} file-processing jobs to finish`);
+				await this.waitForFileJobs(fileJobs.map((f) => f.jobId));
 			}
 
 			// 	TODO: get recent messages, context files and current message attachments for the system prompt
@@ -197,6 +204,37 @@ export class MessagesProcessor extends WorkerHost {
 		}
 
 		return systemPrompt;
+	}
+
+	private async waitForFileJobs(jobIds: string[], opts?: { timeoutMs?: number; pollMs?: number }) {
+		const timeoutMs = opts?.timeoutMs ?? 10 * 60 * 1000;
+		const pollMs = opts?.pollMs ?? 1000;
+		const startedAt = Date.now();
+
+		const uniqueJobIds = Array.from(new Set(jobIds.filter(Boolean)));
+		if (!uniqueJobIds.length) return;
+
+		while (true) {
+			const states = await Promise.all(
+				uniqueJobIds.map(async (jobId) => {
+					const fileJob = await this.fileProcessingQueue.getJob(jobId);
+					if (!fileJob) return "missing";
+					return await fileJob.getState();
+				})
+			);
+
+			const pending = states.filter((s) => s !== "completed" && s !== "failed" && s !== "missing");
+			if (pending.length === 0) return;
+
+			if (Date.now() - startedAt > timeoutMs) {
+				this.logger.warn(
+					`Timed out waiting for file-processing jobs: ${uniqueJobIds.join(", ")} (states: ${states.join(", ")})`
+				);
+				return;
+			}
+
+			await new Promise((r) => setTimeout(r, pollMs));
+		}
 	}
 
 	private async failMessage(assistantMessageId: string, tutorChatId: string, userId: string, reason: string) {

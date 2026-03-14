@@ -22,7 +22,11 @@ export interface IGenerateResponseJobData {
 	assistantMessageId: string;
 	userMessageId: string;
 	tutorChatId: string;
-	userId: string;
+  userId: string;
+	fileJobs?: Array<{
+		fileId: string;
+		jobId: string;
+	}>;
 }
 
 export interface IUpdateMessageData {

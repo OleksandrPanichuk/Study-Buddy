@@ -13,6 +13,7 @@ import {
 	createTutorChatFn,
 	deleteTutorChatFn,
 	getAllTutorChatsFn,
+	getTutorChatFn,
 	TUTOR_CHATS_QUERY_KEYS,
 	updateTutorChatFn
 } from "@/features/tutor-chats";
@@ -39,6 +40,12 @@ export const getInfiniteTutorChatsQueryOptions = (data: Omit<TFindAllTutorChatsI
 		initialPageParam: data.cursor
 	});
 
+export const getTutorChatQueryOptions = (tutorChatId: string) =>
+	queryOptions({
+		queryKey: TUTOR_CHATS_QUERY_KEYS.findById(tutorChatId),
+		queryFn: () => getTutorChatFn({ data: { tutorChatId } })
+	});
+
 export const getCreateTutorChatMutationOptions = () =>
 	mutationOptions({
 		mutationFn: (data: TCreateTutorChatInput) => createTutorChatFn({ data }),
@@ -48,7 +55,7 @@ export const getCreateTutorChatMutationOptions = () =>
 					queryKey: TUTOR_CHATS_QUERY_KEYS.findAll(),
 					exact: false
 				},
-				(old) => {
+				(old: unknown) => {
 					if (!old) return old;
 
 					if (isInfiniteQuery<TFindAllTutorChatsResponse>(old)) {
@@ -99,6 +106,8 @@ export const getUpdateTutorChatMutationOptions = () =>
 					return (old as TTutorChat[]).map((chat) => (chat.id === tutorChat.id ? tutorChat : chat));
 				}
 			);
+
+			client.setQueryData(TUTOR_CHATS_QUERY_KEYS.findById(tutorChat.id), tutorChat);
 		}
 	});
 

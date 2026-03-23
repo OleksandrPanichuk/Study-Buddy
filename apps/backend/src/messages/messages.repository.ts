@@ -1,7 +1,12 @@
-import { PrismaService } from "@app/prisma";
-import { Injectable } from "@nestjs/common";
-import type { ICreateMessageData, IFindAllMessagesData, IUpdateMessageData } from "./messages.interfaces";
-import { AttachmentScope } from "@app/prisma";
+import {AttachmentScope, MessageStatus, PrismaService} from "@app/prisma";
+import {Injectable} from "@nestjs/common";
+import type {
+	ICreateMessageData,
+	IFindAllMessagesData,
+	IFindAttachmentsForContextData,
+	IFindRecentMessagesForContextData,
+	IUpdateMessageData
+} from "./messages.interfaces";
 
 @Injectable()
 export class MessagesRepository {
@@ -47,6 +52,69 @@ export class MessagesRepository {
 		return this.db.message.findUnique({
 			where: { id }
 		});
+	}
+
+	public async findRecentForContext(data: IFindRecentMessagesForContextData) {
+		const messages = await this.db.message.findMany({
+			where: {
+				tutorChatId: data.tutorChatId,
+				userId: data.userId,
+				status: MessageStatus.COMPLETE,
+				id: data.excludeMessageIds?.length ? {notIn: data.excludeMessageIds} : undefined
+			},
+			select: {
+				id: true,
+				role: true,
+				content: true,
+				createdAt: true
+			},
+			take: data.limit ?? 8,
+			orderBy: {
+				createdAt: "desc"
+			}
+		});
+
+		return messages.reverse();
+	}
+
+	public async findAttachmentsForContext(data: IFindAttachmentsForContextData) {
+		const attachments = await this.db.messageAttachment.findMany({
+			where: {
+				messageId: data.messageId,
+				message: {
+					userId: data.userId
+				}
+			},
+			select: {
+				file: {
+					select: {
+						id: true,
+						name: true,
+						mimeType: true,
+						sizeBytes: true,
+						status: true,
+						chunks: {
+							select: {
+								content: true
+							},
+							orderBy: {
+								index: "asc"
+							},
+							take: data.chunkLimit ?? 2
+						}
+					}
+				}
+			}
+		});
+
+		return attachments.map(({file}) => ({
+			id: file.id,
+			name: file.name,
+			mimeType: file.mimeType,
+			sizeBytes: file.sizeBytes,
+			status: file.status,
+			chunks: file.chunks.map((chunk) => chunk.content)
+		}));
 	}
 
 	public createMessagePair(userMessageData: ICreateMessageData, assistantMessageData: ICreateMessageData) {

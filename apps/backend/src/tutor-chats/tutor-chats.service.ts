@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import {Injectable, NotFoundException} from "@nestjs/common";
 import {
 	CreateTutorChatInput,
 	CreateTutorChatResponse,
@@ -7,7 +7,7 @@ import {
 	UpdateTutorChatInput,
 	UpdateTutorChatResponse
 } from "./tutor-chats.dto";
-import { TutorChatsRepository } from "./tutor-chats.repository";
+import {TutorChatsRepository} from "./tutor-chats.repository";
 
 @Injectable()
 export class TutorChatsService {
@@ -32,6 +32,16 @@ export class TutorChatsService {
 			data,
 			nextCursor
 		};
+	}
+
+	public async findById(tutorChatId: string, userId: string) {
+		const tutorChat = await this.tutorChatsRepository.findById(tutorChatId);
+
+		if (!tutorChat || tutorChat.userId !== userId) {
+			throw new NotFoundException("Tutor chat not found");
+		}
+
+		return tutorChat;
 	}
 
 	public async create(dto: CreateTutorChatInput, userId: string): Promise<CreateTutorChatResponse> {

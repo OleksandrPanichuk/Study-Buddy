@@ -43,7 +43,6 @@ export class FilesService {
 	}
 
 	private async upload(files: Express.Multer.File[], folder: string, userId: string): Promise<UploadFilesResponse> {
-		console.log(files[0].filename, files[0].originalname);
 		const uploadedFiles = await this.s3Service.uploadFiles(files, {
 			maxSize: MAX_FILE_SIZE,
 			folder: folder

@@ -24,6 +24,7 @@ import {
 	DeleteTutorChatParams,
 	FindAllTutorChatsQuery,
 	FindAllTutorChatsResponse,
+	FindTutorChatParams,
 	UpdateTutorChatInput,
 	UpdateTutorChatResponse
 } from "./tutor-chats.dto";
@@ -71,6 +72,12 @@ export class TutorChatsController {
 	@Patch("/")
 	update(@Body() dto: UpdateTutorChatInput, @CurrentUser("id") userId: string) {
 		return this.tutorChatsService.update(dto, userId);
+	}
+
+	@HttpCode(HttpStatus.OK)
+	@Get("/by-id/:tutorChatId")
+	findById(@Param() params: FindTutorChatParams, @CurrentUser("id") userId: string) {
+		return this.tutorChatsService.findById(params.tutorChatId, userId);
 	}
 
 	@ApiDeleteTutorChat()

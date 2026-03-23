@@ -22,7 +22,7 @@ export interface IGenerateResponseJobData {
 	assistantMessageId: string;
 	userMessageId: string;
 	tutorChatId: string;
-  userId: string;
+	userId: string;
 	fileJobs?: Array<{
 		fileId: string;
 		jobId: string;
@@ -54,4 +54,38 @@ export interface IGenerateWithStreamingData {
 	systemPrompt: string;
 	prompt: string;
 	userId: string;
+}
+
+export interface IFindRecentMessagesForContextData {
+	tutorChatId: string;
+	userId: string;
+	excludeMessageIds?: string[];
+	limit?: number;
+}
+
+export interface IFindAttachmentsForContextData {
+	messageId: string;
+	userId: string;
+	chunkLimit?: number;
+}
+
+export interface IContextMessage {
+	id: string;
+	role: MessageRole;
+	content: string;
+	createdAt: Date;
+}
+
+export interface IContextAttachment {
+	id: string;
+	name: string;
+	mimeType: string;
+	sizeBytes: number;
+	status: string;
+	chunks: string[];
+}
+
+export interface IBuildContextReturn {
+	recentMessages: IContextMessage[];
+	attachments: IContextAttachment[];
 }

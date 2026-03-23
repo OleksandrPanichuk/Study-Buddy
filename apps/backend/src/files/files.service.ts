@@ -39,6 +39,10 @@ export class FilesService {
 			await this.s3Service.deleteFile(fileAsset.storageKey);
 		}
 
+		if (fileAsset.jobId) {
+			await this.fileProcessingQueue.remove(fileAsset.jobId);
+		}
+
 		await this.filesRepository.deleteFileAsset(fileAssetId);
 	}
 

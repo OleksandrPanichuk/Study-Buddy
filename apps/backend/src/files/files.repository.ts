@@ -12,8 +12,8 @@ export class FilesRepository {
 	public findFileAssetById(id: string) {
 		return this.db.fileAsset.findUnique({
 			where: {
-				id,
-			},
+				id
+			}
 		});
 	}
 
@@ -21,8 +21,8 @@ export class FilesRepository {
 		return this.db.fileAsset.findUnique({
 			where: {
 				id,
-				userId,
-			},
+				userId
+			}
 		});
 	}
 
@@ -35,39 +35,54 @@ export class FilesRepository {
 				sizeBytes: file.sizeBytes,
 				url: file.url,
 				status: file.status,
-				storageKey: file.storageKey,
-			})),
+				storageKey: file.storageKey
+			}))
 		});
 	}
 
 	public updateFileAssetStatus(id: string, status: FileStatus) {
 		return this.db.fileAsset.update({
 			where: {
-				id,
+				id
 			},
 			data: {
 				status,
+				...((status === "FAILED" || status === "READY") && {
+					jobId: null
+				})
+			}
+		});
+	}
+
+	public updateFileAssetJobId(id: string, jobId: string | null) {
+		return this.db.fileAsset.update({
+			where: {
+				id
 			},
+			data: {
+				jobId
+			}
 		});
 	}
 
 	public updateFileAssetTextHash(id: string, textHash: string) {
 		return this.db.fileAsset.update({
 			where: {
-				id,
+				id
 			},
 			data: {
 				textHash,
 				status: FileStatus.READY,
-			},
+				jobId: null
+			}
 		});
 	}
 
 	public deleteFileAsset(id: string) {
 		return this.db.fileAsset.delete({
 			where: {
-				id,
-			},
+				id
+			}
 		});
 	}
 
@@ -76,8 +91,8 @@ export class FilesRepository {
 	public findChunksByFileId(fileId: string) {
 		return this.db.fileChunk.findMany({
 			where: {
-				fileId,
-			},
+				fileId
+			}
 		});
 	}
 
@@ -107,15 +122,15 @@ export class FilesRepository {
                     INSERT INTO "file_chunks" (id, index, content, token_count, embedding, file_id)
                     VALUES (${uuid()}, ${chunk.index}, ${chunk.content}, ${chunk.tokenCount}, ${vectorStr}::vector, ${fileAssetId})
                 `;
-			}),
+			})
 		);
 	}
 
 	public deleteChunksByFileId(fileId: string) {
 		return this.db.fileChunk.deleteMany({
 			where: {
-				fileId,
-			},
+				fileId
+			}
 		});
 	}
 }

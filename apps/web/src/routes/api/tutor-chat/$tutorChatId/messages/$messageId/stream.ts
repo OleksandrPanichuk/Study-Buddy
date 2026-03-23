@@ -1,5 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { getCookies } from "@tanstack/react-start/server";
+import {createFileRoute} from "@tanstack/react-router";
+import {getCookies} from "@tanstack/react-start/server";
 
 export const Route = createFileRoute("/api/tutor-chat/$tutorChatId/messages/$messageId/stream")({
 	server: {
@@ -25,7 +25,8 @@ export const Route = createFileRoute("/api/tutor-chat/$tutorChatId/messages/$mes
 						accept: "text/event-stream",
 						"cache-control": "no-cache",
 						cookie: cookieString
-					}
+					},
+					signal: AbortSignal.timeout(300000)
 				});
 
 				if (!backendResponse.ok) {

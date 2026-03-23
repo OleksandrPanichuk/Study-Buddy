@@ -1,12 +1,12 @@
-import { AIService } from "@app/ai";
-import { InjectQueue, Processor, WorkerHost } from "@nestjs/bullmq";
-import { Logger } from "@nestjs/common";
-import { EventEmitter2 } from "@nestjs/event-emitter";
-import { Message } from "@prisma/generated/client";
-import { MessageStatus } from "@prisma/generated/enums";
-import { AIModels } from "@repo/constants";
-import { Job, Queue } from "bullmq";
-import { MessageStreamStatus, MessagesSSEEvents } from "@/messages/messages.constants";
+import {AIService} from "@app/ai";
+import {InjectQueue, Processor, WorkerHost} from "@nestjs/bullmq";
+import {Logger} from "@nestjs/common";
+import {EventEmitter2} from "@nestjs/event-emitter";
+import {Message} from "@prisma/generated/client";
+import {MessageStatus} from "@prisma/generated/enums";
+import {AIModels} from "@repo/constants";
+import {Job, Queue} from "bullmq";
+import {MessagesSSEEvents, MessageStreamStatus} from "@/messages/messages.constants";
 import type {
 	IBuildContextReturn,
 	IContextAttachment,
@@ -15,9 +15,9 @@ import type {
 	IGenerateWithStreamingData,
 	IMessageStreamEventData
 } from "@/messages/messages.interfaces";
-import { MessagesRepository } from "@/messages/messages.repository";
-import { SYSTEM_PROMPT } from "@/shared/prompts";
-import { TutorChatsRepository } from "@/tutor-chats/tutor-chats.repository";
+import {MessagesRepository} from "@/messages/messages.repository";
+import {SYSTEM_PROMPT} from "@/shared/prompts";
+import {TutorChatsRepository} from "@/tutor-chats/tutor-chats.repository";
 
 @Processor("messages")
 export class MessagesProcessor extends WorkerHost {
@@ -53,7 +53,11 @@ export class MessagesProcessor extends WorkerHost {
 			const userMessage = await this.messagesRepository.findById(userMessageId);
 			const assistantMessage = await this.messagesRepository.findById(assistantMessageId);
 
-			await this.validateMessages(userMessage, assistantMessage, userId, tutorChatId);
+			const validated = await this.validateMessages(userMessage, assistantMessage, userId, tutorChatId);
+
+			if (!validated) {
+				return;
+			}
 
 			if (fileJobs?.length) {
 				this.logger.log(`Waiting for ${fileJobs.length} file-processing jobs to finish`);
@@ -241,7 +245,7 @@ export class MessagesProcessor extends WorkerHost {
 		assistantMessage: Message | null,
 		userId: string,
 		tutorChatId: string
-	) {
+	): Promise<boolean> {
 		const userMessageId = userMessage?.id;
 		const assistantMessageId = assistantMessage?.id;
 
@@ -250,19 +254,19 @@ export class MessagesProcessor extends WorkerHost {
 				`User message with ID ${userMessageId} or assistant message with ID ${assistantMessageId} not found`
 			);
 			await this.failMessage(assistantMessageId, tutorChatId, userId, "Message not found");
-			return;
+			return false;
 		}
 
 		if (userMessage.userId !== userId) {
 			this.logger.error(`User message with ID ${userMessageId} does not belong to user ${userId}`);
 			await this.failMessage(assistantMessageId, tutorChatId, userId, "Message not found");
-			return;
+			return false;
 		}
 
 		if (assistantMessage.userId !== userId) {
 			this.logger.error(`Assistant message with ID ${assistantMessageId} does not belong to user ${userId}`);
 			await this.failMessage(assistantMessageId, tutorChatId, userId, "Message not found");
-			return;
+			return false;
 		}
 
 		if (userMessage.tutorChatId !== tutorChatId || assistantMessage.tutorChatId !== tutorChatId) {
@@ -270,8 +274,10 @@ export class MessagesProcessor extends WorkerHost {
 				`User message with ID ${userMessageId} or assistant message with ID ${assistantMessageId} does not belong to tutor chat ${tutorChatId}`
 			);
 			await this.failMessage(assistantMessageId, tutorChatId, userId, "Message not found");
-			return;
+			return false;
 		}
+
+		return true;
 	}
 
 	private async generateWithStreaming({

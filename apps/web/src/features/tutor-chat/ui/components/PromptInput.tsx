@@ -119,6 +119,9 @@ export const PromptInput = ({ tutorChatId }: IPromptInputProps) => {
 				return false;
 			}
 
+			uploadedFilesRef.current.clear();
+			setUploadedFiles([]);
+
 			return true;
 		},
 		[createMessage]

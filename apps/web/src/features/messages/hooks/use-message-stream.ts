@@ -1,11 +1,7 @@
-import type { TFindAllMessagesResponse } from "@repo/schemas";
-import { type InfiniteData, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useRef } from "react";
-import {
-	DEFAULT_MESSAGES_LIMIT,
-	MESSAGES_API_ROUTES,
-	MESSAGES_QUERY_KEYS,
-} from "@/features/messages";
+import type {TFindAllMessagesResponse} from "@repo/schemas";
+import {type InfiniteData, useQueryClient} from "@tanstack/react-query";
+import {useEffect, useRef} from "react";
+import {DEFAULT_MESSAGES_LIMIT, MESSAGES_API_ROUTES, MESSAGES_QUERY_KEYS,} from "@/features/messages";
 
 const PROCESSING_PLACEHOLDER = "Response is being generated...";
 const FAILED_MESSAGE = "Failed to generate response. Please try again.";
@@ -32,10 +28,7 @@ const parseStreamPayload = (raw: string): IMessageStreamEvent | null => {
 	}
 };
 
-export const useMessageStream = ({
-	tutorChatId,
-	assistantMessageId,
-}: IUseMessageStreamProps) => {
+export const useMessageStream = ({ tutorChatId, assistantMessageId }: IUseMessageStreamProps) => {
 	const queryClient = useQueryClient();
 	const streamedChunksMapRef = useRef(new Map<string, boolean>());
 
@@ -47,34 +40,29 @@ export const useMessageStream = ({
 		const eventSource = new EventSource(streamUrl, { withCredentials: true });
 
 		const updateMessageInCache = (
-			updater: (
-				message: TFindAllMessagesResponse["data"][number],
-			) => TFindAllMessagesResponse["data"][number],
+			updater: (message: TFindAllMessagesResponse["data"][number]) => TFindAllMessagesResponse["data"][number]
 		) => {
 			queryClient.setQueriesData(
 				{
 					queryKey: MESSAGES_QUERY_KEYS.getAll({
 						tutorChatId,
-						limit: DEFAULT_MESSAGES_LIMIT,
+						limit: DEFAULT_MESSAGES_LIMIT
 					}),
-					exact: false,
+					exact: false
 				},
 				(oldData) => {
 					if (!oldData) return oldData;
 
-					const oldInfiniteData =
-						oldData as InfiniteData<TFindAllMessagesResponse>;
+					const oldInfiniteData = oldData as InfiniteData<TFindAllMessagesResponse>;
 
 					return {
 						...oldInfiniteData,
 						pages: oldInfiniteData.pages.map((page) => ({
 							...page,
-							data: page.data.map((message) =>
-								message.id === assistantMessageId ? updater(message) : message,
-							),
-						})),
+							data: page.data.map((message) => (message.id === assistantMessageId ? updater(message) : message))
+						}))
 					} satisfies InfiniteData<TFindAllMessagesResponse>;
-				},
+				}
 			);
 		};
 
@@ -84,6 +72,12 @@ export const useMessageStream = ({
 
 		eventSource.onerror = (error) => {
 			console.error("Error in message stream", error);
+			updateMessageInCache((message) => ({
+				...message,
+				status: "FAILED",
+				content: FAILED_MESSAGE
+			}));
+			streamedChunksMapRef.current.delete(assistantMessageId);
 			eventSource.close();
 		};
 
@@ -92,18 +86,16 @@ export const useMessageStream = ({
 			if (!payload || payload.messageId !== assistantMessageId) return;
 
 			if (payload.status === "STREAMING") {
-				const hasAlreadyStreamedChunk =
-					streamedChunksMapRef.current.get(assistantMessageId) ?? false;
+				const hasAlreadyStreamedChunk = streamedChunksMapRef.current.get(assistantMessageId) ?? false;
 				streamedChunksMapRef.current.set(assistantMessageId, true);
 
 				updateMessageInCache((message) => ({
 					...message,
 					status: "PROCESSING",
 					content:
-						hasAlreadyStreamedChunk ||
-						message.content !== PROCESSING_PLACEHOLDER
+						hasAlreadyStreamedChunk || message.content !== PROCESSING_PLACEHOLDER
 							? `${message.content}${payload.content}`
-							: payload.content,
+							: payload.content
 				}));
 				return;
 			}
@@ -111,7 +103,7 @@ export const useMessageStream = ({
 			if (payload.status === "COMPLETE") {
 				updateMessageInCache((message) => ({
 					...message,
-					status: "COMPLETE",
+					status: "COMPLETE"
 				}));
 				streamedChunksMapRef.current.delete(assistantMessageId);
 				eventSource.close();
@@ -122,7 +114,7 @@ export const useMessageStream = ({
 				updateMessageInCache((message) => ({
 					...message,
 					status: "FAILED",
-					content: FAILED_MESSAGE,
+					content: FAILED_MESSAGE
 				}));
 				streamedChunksMapRef.current.delete(assistantMessageId);
 				eventSource.close();

@@ -1,13 +1,16 @@
 import path from "node:path";
-import type { Readable } from "node:stream";
+import type {Readable} from "node:stream";
+import {buildContentDisposition, normalizeFilename} from "@app/s3/filename.utils";
 import type {
 	IDeleteResult,
 	IFileValidationOptions,
+	IPresignedDownloadUrlOptions,
 	IPresignedUploadUrlResult,
 	IUploadOptions,
 	IUploadResult
 } from "@app/s3/s3.interfaces";
 import {
+	CreateBucketCommand,
 	DeleteObjectCommand,
 	GetObjectCommand,
 	HeadBucketCommand,
@@ -16,21 +19,23 @@ import {
 	S3Client,
 	type S3ServiceException
 } from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import {Upload} from "@aws-sdk/lib-storage";
+import {getSignedUrl} from "@aws-sdk/s3-request-presigner";
 import {
 	BadRequestException,
 	HttpException,
 	Injectable,
 	InternalServerErrorException,
 	Logger,
-	NotFoundException
+	NotFoundException,
+	OnModuleInit
 } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
-import { v4 as uuid } from "uuid";
-import type { Env } from "@/shared/config";
+import {ConfigService} from "@nestjs/config";
+import {v4 as uuid} from "uuid";
+import type {Env} from "@/shared/config";
 
 @Injectable()
-export class S3Service {
+export class S3Service implements OnModuleInit {
 	private readonly client: S3Client;
 	private readonly logger: Logger = new Logger(S3Service.name);
 	private readonly bucket: string;
@@ -49,9 +54,17 @@ export class S3Service {
 				accessKeyId: this.config.get("AWS_S3_ACCESS_KEY_ID"),
 				secretAccessKey: this.config.get("AWS_S3_SECRET_ACCESS_KEY")
 			},
-			forcePathStyle: this.config.get("AWS_S3_FORCE_PATH_STYLE") === "true",
+			forcePathStyle: this.config.get("AWS_S3_FORCE_PATH_STYLE"),
 			maxAttempts: 1
 		});
+	}
+
+	async onModuleInit() {
+		try {
+			await this.createBucketIfNotExists();
+		} catch (err) {
+			this.logger.error(`S3 bucket initialization failed: ${err}`);
+		}
 	}
 
 	public getClient(): S3Client {
@@ -65,21 +78,36 @@ export class S3Service {
 				allowedMimeTypes: options.allowedMimeTypes
 			});
 
-			const key = this.generateKey(file.originalname, options);
+			const normalizedOriginalName = normalizeFilename(file.originalname || "file");
+			const key = this.generateKey(normalizedOriginalName, options);
 			const contentType = options.contentType || file.mimetype;
+			const body = this.toBuffer(file.buffer);
 
-			const command = new PutObjectCommand({
-				Bucket: this.bucket,
-				Key: key,
-				Body: file.buffer,
-				ContentType: contentType,
-				ACL: options.acl || "private",
-				Metadata: options.metadata,
-				CacheControl: options.cacheControl
+			const metadata: Record<string, string> = {
+				...(options.metadata ?? {}),
+				"original-filename": encodeURIComponent(normalizedOriginalName),
+				"filename-normalized": "true"
+			};
+
+			const contentDisposition =
+				options.contentDisposition ?? buildContentDisposition(normalizedOriginalName, "attachment");
+
+			const upload = new Upload({
+				client: this.client,
+				params: {
+					Bucket: this.bucket,
+					Key: key,
+					Body: body,
+					ContentType: contentType,
+					ContentLength: body.length,
+					ACL: options.acl || "private",
+					Metadata: metadata,
+					CacheControl: options.cacheControl,
+					ContentDisposition: contentDisposition
+				}
 			});
 
-			const result = await this.executeWithRetry(() => this.client.send(command));
-
+			const result = await upload.done();
 			const url = this.getPublicUrl(key);
 
 			this.logger.log(`File uploaded successfully: ${key}`);
@@ -91,7 +119,7 @@ export class S3Service {
 				size: file.size,
 				mimeType: contentType,
 				etag: result.ETag,
-				name: file.originalname
+				name: normalizedOriginalName
 			};
 		} catch (error) {
 			if (error instanceof HttpException) {
@@ -142,14 +170,33 @@ export class S3Service {
 		);
 	}
 
-	public async createPresignedDownloadUrl(key: string, expiresIn = 3600): Promise<string> {
+	public async createPresignedDownloadUrl(
+		key: string,
+		options: number | IPresignedDownloadUrlOptions = 3600
+	): Promise<string> {
 		try {
+			const resolved =
+				typeof options === "number"
+					? { expiresIn: options, fileName: undefined, dispositionType: "attachment" as const, contentType: undefined }
+					: {
+							expiresIn: options.expiresIn ?? 3600,
+							fileName: options.fileName,
+							dispositionType: options.dispositionType ?? ("attachment" as const),
+							contentType: options.contentType
+						};
+
+			const responseContentDisposition = resolved.fileName
+				? buildContentDisposition(normalizeFilename(resolved.fileName), resolved.dispositionType)
+				: undefined;
+
 			const command = new GetObjectCommand({
 				Bucket: this.bucket,
-				Key: key
+				Key: key,
+				ResponseContentDisposition: responseContentDisposition,
+				ResponseContentType: resolved.contentType
 			});
 
-			const url = await getSignedUrl(this.client, command, { expiresIn });
+			const url = await getSignedUrl(this.client, command, { expiresIn: resolved.expiresIn });
 
 			this.logger.log(`Presigned download URL created successfully for key: ${key}`);
 
@@ -166,16 +213,27 @@ export class S3Service {
 		expiresIn = 3600
 	): Promise<IPresignedUploadUrlResult> {
 		try {
-			const key = this.generateKey(fileName, options);
-			const contentType = options.contentType || this.getMimeTypeFromExtension(fileName);
+			const normalizedFileName = normalizeFilename(fileName || "file");
+			const key = this.generateKey(normalizedFileName, options);
+			const contentType = options.contentType || this.getMimeTypeFromExtension(normalizedFileName);
+
+			const metadata: Record<string, string> = {
+				...(options.metadata ?? {}),
+				"original-filename": encodeURIComponent(normalizedFileName),
+				"filename-normalized": "true"
+			};
+
+			const contentDisposition =
+				options.contentDisposition ?? buildContentDisposition(normalizedFileName, "attachment");
 
 			const command = new PutObjectCommand({
 				Bucket: this.bucket,
 				Key: key,
 				ContentType: contentType,
 				ACL: options.acl || "private",
-				Metadata: options.metadata,
-				CacheControl: options.cacheControl
+				Metadata: metadata,
+				CacheControl: options.cacheControl,
+				ContentDisposition: contentDisposition
 			});
 
 			const uploadUrl = await getSignedUrl(this.client, command, { expiresIn });
@@ -342,10 +400,41 @@ export class S3Service {
 		return new Promise((resolve) => setTimeout(resolve, ms));
 	}
 
+	private toBuffer(value: unknown): Buffer {
+		if (Buffer.isBuffer(value)) return value;
+
+		if (value instanceof Uint8Array) return Buffer.from(value);
+
+		if (this.isSerializedBuffer(value)) return Buffer.from(value.data);
+
+		if (this.isNumericRecord(value)) return Buffer.from(Object.values(value));
+
+		throw new BadRequestException("Invalid file buffer payload.");
+	}
+
+	private isSerializedBuffer(value: unknown): value is { type: "Buffer"; data: number[] } {
+		if (typeof value !== "object" || value === null) return false;
+
+		const candidate = value as Record<string, unknown>;
+
+		return (
+			candidate.type === "Buffer" &&
+			Array.isArray(candidate.data) &&
+			candidate.data.every((byte) => typeof byte === "number")
+		);
+	}
+
+	private isNumericRecord(value: unknown): value is Record<string, number> {
+		if (typeof value !== "object" || value === null) return false;
+
+		return Object.values(value as Record<string, unknown>).every((entry) => typeof entry === "number");
+	}
+
 	private generateKey(originalName: string, options: IUploadOptions): string {
 		const extension = path.extname(originalName).toLowerCase();
 		const filename = options.filename || `${uuid()}${extension}`;
 		const folder = options.folder ? `${options.folder}/` : "";
+
 		return `${folder}${filename}`;
 	}
 
@@ -399,6 +488,20 @@ export class S3Service {
 
 			this.logger.error(`S3 health check failed: ${message}`, stack);
 			throw error;
+		}
+	}
+
+	private async createBucketIfNotExists() {
+		try {
+			await this.client.send(new CreateBucketCommand({ Bucket: this.bucket }));
+			this.logger.log(`Bucket '${this.bucket}' created.`);
+		} catch (err) {
+			if (this.isS3Exception(err) && (err?.name === "BucketAlreadyOwnedByYou" || err?.name === "BucketAlreadyExists")) {
+				this.logger.log(`Bucket '${this.bucket}' already exists.`);
+			} else {
+				this.logger.error(`Error creating bucket: ${err}`);
+				throw err;
+			}
 		}
 	}
 }

@@ -1,11 +1,10 @@
 import {MessageRole, MessageStatus} from "@app/prisma";
 import {InjectQueue} from "@nestjs/bullmq";
 import {ForbiddenException, Injectable, NotFoundException} from "@nestjs/common";
-import {ConfigService} from "@nestjs/config";
+import {AI_DEFAULT_MODEL} from "@repo/constants";
 import {Queue} from "bullmq";
 import type {IGenerateResponseJobData} from "@/messages/messages.interfaces";
 import {MessagesRepository} from "@/messages/messages.repository";
-import {Env} from "@/shared/config";
 import {TutorChatsRepository} from "@/tutor-chats/tutor-chats.repository";
 import {CreateMessageInput, CreateMessageResponse, FindAllMessagesQuery, FindAllMessagesResponse} from "./messages.dto";
 
@@ -14,8 +13,7 @@ export class MessagesService {
 	constructor(
 		@InjectQueue("messages") private readonly messagesQueue: Queue,
 		private readonly messagesRepository: MessagesRepository,
-		private readonly tutorChatsRepository: TutorChatsRepository,
-		private readonly config: ConfigService<Env>
+		private readonly tutorChatsRepository: TutorChatsRepository
 	) {}
 
 	public async findAll(
@@ -48,7 +46,7 @@ export class MessagesService {
 	}
 
 	public async create(dto: CreateMessageInput, tutorChatId: string, userId: string): Promise<CreateMessageResponse> {
-		const { content, model = this.config.get("AI_DEFAULT_MODEL") } = dto;
+		const { content, model = AI_DEFAULT_MODEL, files } = dto;
 
 		const tutorChat = await this.tutorChatsRepository.findById(tutorChatId);
 
@@ -68,7 +66,7 @@ export class MessagesService {
 				content
 			},
 			{
-				content: "Response is being generated...",
+				content: "",
 				role: MessageRole.ASSISTANT,
 				status: MessageStatus.PROCESSING,
 				tutorChatId,
@@ -77,11 +75,20 @@ export class MessagesService {
 			}
 		);
 
+		const fileIds = (files ?? []).map((f) => f.id);
+		if (fileIds.length) {
+			await this.messagesRepository.createMessageAttachments(userMessage.id, fileIds);
+		}
+
 		const jobData = {
 			assistantMessageId: assistantMessage.id,
 			userMessageId: userMessage.id,
 			tutorChatId,
-			userId
+			userId,
+			fileJobs: (files ?? []).map((f) => ({
+				fileId: f.id,
+				jobId: f.jobId
+			}))
 		} satisfies IGenerateResponseJobData;
 
 		await this.messagesQueue.add("generate-response", jobData, {

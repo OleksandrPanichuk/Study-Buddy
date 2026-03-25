@@ -7,7 +7,9 @@
 			"@repo/ui/*": ["../../packages/ui/src/*"],
 			"@repo/ui": ["../../packages/ui/src"],
 			"@repo/schemas/*": ["../../packages/schemas/src/*"],
-			"@repo/schemas": ["../../packages/schemas/src"]
+			"@repo/schemas": ["../../packages/schemas/src"],
+			"@repo/constants/*": ["../../packages/constants/src/*"],
+			"@repo/constants": ["../../packages/constants/src"]
 		},
 		"lib": ["ESNext", "DOM", "DOM.Iterable"],
 		"module": "ESNext",

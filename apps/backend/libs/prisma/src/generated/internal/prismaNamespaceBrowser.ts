@@ -214,6 +214,7 @@ export const FileAssetScalarFieldEnum = {
   storageKey: 'storageKey',
   status: 'status',
   textHash: 'textHash',
+  jobId: 'jobId',
   userId: 'userId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

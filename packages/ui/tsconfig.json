@@ -4,9 +4,6 @@
 	"extends": "@repo/typescript-config/react-internal.json",
 	"compilerOptions": {
 		"outDir": "dist",
-		"baseUrl": ".",
-		"paths": {
-			"@/*": ["./src/*"]
-		}
+		"baseUrl": "."
 	}
 }

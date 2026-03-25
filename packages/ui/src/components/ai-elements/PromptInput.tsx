@@ -1,6 +1,12 @@
-import type {ChatStatus, FileUIPart, SourceDocumentUIPart} from "ai";
-import {CornerDownLeftIcon, ImageIcon, PlusIcon, SquareIcon, XIcon,} from "lucide-react";
-import {nanoid} from "nanoid";
+import type { ChatStatus, FileUIPart, SourceDocumentUIPart } from "ai";
+import {
+	CornerDownLeftIcon,
+	ImageIcon,
+	PlusIcon,
+	SquareIcon,
+	XIcon,
+} from "lucide-react";
+import { nanoid } from "nanoid";
 import {
 	type ChangeEvent,
 	type ChangeEventHandler,
@@ -21,6 +27,7 @@ import {
 	useRef,
 	useState,
 } from "react";
+import { cn } from "../../lib"; // ============================================================================
 import {
 	Command,
 	CommandEmpty,
@@ -45,9 +52,8 @@ import {
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
-	Spinner
-} from "@/components";
-import {cn} from "@/lib/utils"; // ============================================================================
+	Spinner,
+} from "../";
 
 // ============================================================================
 // Provider Context & Types
@@ -114,6 +120,13 @@ const useOptionalProviderAttachments = () =>
 
 export type PromptInputProviderProps = PropsWithChildren<{
 	initialInput?: string;
+
+	onFilesAdded?: (
+		items: Array<{ file: File; localId: string }>,
+		removeLocal: (id: string) => void,
+	) => void;
+
+	onFileRemoved?: (localId: string) => void;
 }>;
 
 /**
@@ -122,6 +135,8 @@ export type PromptInputProviderProps = PropsWithChildren<{
  */
 export function PromptInputProvider({
 	initialInput: initialTextInput = "",
+	onFileRemoved,
+	onFilesAdded,
 	children,
 }: PromptInputProviderProps) {
 	// ----- textInput state
@@ -133,36 +148,55 @@ export function PromptInputProvider({
 		(FileUIPart & { id: string })[]
 	>([]);
 	const fileInputRef = useRef<HTMLInputElement | null>(null);
-	const openRef = useRef<() => void>(() => undefined);
+  const openRef = useRef<() => void>(() => undefined);
+	
+ 	const remove = useCallback(
+		(id: string) => {
+			setAttachmentFiles((prev) => {
+				const found = prev.find((f) => f.id === id);
+				if (found?.url) {
+					URL.revokeObjectURL(found.url);
+				}
+				return prev.filter((f) => f.id !== id);
+			});
+			onFileRemoved?.(id);
+		},
+		[onFileRemoved],
+	);
 
-	const add = useCallback((files: File[] | FileList) => {
-		const incoming = Array.from(files);
-		if (incoming.length === 0) {
-			return;
-		}
-
-		setAttachmentFiles((prev) =>
-			prev.concat(
-				incoming.map((file) => ({
-					id: nanoid(),
-					type: "file" as const,
-					url: URL.createObjectURL(file),
-					mediaType: file.type,
-					filename: file.name,
-				})),
-			),
-		);
-	}, []);
-
-	const remove = useCallback((id: string) => {
-		setAttachmentFiles((prev) => {
-			const found = prev.find((f) => f.id === id);
-			if (found?.url) {
-				URL.revokeObjectURL(found.url);
+	const add = useCallback(
+		(files: File[] | FileList) => {
+			const incoming = Array.from(files);
+			if (incoming.length === 0) {
+				return;
 			}
-			return prev.filter((f) => f.id !== id);
-		});
-	}, []);
+
+			const newEntries = incoming.map((file) => ({
+				localId: nanoid(),
+				file,
+			}));
+
+			setAttachmentFiles((prev) =>
+				prev.concat(
+					newEntries.map(({ localId, file }) => ({
+						id: localId,
+						type: "file" as const,
+						url: URL.createObjectURL(file),
+						mediaType: file.type,
+						filename: file.name,
+					})),
+				),
+			);
+
+			onFilesAdded?.(
+				newEntries.map(({ localId, file }) => ({ localId, file })),
+				remove,
+			);
+		},
+		[onFilesAdded, remove],
+	);
+
+
 
 	const clear = useCallback(() => {
 		setAttachmentFiles((prev) => {

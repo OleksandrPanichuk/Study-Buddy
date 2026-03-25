@@ -3,12 +3,14 @@ import {
 	createTutorChatInputSchema,
 	deleteTutorChatInputSchema,
 	findAllTutorChatsInputSchema,
+	findTutorChatInputSchema,
 	type TBulkDeleteTutorChatsInput,
 	type TCreateTutorChatInput,
 	type TCreateTutorChatResponse,
 	type TDeleteTutorChatInput,
 	type TFindAllTutorChatsInput,
 	type TFindAllTutorChatsResponse,
+	type TFindTutorChatInput,
 	type TTutorChat,
 	type TUpdateTutorChatInput,
 	type TUpdateTutorChatResponse,
@@ -32,6 +34,12 @@ export const getAllTutorChatsFn = createServerFn({ method: "GET" })
 		});
 
 		return await fetcher.get(url).json<TFindAllTutorChatsResponse>();
+	});
+
+export const getTutorChatFn = createServerFn({ method: "GET" })
+	.inputValidator((data: TFindTutorChatInput) => findTutorChatInputSchema.parse(data))
+	.handler(async (ctx) => {
+		return await fetcher.get(TUTOR_CHATS_API_ROUTES.by_id(ctx.data.tutorChatId)).json<TTutorChat>();
 	});
 
 export const createTutorChatFn = createServerFn({ method: "POST" })

@@ -3,6 +3,7 @@ import {
 	ApiBadRequestResponse,
 	ApiBody,
 	ApiConsumes,
+	ApiNoContentResponse,
 	ApiNotFoundResponse,
 	ApiOkResponse,
 	ApiOperation,
@@ -106,5 +107,26 @@ export const ApiUploadTutorChat = () => {
 		ApiTooManyRequestsResponse({
 			description: "Too many requests - Rate limit exceeded (10 requests per minute)"
 		})
+	);
+};
+
+export const ApiDeleteFileAsset = () => {
+	return applyDecorators(
+		ApiOperation({
+			summary: "Delete a file asset",
+			description:
+				"Permanently deletes a file asset owned by the authenticated user. " +
+				"Removes the file from S3 storage and deletes all associated records (chunks, embeddings) from the database."
+		}),
+		ApiParam({
+			name: "fileAssetId",
+			type: String,
+			description: "The unique identifier of the file asset to delete",
+			example: "cm4xyz789abc012def345ghi"
+		}),
+		ApiNoContentResponse({ description: "File asset deleted successfully" }),
+		ApiNotFoundResponse({ description: "File asset not found or does not belong to the authenticated user" }),
+		ApiUnauthorizedResponse({ description: "User is not authenticated" }),
+		ApiTooManyRequestsResponse({ description: "Rate limit exceeded" })
 	);
 };

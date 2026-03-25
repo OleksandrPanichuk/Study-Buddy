@@ -24,6 +24,8 @@ import {
 	DeleteTutorChatParams,
 	FindAllTutorChatsQuery,
 	FindAllTutorChatsResponse,
+	FindTutorChatParams,
+	FindTutorChatResponse,
 	UpdateTutorChatInput,
 	UpdateTutorChatResponse
 } from "./tutor-chats.dto";
@@ -33,6 +35,7 @@ import {
 	ApiCreateTutorChat,
 	ApiDeleteTutorChat,
 	ApiFindAllTutorChats,
+	ApiFindTutorChat,
 	ApiUpdateTutorChat
 } from "./tutor-chats.swagger";
 
@@ -71,6 +74,16 @@ export class TutorChatsController {
 	@Patch("/")
 	update(@Body() dto: UpdateTutorChatInput, @CurrentUser("id") userId: string) {
 		return this.tutorChatsService.update(dto, userId);
+	}
+
+	@ApiFindTutorChat()
+	@ZodResponse({
+		type: FindTutorChatResponse
+	})
+	@HttpCode(HttpStatus.OK)
+	@Get("/by-id/:tutorChatId")
+	findById(@Param() params: FindTutorChatParams, @CurrentUser("id") userId: string) {
+		return this.tutorChatsService.findById(params.tutorChatId, userId);
 	}
 
 	@ApiDeleteTutorChat()

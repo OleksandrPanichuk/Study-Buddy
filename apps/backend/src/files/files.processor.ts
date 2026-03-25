@@ -1,13 +1,13 @@
-import { createHash } from "node:crypto";
-import { AIService } from "@app/ai";
-import { FileStatus } from "@app/prisma";
-import { S3Service } from "@app/s3";
-import { Processor, WorkerHost } from "@nestjs/bullmq";
-import { Logger } from "@nestjs/common";
-import { Job } from "bullmq";
-import { FileProcessingService } from "./file-processing.service";
-import type { ICreateFileChunkData, IFileProcessingJobData } from "./files.interfaces";
-import { FilesRepository } from "./files.repository";
+import {createHash} from "node:crypto";
+import {AIService} from "@app/ai";
+import {FileStatus} from "@app/prisma";
+import {S3Service} from "@app/s3";
+import {Processor, WorkerHost} from "@nestjs/bullmq";
+import {Logger} from "@nestjs/common";
+import {Job} from "bullmq";
+import {FileProcessingService} from "./file-processing.service";
+import type {ICreateFileChunkData, IFileProcessingJobData} from "./files.interfaces";
+import {FilesRepository} from "./files.repository";
 
 @Processor("file-processing")
 export class FilesProcessor extends WorkerHost {
@@ -31,6 +31,8 @@ export class FilesProcessor extends WorkerHost {
 				this.logger.error(`File asset with ID ${fileAssetId} not found`);
 				return;
 			}
+
+			await this.filesRepository.updateFileAssetJobId(fileAsset.id, job.id);
 
 			this.logger.log(`Downloading file ${storageKey} (asset ${fileAssetId})`);
 			const buffer = await this.s3Service.downloadFile(storageKey);

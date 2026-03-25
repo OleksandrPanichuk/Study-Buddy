@@ -5,6 +5,7 @@ import {routeTree} from "./routeTree.gen";
 
 
 import "@repo/ui/globals.css"
+import type {ComponentType} from "react";
 
 export type TRouterContext = {
 	queryClient: QueryClient;
@@ -36,3 +37,10 @@ export const getRouter = () => {
 
 	return router;
 };
+
+declare module "@tanstack/react-router" {
+	interface StaticDataRouteOption {
+		headerComponent?: ComponentType;
+		headerShowUserMenu?: boolean;
+	}
+}

@@ -2,6 +2,7 @@ import {google} from "@ai-sdk/google";
 import {IGenerateOptions} from "@app/ai/ai.interfaces";
 import {HttpException, Injectable, InternalServerErrorException, Logger} from "@nestjs/common";
 import {ConfigService} from "@nestjs/config";
+import {AI_DEFAULT_MODEL, AI_EMBEDDINGS_MODEL} from "@repo/constants";
 import {embedMany, generateText, streamText} from "ai";
 import type {Env} from "@/shared/config";
 
@@ -12,7 +13,7 @@ export class AIService {
 	constructor(private readonly config: ConfigService<Env>) {}
 
 	public async createEmbeddings(inputs: string[], model?: string) {
-		const modelSpec = model ?? this.config.get("AI_EMBEDDING_MODEL");
+		const modelSpec = model ?? AI_EMBEDDINGS_MODEL;
 
 		if (!modelSpec) {
 			throw new InternalServerErrorException(
@@ -25,7 +26,12 @@ export class AIService {
 				model: google.embeddingModel(modelSpec),
 				values: inputs,
 				maxRetries: 3,
-				maxParallelCalls: 4
+				maxParallelCalls: 4,
+				providerOptions: {
+					google: {
+						outputDimensionality: 768
+					}
+				}
 			});
 
 			if (!result.embeddings) {
@@ -50,7 +56,7 @@ export class AIService {
 	public streamText(options: IGenerateOptions): ReturnType<typeof streamText> {
 		const { maxOutputTokens = 4096, temperature = 0.7, model, ...rest } = options;
 
-		const modelSpec = model ?? this.config.get("AI_DEFAULT_MODEL");
+		const modelSpec = model ?? AI_DEFAULT_MODEL;
 
 		return streamText({
 			model: google(modelSpec),
@@ -63,10 +69,10 @@ export class AIService {
 	public generateText(options: IGenerateOptions): ReturnType<typeof generateText> {
 		const { maxOutputTokens = 4096, temperature = 0.7, model, ...rest } = options;
 
-		const modelSpec = model ?? this.config.get("AI_DEFAULT_MODEL");
+		const modelSpec = model ?? AI_DEFAULT_MODEL;
 
 		return generateText({
-			model: google(modelSpec),
+			model: google(model),
 			maxOutputTokens,
 			temperature,
 			...rest

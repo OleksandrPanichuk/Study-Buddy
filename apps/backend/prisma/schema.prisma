@@ -231,6 +231,7 @@ model FileAsset {
   storageKey String?    @map("storage_key")
   status     FileStatus @default(UPLOADING)
   textHash   String?    @map("text_hash")
+  jobId      String?    @map("job_id") @db.Uuid
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @map("user_id") @db.Uuid

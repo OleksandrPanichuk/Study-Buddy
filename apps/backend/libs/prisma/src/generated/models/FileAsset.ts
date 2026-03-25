@@ -43,6 +43,7 @@ export type FileAssetMinAggregateOutputType = {
   storageKey: string | null
   status: $Enums.FileStatus | null
   textHash: string | null
+  jobId: string | null
   userId: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -57,6 +58,7 @@ export type FileAssetMaxAggregateOutputType = {
   storageKey: string | null
   status: $Enums.FileStatus | null
   textHash: string | null
+  jobId: string | null
   userId: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -71,6 +73,7 @@ export type FileAssetCountAggregateOutputType = {
   storageKey: number
   status: number
   textHash: number
+  jobId: number
   userId: number
   createdAt: number
   updatedAt: number
@@ -95,6 +98,7 @@ export type FileAssetMinAggregateInputType = {
   storageKey?: true
   status?: true
   textHash?: true
+  jobId?: true
   userId?: true
   createdAt?: true
   updatedAt?: true
@@ -109,6 +113,7 @@ export type FileAssetMaxAggregateInputType = {
   storageKey?: true
   status?: true
   textHash?: true
+  jobId?: true
   userId?: true
   createdAt?: true
   updatedAt?: true
@@ -123,6 +128,7 @@ export type FileAssetCountAggregateInputType = {
   storageKey?: true
   status?: true
   textHash?: true
+  jobId?: true
   userId?: true
   createdAt?: true
   updatedAt?: true
@@ -224,6 +230,7 @@ export type FileAssetGroupByOutputType = {
   storageKey: string | null
   status: $Enums.FileStatus
   textHash: string | null
+  jobId: string | null
   userId: string
   createdAt: Date
   updatedAt: Date
@@ -261,6 +268,7 @@ export type FileAssetWhereInput = {
   storageKey?: Prisma.StringNullableFilter<"FileAsset"> | string | null
   status?: Prisma.EnumFileStatusFilter<"FileAsset"> | $Enums.FileStatus
   textHash?: Prisma.StringNullableFilter<"FileAsset"> | string | null
+  jobId?: Prisma.UuidNullableFilter<"FileAsset"> | string | null
   userId?: Prisma.UuidFilter<"FileAsset"> | string
   createdAt?: Prisma.DateTimeFilter<"FileAsset"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"FileAsset"> | Date | string
@@ -280,6 +288,7 @@ export type FileAssetOrderByWithRelationInput = {
   storageKey?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   textHash?: Prisma.SortOrderInput | Prisma.SortOrder
+  jobId?: Prisma.SortOrderInput | Prisma.SortOrder
   userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -302,6 +311,7 @@ export type FileAssetWhereUniqueInput = Prisma.AtLeast<{
   storageKey?: Prisma.StringNullableFilter<"FileAsset"> | string | null
   status?: Prisma.EnumFileStatusFilter<"FileAsset"> | $Enums.FileStatus
   textHash?: Prisma.StringNullableFilter<"FileAsset"> | string | null
+  jobId?: Prisma.UuidNullableFilter<"FileAsset"> | string | null
   userId?: Prisma.UuidFilter<"FileAsset"> | string
   createdAt?: Prisma.DateTimeFilter<"FileAsset"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"FileAsset"> | Date | string
@@ -321,6 +331,7 @@ export type FileAssetOrderByWithAggregationInput = {
   storageKey?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   textHash?: Prisma.SortOrderInput | Prisma.SortOrder
+  jobId?: Prisma.SortOrderInput | Prisma.SortOrder
   userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -343,6 +354,7 @@ export type FileAssetScalarWhereWithAggregatesInput = {
   storageKey?: Prisma.StringNullableWithAggregatesFilter<"FileAsset"> | string | null
   status?: Prisma.EnumFileStatusWithAggregatesFilter<"FileAsset"> | $Enums.FileStatus
   textHash?: Prisma.StringNullableWithAggregatesFilter<"FileAsset"> | string | null
+  jobId?: Prisma.UuidNullableWithAggregatesFilter<"FileAsset"> | string | null
   userId?: Prisma.UuidWithAggregatesFilter<"FileAsset"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"FileAsset"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"FileAsset"> | Date | string
@@ -357,6 +369,7 @@ export type FileAssetCreateInput = {
   storageKey?: string | null
   status?: $Enums.FileStatus
   textHash?: string | null
+  jobId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutFilesInput
@@ -375,6 +388,7 @@ export type FileAssetUncheckedCreateInput = {
   storageKey?: string | null
   status?: $Enums.FileStatus
   textHash?: string | null
+  jobId?: string | null
   userId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -393,6 +407,7 @@ export type FileAssetUpdateInput = {
   storageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumFileStatusFieldUpdateOperationsInput | $Enums.FileStatus
   textHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jobId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutFilesNestedInput
@@ -411,6 +426,7 @@ export type FileAssetUncheckedUpdateInput = {
   storageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumFileStatusFieldUpdateOperationsInput | $Enums.FileStatus
   textHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jobId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -429,6 +445,7 @@ export type FileAssetCreateManyInput = {
   storageKey?: string | null
   status?: $Enums.FileStatus
   textHash?: string | null
+  jobId?: string | null
   userId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -443,6 +460,7 @@ export type FileAssetUpdateManyMutationInput = {
   storageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumFileStatusFieldUpdateOperationsInput | $Enums.FileStatus
   textHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jobId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -456,6 +474,7 @@ export type FileAssetUncheckedUpdateManyInput = {
   storageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumFileStatusFieldUpdateOperationsInput | $Enums.FileStatus
   textHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jobId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -485,6 +504,7 @@ export type FileAssetCountOrderByAggregateInput = {
   storageKey?: Prisma.SortOrder
   status?: Prisma.SortOrder
   textHash?: Prisma.SortOrder
+  jobId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -503,6 +523,7 @@ export type FileAssetMaxOrderByAggregateInput = {
   storageKey?: Prisma.SortOrder
   status?: Prisma.SortOrder
   textHash?: Prisma.SortOrder
+  jobId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -517,6 +538,7 @@ export type FileAssetMinOrderByAggregateInput = {
   storageKey?: Prisma.SortOrder
   status?: Prisma.SortOrder
   textHash?: Prisma.SortOrder
+  jobId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -644,6 +666,7 @@ export type FileAssetCreateWithoutUserInput = {
   storageKey?: string | null
   status?: $Enums.FileStatus
   textHash?: string | null
+  jobId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   chunks?: Prisma.FileChunkCreateNestedManyWithoutFileInput
@@ -661,6 +684,7 @@ export type FileAssetUncheckedCreateWithoutUserInput = {
   storageKey?: string | null
   status?: $Enums.FileStatus
   textHash?: string | null
+  jobId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   chunks?: Prisma.FileChunkUncheckedCreateNestedManyWithoutFileInput
@@ -707,6 +731,7 @@ export type FileAssetScalarWhereInput = {
   storageKey?: Prisma.StringNullableFilter<"FileAsset"> | string | null
   status?: Prisma.EnumFileStatusFilter<"FileAsset"> | $Enums.FileStatus
   textHash?: Prisma.StringNullableFilter<"FileAsset"> | string | null
+  jobId?: Prisma.UuidNullableFilter<"FileAsset"> | string | null
   userId?: Prisma.UuidFilter<"FileAsset"> | string
   createdAt?: Prisma.DateTimeFilter<"FileAsset"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"FileAsset"> | Date | string
@@ -721,6 +746,7 @@ export type FileAssetCreateWithoutAttachmentsInput = {
   storageKey?: string | null
   status?: $Enums.FileStatus
   textHash?: string | null
+  jobId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutFilesInput
@@ -738,6 +764,7 @@ export type FileAssetUncheckedCreateWithoutAttachmentsInput = {
   storageKey?: string | null
   status?: $Enums.FileStatus
   textHash?: string | null
+  jobId?: string | null
   userId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -771,6 +798,7 @@ export type FileAssetUpdateWithoutAttachmentsInput = {
   storageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumFileStatusFieldUpdateOperationsInput | $Enums.FileStatus
   textHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jobId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutFilesNestedInput
@@ -788,6 +816,7 @@ export type FileAssetUncheckedUpdateWithoutAttachmentsInput = {
   storageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumFileStatusFieldUpdateOperationsInput | $Enums.FileStatus
   textHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jobId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -805,6 +834,7 @@ export type FileAssetCreateWithoutContextRefsInput = {
   storageKey?: string | null
   status?: $Enums.FileStatus
   textHash?: string | null
+  jobId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutFilesInput
@@ -822,6 +852,7 @@ export type FileAssetUncheckedCreateWithoutContextRefsInput = {
   storageKey?: string | null
   status?: $Enums.FileStatus
   textHash?: string | null
+  jobId?: string | null
   userId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -855,6 +886,7 @@ export type FileAssetUpdateWithoutContextRefsInput = {
   storageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumFileStatusFieldUpdateOperationsInput | $Enums.FileStatus
   textHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jobId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutFilesNestedInput
@@ -872,6 +904,7 @@ export type FileAssetUncheckedUpdateWithoutContextRefsInput = {
   storageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumFileStatusFieldUpdateOperationsInput | $Enums.FileStatus
   textHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jobId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -889,6 +922,7 @@ export type FileAssetCreateWithoutChunksInput = {
   storageKey?: string | null
   status?: $Enums.FileStatus
   textHash?: string | null
+  jobId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutFilesInput
@@ -906,6 +940,7 @@ export type FileAssetUncheckedCreateWithoutChunksInput = {
   storageKey?: string | null
   status?: $Enums.FileStatus
   textHash?: string | null
+  jobId?: string | null
   userId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -939,6 +974,7 @@ export type FileAssetUpdateWithoutChunksInput = {
   storageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumFileStatusFieldUpdateOperationsInput | $Enums.FileStatus
   textHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jobId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutFilesNestedInput
@@ -956,6 +992,7 @@ export type FileAssetUncheckedUpdateWithoutChunksInput = {
   storageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumFileStatusFieldUpdateOperationsInput | $Enums.FileStatus
   textHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jobId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -973,6 +1010,7 @@ export type FileAssetCreateWithoutMaterialsInput = {
   storageKey?: string | null
   status?: $Enums.FileStatus
   textHash?: string | null
+  jobId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutFilesInput
@@ -990,6 +1028,7 @@ export type FileAssetUncheckedCreateWithoutMaterialsInput = {
   storageKey?: string | null
   status?: $Enums.FileStatus
   textHash?: string | null
+  jobId?: string | null
   userId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1023,6 +1062,7 @@ export type FileAssetUpdateWithoutMaterialsInput = {
   storageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumFileStatusFieldUpdateOperationsInput | $Enums.FileStatus
   textHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jobId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutFilesNestedInput
@@ -1040,6 +1080,7 @@ export type FileAssetUncheckedUpdateWithoutMaterialsInput = {
   storageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumFileStatusFieldUpdateOperationsInput | $Enums.FileStatus
   textHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jobId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1057,6 +1098,7 @@ export type FileAssetCreateManyUserInput = {
   storageKey?: string | null
   status?: $Enums.FileStatus
   textHash?: string | null
+  jobId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1070,6 +1112,7 @@ export type FileAssetUpdateWithoutUserInput = {
   storageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumFileStatusFieldUpdateOperationsInput | $Enums.FileStatus
   textHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jobId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   chunks?: Prisma.FileChunkUpdateManyWithoutFileNestedInput
@@ -1087,6 +1130,7 @@ export type FileAssetUncheckedUpdateWithoutUserInput = {
   storageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumFileStatusFieldUpdateOperationsInput | $Enums.FileStatus
   textHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jobId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   chunks?: Prisma.FileChunkUncheckedUpdateManyWithoutFileNestedInput
@@ -1104,6 +1148,7 @@ export type FileAssetUncheckedUpdateManyWithoutUserInput = {
   storageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumFileStatusFieldUpdateOperationsInput | $Enums.FileStatus
   textHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jobId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1175,6 +1220,7 @@ export type FileAssetSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   storageKey?: boolean
   status?: boolean
   textHash?: boolean
+  jobId?: boolean
   userId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1195,6 +1241,7 @@ export type FileAssetSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   storageKey?: boolean
   status?: boolean
   textHash?: boolean
+  jobId?: boolean
   userId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1210,6 +1257,7 @@ export type FileAssetSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   storageKey?: boolean
   status?: boolean
   textHash?: boolean
+  jobId?: boolean
   userId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1225,12 +1273,13 @@ export type FileAssetSelectScalar = {
   storageKey?: boolean
   status?: boolean
   textHash?: boolean
+  jobId?: boolean
   userId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type FileAssetOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "mimeType" | "sizeBytes" | "url" | "storageKey" | "status" | "textHash" | "userId" | "createdAt" | "updatedAt", ExtArgs["result"]["fileAsset"]>
+export type FileAssetOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "mimeType" | "sizeBytes" | "url" | "storageKey" | "status" | "textHash" | "jobId" | "userId" | "createdAt" | "updatedAt", ExtArgs["result"]["fileAsset"]>
 export type FileAssetInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   chunks?: boolean | Prisma.FileAsset$chunksArgs<ExtArgs>
@@ -1264,6 +1313,7 @@ export type $FileAssetPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     storageKey: string | null
     status: $Enums.FileStatus
     textHash: string | null
+    jobId: string | null
     userId: string
     createdAt: Date
     updatedAt: Date
@@ -1703,6 +1753,7 @@ export interface FileAssetFieldRefs {
   readonly storageKey: Prisma.FieldRef<"FileAsset", 'String'>
   readonly status: Prisma.FieldRef<"FileAsset", 'FileStatus'>
   readonly textHash: Prisma.FieldRef<"FileAsset", 'String'>
+  readonly jobId: Prisma.FieldRef<"FileAsset", 'String'>
   readonly userId: Prisma.FieldRef<"FileAsset", 'String'>
   readonly createdAt: Prisma.FieldRef<"FileAsset", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"FileAsset", 'DateTime'>

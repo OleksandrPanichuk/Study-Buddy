@@ -9,6 +9,7 @@
 		"test": "vitest run"
 	},
 	"dependencies": {
+		"@repo/constants": "workspace:*",
 		"@repo/schemas": "workspace:*",
 		"@repo/ui": "workspace:*",
 		"@tailwindcss/vite": "^4.0.6",

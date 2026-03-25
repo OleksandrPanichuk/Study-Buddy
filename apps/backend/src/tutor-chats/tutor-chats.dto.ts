@@ -5,6 +5,8 @@ import {
   deleteTutorChatInputSchema,
   findAllTutorChatsInputSchema,
   findAllTutorChatsResponseSchema,
+  findTutorChatInputSchema,
+  findTutorChatResponseSchema,
   updateTutorChatInputSchema,
   updateTutorChatResponseSchema
 } from "@repo/schemas";
@@ -17,6 +19,10 @@ export class CreateTutorChatResponse extends createZodDto(createTutorChatRespons
 export class FindAllTutorChatsQuery extends createZodDto(findAllTutorChatsInputSchema) {}
 
 export class FindAllTutorChatsResponse extends createZodDto(findAllTutorChatsResponseSchema) {}
+
+export class FindTutorChatParams extends createZodDto(findTutorChatInputSchema) {}
+
+export class FindTutorChatResponse extends createZodDto(findTutorChatResponseSchema) {}
 
 export class DeleteTutorChatParams extends createZodDto(deleteTutorChatInputSchema) {}
 

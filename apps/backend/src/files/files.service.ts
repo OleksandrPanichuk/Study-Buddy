@@ -1,12 +1,13 @@
-import { FileStatus } from "@app/prisma";
-import { S3Service } from "@app/s3";
-import { InjectQueue } from "@nestjs/bullmq";
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { Queue } from "bullmq";
-import { FilesRepository } from "@/files/files.repository";
-import { TutorChatsRepository } from "@/tutor-chats/tutor-chats.repository";
-import { MAX_FILE_SIZE } from "./files.constants";
-import { IFileProcessingJobData } from "./files.interfaces";
+import {FileStatus} from "@app/prisma";
+import {S3Service} from "@app/s3";
+import {InjectQueue} from "@nestjs/bullmq";
+import {ConflictException, Injectable, NotFoundException} from "@nestjs/common";
+import {MAX_FILE_SIZE} from "@repo/constants";
+import {Queue} from "bullmq";
+import {FilesRepository} from "@/files/files.repository";
+import {TutorChatsRepository} from "@/tutor-chats/tutor-chats.repository";
+import {UploadFilesResponse} from "./files.dto";
+import {IFileProcessingJobData} from "./files.interfaces";
 
 @Injectable()
 export class FilesService {
@@ -27,12 +28,56 @@ export class FilesService {
 		return await this.upload(files, `tutor-chats/${tutorChatId}`, userId);
 	}
 
-	private async upload(files: Express.Multer.File[], folder: string, userId: string) {
+	public async delete(fileAssetId: string, userId: string) {
+		const fileAsset = await this.filesRepository.findFileAssetByIdAndUserId(fileAssetId, userId);
+
+		if (!fileAsset) {
+			throw new NotFoundException("File asset not found");
+		}
+
+		if (fileAsset.jobId) {
+			await this.removeFileProcessingJobWithRetry(fileAsset.jobId);
+		}
+
+		if (fileAsset.storageKey) {
+			await this.s3Service.deleteFile(fileAsset.storageKey);
+		}
+
+		await this.filesRepository.deleteFileAsset(fileAssetId);
+	}
+
+	private async removeFileProcessingJobWithRetry(jobId: string): Promise<void> {
+		const maxAttempts = 3;
+		const backoffMs = 150;
+
+		for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+			const removed = await this.fileProcessingQueue.remove(jobId);
+
+			if (removed === 1) {
+				return;
+			}
+
+			if (removed !== 0) {
+				throw new ConflictException("Unable to safely cancel file processing job");
+			}
+
+			if (attempt < maxAttempts) {
+				await this.sleep(backoffMs * attempt);
+			}
+		}
+
+		throw new ConflictException("File is currently being processed. Try deleting it again in a moment.");
+	}
+
+	private async sleep(ms: number): Promise<void> {
+		await new Promise((resolve) => setTimeout(resolve, ms));
+	}
+
+	private async upload(files: Express.Multer.File[], folder: string, userId: string): Promise<UploadFilesResponse> {
 		const uploadedFiles = await this.s3Service.uploadFiles(files, {
 			maxSize: MAX_FILE_SIZE,
 			folder: folder
 		});
-
 		const fileAssets = await this.filesRepository.createFileAssets(
 			uploadedFiles.map((file) => ({
 				name: file.name,
@@ -68,7 +113,10 @@ export class FilesService {
 					id: fileAsset.id,
 					jobId: job.id,
 					url: fileAsset.url,
-					key: fileAsset.storageKey
+					name: fileAsset.name,
+					storageKey: fileAsset.storageKey,
+					sizeBytes: fileAsset.sizeBytes,
+					mimeType: fileAsset.mimeType
 				};
 			})
 		);

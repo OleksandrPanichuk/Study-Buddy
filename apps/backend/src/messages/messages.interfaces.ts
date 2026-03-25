@@ -1,4 +1,5 @@
 import {MessageRole, MessageStatus} from "@app/prisma";
+import {AIModels} from "@repo/constants";
 import {MessageStreamStatus} from "@/messages/messages.constants";
 
 export interface IFindAllMessagesData {
@@ -12,7 +13,7 @@ export interface ICreateMessageData {
 	tutorChatId: string;
 	userId: string;
 	content: string;
-	model?: string;
+	model?: AIModels;
 	role: MessageRole;
 	status?: MessageStatus;
 }
@@ -22,6 +23,10 @@ export interface IGenerateResponseJobData {
 	userMessageId: string;
 	tutorChatId: string;
 	userId: string;
+	fileJobs?: Array<{
+		fileId: string;
+		jobId: string;
+	}>;
 }
 
 export interface IUpdateMessageData {
@@ -45,8 +50,42 @@ export interface IMessageStreamEventData {
 export interface IGenerateWithStreamingData {
 	assistantMessageId: string;
 	tutorChatId: string;
-	model: string;
+	model: AIModels;
 	systemPrompt: string;
 	prompt: string;
 	userId: string;
+}
+
+export interface IFindRecentMessagesForContextData {
+	tutorChatId: string;
+	userId: string;
+	excludeMessageIds?: string[];
+	limit?: number;
+}
+
+export interface IFindAttachmentsForContextData {
+	messageId: string;
+	userId: string;
+	chunkLimit?: number;
+}
+
+export interface IContextMessage {
+	id: string;
+	role: MessageRole;
+	content: string;
+	createdAt: Date;
+}
+
+export interface IContextAttachment {
+	id: string;
+	name: string;
+	mimeType: string;
+	sizeBytes: number;
+	status: string;
+	chunks: string[];
+}
+
+export interface IBuildContextReturn {
+	recentMessages: IContextMessage[];
+	attachments: IContextAttachment[];
 }

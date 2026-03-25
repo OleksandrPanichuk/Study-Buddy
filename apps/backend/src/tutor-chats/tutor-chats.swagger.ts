@@ -18,9 +18,38 @@ import {
 	CreateTutorChatResponse,
 	FindAllTutorChatsQuery,
 	FindAllTutorChatsResponse,
+	FindTutorChatResponse,
 	UpdateTutorChatInput,
 	UpdateTutorChatResponse
 } from "./tutor-chats.dto";
+
+export const ApiFindTutorChat = () => {
+	return applyDecorators(
+		ApiOperation({
+			summary: "Get tutor chat by ID",
+			description: "Retrieves a specific tutor chat by its ID for the authenticated user."
+		}),
+		ApiParam({
+			name: "tutorChatId",
+			type: String,
+			description: "The unique identifier of the tutor chat to retrieve",
+			example: "cm4abc123def456ghi789jkl"
+		}),
+		ApiOkResponse({
+			description: "Tutor chat retrieved successfully.",
+			type: FindTutorChatResponse
+		}),
+		ApiNotFoundResponse({
+			description: "The tutor chat could not be found or does not belong to the requesting user."
+		}),
+		ApiUnauthorizedResponse({
+			description: "User not authenticated"
+		}),
+		ApiTooManyRequestsResponse({
+			description: "Too many requests - Rate limit exceeded"
+		})
+	);
+};
 
 export const ApiFindAllTutorChats = () => {
 	return applyDecorators(

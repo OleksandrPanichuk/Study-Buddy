@@ -1,7 +1,7 @@
 import {FileStatus} from "@app/prisma";
 import {S3Service} from "@app/s3";
 import {InjectQueue} from "@nestjs/bullmq";
-import {Injectable, NotFoundException} from "@nestjs/common";
+import {ConflictException, Injectable, NotFoundException} from "@nestjs/common";
 import {MAX_FILE_SIZE} from "@repo/constants";
 import {Queue} from "bullmq";
 import {FilesRepository} from "@/files/files.repository";
@@ -35,15 +35,42 @@ export class FilesService {
 			throw new NotFoundException("File asset not found");
 		}
 
+		if (fileAsset.jobId) {
+			await this.removeFileProcessingJobWithRetry(fileAsset.jobId);
+		}
+
 		if (fileAsset.storageKey) {
 			await this.s3Service.deleteFile(fileAsset.storageKey);
 		}
 
-		if (fileAsset.jobId) {
-			await this.fileProcessingQueue.remove(fileAsset.jobId);
+		await this.filesRepository.deleteFileAsset(fileAssetId);
+	}
+
+	private async removeFileProcessingJobWithRetry(jobId: string): Promise<void> {
+		const maxAttempts = 3;
+		const backoffMs = 150;
+
+		for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+			const removed = await this.fileProcessingQueue.remove(jobId);
+
+			if (removed === 1) {
+				return;
+			}
+
+			if (removed !== 0) {
+				throw new ConflictException("Unable to safely cancel file processing job");
+			}
+
+			if (attempt < maxAttempts) {
+				await this.sleep(backoffMs * attempt);
+			}
 		}
 
-		await this.filesRepository.deleteFileAsset(fileAssetId);
+		throw new ConflictException("File is currently being processed. Try deleting it again in a moment.");
+	}
+
+	private async sleep(ms: number): Promise<void> {
+		await new Promise((resolve) => setTimeout(resolve, ms));
 	}
 
 	private async upload(files: Express.Multer.File[], folder: string, userId: string): Promise<UploadFilesResponse> {

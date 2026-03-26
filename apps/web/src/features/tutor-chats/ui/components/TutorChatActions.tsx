@@ -8,7 +8,7 @@ import {
 	DropdownMenuTrigger
 } from "@repo/ui";
 import {useMutation} from "@tanstack/react-query";
-import {MoreHorizontalIcon, PencilIcon, Trash2Icon} from "lucide-react";
+import {FilesIcon, MoreHorizontalIcon, PencilIcon, Trash2Icon} from "lucide-react";
 import {toast} from "sonner";
 import {MODALS, useConfirm, useModal} from "@/features/shared";
 import {getDeleteTutorChatMutationOptions} from "@/features/tutor-chats";
@@ -19,7 +19,8 @@ interface ITutorChatActionsProps {
 
 export const TutorChatActions = ({ data }: ITutorChatActionsProps) => {
 	const [ConfirmationModal, confirm] = useConfirm();
-	const { open } = useModal(MODALS.UPDATE_TUTOR_CHAT);
+	const { open: openEdit } = useModal(MODALS.UPDATE_TUTOR_CHAT);
+	const { open: openFiles } = useModal(MODALS.TUTOR_CHAT_CONTEXT_FILES);
 
 	const { mutate: deleteTutorChat } = useMutation(getDeleteTutorChatMutationOptions());
 
@@ -44,15 +45,19 @@ export const TutorChatActions = ({ data }: ITutorChatActionsProps) => {
 			<ConfirmationModal />
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
-					<Button variant="ghost" size="icon" className="size-8 opacity-0 group-hover:opacity-100 transition-opacity">
+					<Button variant="ghost" size="icon" className="size-8  shrink-0 transition-opacity">
 						<MoreHorizontalIcon className="size-4" />
 						<span className="sr-only">Open menu</span>
 					</Button>
 				</DropdownMenuTrigger>
 				<DropdownMenuContent align="end" className="w-40">
-					<DropdownMenuItem onClick={() => open({ data })}>
+					<DropdownMenuItem onClick={() => openEdit({ data })}>
 						<PencilIcon className="size-4 mr-2" />
 						Edit
+					</DropdownMenuItem>
+					<DropdownMenuItem onClick={() => openFiles({ data })}>
+						<FilesIcon className={"size-4 mr-2"} />
+						Files
 					</DropdownMenuItem>
 					<DropdownMenuSeparator />
 					<DropdownMenuItem onClick={handleDelete} variant={"destructive"}>

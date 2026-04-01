@@ -1,11 +1,3 @@
-import { MODALS, useModal } from "@/features/shared";
-import {
-	getCreateTutorChatMutationOptions,
-	templates,
-	TemplateSelect,
-	TutorChatForm,
-	tutorChatFormId
-} from "@/features/tutor-chats";
 import type { TCreateTutorChatInput } from "@repo/schemas";
 import { Button, Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@repo/ui";
 import { useMutation } from "@tanstack/react-query";
@@ -13,6 +5,14 @@ import { useNavigate } from "@tanstack/react-router";
 import { BookOpenIcon, SparklesIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { MODALS, useModal } from "@/features/shared";
+import {
+	getCreateTutorChatMutationOptions,
+	TemplateSelect,
+	TutorChatForm,
+	templates,
+	tutorChatFormId
+} from "@/features/tutor-chat";
 
 // TODO: add loading states and error handling
 export const CreateTutorChatModal = () => {

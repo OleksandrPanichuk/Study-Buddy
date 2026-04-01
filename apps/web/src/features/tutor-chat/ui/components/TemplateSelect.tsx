@@ -1,7 +1,7 @@
-import { Input } from "@repo/ui";
-import { PlusIcon } from "lucide-react";
-import { useState } from "react";
-import { templates } from "../../constants";
+import {Input} from "@repo/ui";
+import {PlusIcon} from "lucide-react";
+import {useState} from "react";
+import {templates} from "@/features/tutor-chat";
 
 interface ITemplateSelectProps {
 	value: string | null;
@@ -17,9 +17,7 @@ export const TemplateSelect = ({ value, onChange }: ITemplateSelectProps) => {
 			<div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 				<div>
 					<p className="text-sm font-semibold">Using a template</p>
-					<p className="text-xs text-muted-foreground">
-						Pick a template and adjust the details later.
-					</p>
+					<p className="text-xs text-muted-foreground">Pick a template and adjust the details later.</p>
 				</div>
 				<div className="w-full sm:w-64">
 					<Input
@@ -44,8 +42,7 @@ export const TemplateSelect = ({ value, onChange }: ITemplateSelectProps) => {
 								isSelected
 									? "border-primary bg-primary/5 ring-2 ring-primary/20"
 									: "bg-background hover:border-primary/30 hover:bg-muted/50"
-							}`}
-						>
+							}`}>
 							<div className="mb-2 flex items-start justify-between gap-2">
 								<p className="text-sm font-bold leading-tight group-hover:text-primary transition-colors">
 									{template.name}
@@ -55,18 +52,11 @@ export const TemplateSelect = ({ value, onChange }: ITemplateSelectProps) => {
 										isSelected
 											? "border-primary bg-primary text-primary-foreground"
 											: "border-muted-foreground/30 text-muted-foreground"
-									}`}
-								>
-									{isSelected ? (
-										<div className="size-2 rounded-full bg-current" />
-									) : (
-										<PlusIcon className={"size-3"} />
-									)}
+									}`}>
+									{isSelected ? <div className="size-2 rounded-full bg-current" /> : <PlusIcon className={"size-3"} />}
 								</div>
 							</div>
-							<p className="flex-1 text-xs text-muted-foreground line-clamp-2">
-								{template.description}
-							</p>
+							<p className="flex-1 text-xs text-muted-foreground line-clamp-2">{template.description}</p>
 							<div className="mt-4 flex items-center gap-1.5">
 								<span className="inline-flex items-center rounded-md bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground ring-1 ring-inset ring-foreground/10">
 									{template.topic}

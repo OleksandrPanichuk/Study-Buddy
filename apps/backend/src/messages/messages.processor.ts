@@ -1,12 +1,12 @@
 import {AIService} from "@app/ai";
-import {InjectQueue, Processor, WorkerHost} from "@nestjs/bullmq";
+import {Processor, WorkerHost} from "@nestjs/bullmq";
 import {Logger} from "@nestjs/common";
 import {EventEmitter2} from "@nestjs/event-emitter";
 import {Message} from "@prisma/generated/client";
 import {MessageStatus} from "@prisma/generated/enums";
 import {AIModels} from "@repo/constants";
-import {Job, Queue} from "bullmq";
-import {MessagesSSEEvents, MessageStreamStatus} from "@/messages/messages.constants";
+import {Job} from "bullmq";
+import {MESSAGE_GENERATING_QUEUE, MessagesSSEEvents, MessageStreamStatus} from "@/messages/messages.constants";
 import type {
 	IBuildContextReturn,
 	IContextAttachment,
@@ -18,8 +18,9 @@ import type {
 import {MessagesRepository} from "@/messages/messages.repository";
 import {SYSTEM_PROMPT} from "@/shared/prompts";
 import {TutorChatsRepository} from "@/tutor-chats/tutor-chats.repository";
+import {FileProcessingQueueService} from "@/file-processing/file-processing-queue.service";
 
-@Processor("messages")
+@Processor(MESSAGE_GENERATING_QUEUE)
 export class MessagesProcessor extends WorkerHost {
 	private readonly logger = new Logger(MessagesProcessor.name);
 	private readonly recentMessagesLimit = 8;
@@ -27,7 +28,7 @@ export class MessagesProcessor extends WorkerHost {
 	private readonly attachmentChunkCharLimit = 1000;
 
 	constructor(
-		@InjectQueue("file-processing") private readonly fileProcessingQueue: Queue,
+		private readonly fileProcessingQueue: FileProcessingQueueService,
 		private readonly eventEmitter: EventEmitter2,
 		private readonly messagesRepository: MessagesRepository,
 		private readonly tutorChatsRepository: TutorChatsRepository,
@@ -61,7 +62,7 @@ export class MessagesProcessor extends WorkerHost {
 
 			if (fileJobs?.length) {
 				this.logger.log(`Waiting for ${fileJobs.length} file-processing jobs to finish`);
-				await this.waitForFileJobs(fileJobs.map((f) => f.jobId));
+				await this.fileProcessingQueue.waitForJobs(fileJobs.map((f) => f.jobId));
 			}
 
 			this.logger.log("Building model context with recent messages and current message attachments");
@@ -336,37 +337,6 @@ export class MessagesProcessor extends WorkerHost {
 				inputTokens: result.usage?.inputTokens,
 				outputTokens: result.usage?.outputTokens
 			};
-		}
-	}
-
-	private async waitForFileJobs(jobIds: string[], opts?: { timeoutMs?: number; pollMs?: number }) {
-		const timeoutMs = opts?.timeoutMs ?? 10 * 60 * 1000;
-		const pollMs = opts?.pollMs ?? 1000;
-		const startedAt = Date.now();
-
-		const uniqueJobIds = Array.from(new Set(jobIds.filter(Boolean)));
-		if (!uniqueJobIds.length) return;
-
-		while (true) {
-			const states = await Promise.all(
-				uniqueJobIds.map(async (jobId) => {
-					const fileJob = await this.fileProcessingQueue.getJob(jobId);
-					if (!fileJob) return "missing";
-					return await fileJob.getState();
-				})
-			);
-
-			const pending = states.filter((s) => s !== "completed" && s !== "failed" && s !== "missing");
-			if (pending.length === 0) return;
-
-			if (Date.now() - startedAt > timeoutMs) {
-				this.logger.warn(
-					`Timed out waiting for file-processing jobs: ${uniqueJobIds.join(", ")} (states: ${states.join(", ")})`
-				);
-				return;
-			}
-
-			await new Promise((r) => setTimeout(r, pollMs));
 		}
 	}
 

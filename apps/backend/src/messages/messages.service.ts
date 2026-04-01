@@ -7,11 +7,12 @@ import type {IGenerateResponseJobData} from "@/messages/messages.interfaces";
 import {MessagesRepository} from "@/messages/messages.repository";
 import {TutorChatsRepository} from "@/tutor-chats/tutor-chats.repository";
 import {CreateMessageInput, CreateMessageResponse, FindAllMessagesQuery, FindAllMessagesResponse} from "./messages.dto";
+import {GENERATE_RESPONSE_JOB, MESSAGE_GENERATING_QUEUE} from "@/messages/messages.constants";
 
 @Injectable()
 export class MessagesService {
 	constructor(
-		@InjectQueue("messages") private readonly messagesQueue: Queue,
+		@InjectQueue(MESSAGE_GENERATING_QUEUE) private readonly messagesQueue: Queue,
 		private readonly messagesRepository: MessagesRepository,
 		private readonly tutorChatsRepository: TutorChatsRepository
 	) {}
@@ -91,7 +92,7 @@ export class MessagesService {
 			}))
 		} satisfies IGenerateResponseJobData;
 
-		await this.messagesQueue.add("generate-response", jobData, {
+		await this.messagesQueue.add(GENERATE_RESPONSE_JOB, jobData, {
 			removeOnFail: false,
 			removeOnComplete: true,
 			attempts: 3,

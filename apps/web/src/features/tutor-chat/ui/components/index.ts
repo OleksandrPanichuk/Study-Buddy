@@ -5,5 +5,7 @@ export * from "./ModelSelect";
 export * from "./PromptInput";
 export * from "./PromptInputAttachmentsPreview";
 export * from "./PromptInputInner";
-export * from "./TutorChatContextFilesModal";
+export * from "./TemplateSelect";
+export * from "./TutorChatActions";
+export * from "./TutorChatForm";
 export * from "./UpdateTutorChatModal";

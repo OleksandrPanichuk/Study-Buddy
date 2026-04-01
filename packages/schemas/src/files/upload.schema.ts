@@ -7,9 +7,9 @@ export const uploadFilesInputSchema = z.instanceof(FormData).refine(
 		return files.length > 0 && files.every((file) => file instanceof File);
 	},
 	{
-		error: "Expected at least one file",
+		message: "Expected at least one file",
 	},
-);
+)
 
 export type TUploadFilesInput = z.infer<typeof uploadFilesInputSchema>;
 

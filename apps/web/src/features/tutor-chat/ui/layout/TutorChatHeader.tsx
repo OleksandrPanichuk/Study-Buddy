@@ -2,7 +2,7 @@ import type {TTutorChat} from "@repo/schemas";
 import {Button} from "@repo/ui";
 import {useNavigate} from "@tanstack/react-router";
 import {ChevronLeftIcon} from "lucide-react";
-import {TutorChatActions} from "@/features/tutor-chats";
+import {TutorChatActions} from "@/features/tutor-chat";
 
 interface ITutorChatHeaderProps {
 	tutorChat: TTutorChat;

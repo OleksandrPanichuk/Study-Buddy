@@ -4,7 +4,7 @@ import {useMutation} from "@tanstack/react-query";
 import {PencilIcon} from "lucide-react";
 import {toast} from "sonner";
 import {MODALS, useModal} from "@/features/shared";
-import {getUpdateTutorChatMutationOptions, TutorChatForm, tutorChatFormId} from "@/features/tutor-chats";
+import {getUpdateTutorChatMutationOptions, TutorChatForm, tutorChatFormId} from "@/features/tutor-chat";
 
 export interface IUpdateTutorChatModalData {
 	data: TTutorChat;
@@ -19,7 +19,7 @@ export const UpdateTutorChatModal = () => {
 		const changedFields = Object.keys(updateData).reduce(
 			(acc, key) => {
 				const fieldKey = key as keyof TUpdateTutorChatInput;
-				if (updateData[fieldKey] !== state.data[fieldKey]) {
+				if (updateData[fieldKey] !== state?.data[fieldKey]) {
 					acc[fieldKey] = updateData[fieldKey];
 				}
 				return acc;

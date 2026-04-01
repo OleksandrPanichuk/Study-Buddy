@@ -132,5 +132,5 @@ export class FilesRepository {
 				fileId
 			}
 		});
-	}
+  }
 }

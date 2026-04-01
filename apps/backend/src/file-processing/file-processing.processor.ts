@@ -5,24 +5,27 @@ import {S3Service} from "@app/s3";
 import {Processor, WorkerHost} from "@nestjs/bullmq";
 import {Logger} from "@nestjs/common";
 import {Job} from "bullmq";
-import {FileProcessingService} from "./file-processing.service";
-import type {ICreateFileChunkData, IFileProcessingJobData} from "./files.interfaces";
-import {FilesRepository} from "./files.repository";
+import {FILE_PROCESSING_QUEUE} from "@/file-processing/file-processing.constants";
+import type {IFileProcessingJobData} from "@/file-processing/file-processing.interfaces";
+import {TextExtractionService} from "@/file-processing/text-extraction.service";
+import type {ICreateFileChunkData} from "@/files/files.interfaces";
+import {FilesRepository} from "@/files/files.repository";
 
-@Processor("file-processing")
-export class FilesProcessor extends WorkerHost {
-	private readonly logger = new Logger(FilesProcessor.name);
+@Processor(FILE_PROCESSING_QUEUE)
+export class FileProcessingProcessor extends WorkerHost {
+	private readonly logger = new Logger(FileProcessingProcessor.name);
+
 	constructor(
 		private readonly s3Service: S3Service,
 		private readonly filesRepository: FilesRepository,
 		private readonly aiService: AIService,
-		private readonly fileProcessingService: FileProcessingService
+		private readonly textExtractionService: TextExtractionService
 	) {
 		super();
 	}
 
 	async process(job: Job<IFileProcessingJobData>) {
-		const { fileAssetId, storageKey } = job.data;
+		const {fileAssetId, storageKey} = job.data;
 
 		try {
 			const fileAsset = await this.filesRepository.findFileAssetById(fileAssetId);
@@ -32,12 +35,12 @@ export class FilesProcessor extends WorkerHost {
 				return;
 			}
 
-			await this.filesRepository.updateFileAssetJobId(fileAsset.id, job.id);
+			await this.filesRepository.updateFileAssetJobId(fileAsset.id, job.id?.toString() ?? null);
 
 			this.logger.log(`Downloading file ${storageKey} (asset ${fileAssetId})`);
 			const buffer = await this.s3Service.downloadFile(storageKey);
 
-			let text = await this.fileProcessingService.extractTextFromBuffer(buffer, fileAsset.mimeType, fileAsset.name);
+			let text = await this.textExtractionService.extractTextFromBuffer(buffer, fileAsset.mimeType, fileAsset.name);
 			text = (text || "").replace(/\s+/g, " ").trim();
 
 			if (!text) {
@@ -58,7 +61,7 @@ export class FilesProcessor extends WorkerHost {
 
 			await this.filesRepository.deleteChunksByFileId(fileAssetId);
 
-			const contents = this.fileProcessingService.recursiveChunkText(text);
+			const contents = this.textExtractionService.recursiveChunkText(text);
 			this.logger.log(`Split into ${contents.length} chunks for file ${fileAssetId}`);
 
 			this.logger.log(`Generating embeddings for ${contents.length} chunks`);
@@ -70,15 +73,15 @@ export class FilesProcessor extends WorkerHost {
 			}
 
 			const rows = contents.map((content, index) => ({
-				index: index,
-				content: content,
-				tokenCount: this.fileProcessingService.estimateTokenCount(content),
+				index,
+				content,
+				tokenCount: this.textExtractionService.estimateTokenCount(content),
 				embedding: embeddings[index]
 			})) satisfies ICreateFileChunkData[];
 
 			await this.filesRepository.createChunks(fileAssetId, rows);
-
 			await this.filesRepository.updateFileAssetTextHash(fileAssetId, textHash);
+
 			this.logger.log(`File ${fileAssetId} processed successfully`);
 		} catch (error) {
 			this.logger.error(

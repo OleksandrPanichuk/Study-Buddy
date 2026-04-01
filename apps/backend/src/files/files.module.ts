@@ -1,24 +1,14 @@
-import { AIModule } from "@app/ai";
-import { S3Module } from "@app/s3";
-import { BullModule } from "@nestjs/bullmq";
-import { Module } from "@nestjs/common";
-import { FileProcessingService } from "@/files/file-processing.service";
-import { FilesController } from "@/files/files.controller";
-import { FilesProcessor } from "@/files/files.processor";
-import { FilesRepository } from "@/files/files.repository";
-import { FilesService } from "@/files/files.service";
-import { TutorChatsModule } from "@/tutor-chats/tutor-chats.module";
+import {S3Module} from "@app/s3";
+import {Module} from "@nestjs/common";
+import {FilesController} from "@/files/files.controller";
+import {FilesRepository} from "@/files/files.repository";
+import {FilesService} from "@/files/files.service";
+import {TutorChatsModule} from "@/tutor-chats/tutor-chats.module";
+import {FileProcessingModule} from "@/file-processing/file-processing.module";
 
 @Module({
-	imports: [
-		BullModule.registerQueue({
-			name: "file-processing"
-		}),
-		TutorChatsModule,
-		S3Module,
-		AIModule
-	],
+	imports: [TutorChatsModule, S3Module, FileProcessingModule],
 	controllers: [FilesController],
-	providers: [FilesService, FilesRepository, FilesProcessor, FileProcessingService]
+	providers: [FilesService, FilesRepository]
 })
 export class FilesModule {}

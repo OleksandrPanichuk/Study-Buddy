@@ -1,26 +1,27 @@
-import { LoggerModule } from "@app/logger";
-import { PrismaModule } from "@app/prisma";
-import { RedisModule } from "@app/redis";
-import { BullModule } from "@nestjs/bullmq";
-import { type MiddlewareConsumer, Module, type NestModule } from "@nestjs/common";
-import { ConfigModule, ConfigService } from "@nestjs/config";
-import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from "@nestjs/core";
-import { ScheduleModule } from "@nestjs/schedule";
-import { ThrottlerModule } from "@nestjs/throttler";
-import { SentryGlobalFilter, SentryModule } from "@sentry/nestjs/setup";
-import { CsrfFilter } from "ncsrf";
-import { ZodSerializerInterceptor, ZodValidationPipe } from "nestjs-zod";
-import { AuthModule } from "@/auth/auth.module";
-import { FilesModule } from "@/files/files.module";
-import { MessagesModule } from "@/messages/messages.module";
-import { type Env, envSchema } from "@/shared/config";
-import { RATE_LIMITS } from "@/shared/constants";
-import { ThrottlerExceptionFilter } from "@/shared/filters";
-import { LoggingInterceptor } from "@/shared/interceptors";
-import { SecurityHeadersMiddleware } from "@/shared/middlewares";
-import { TutorChatsModule } from "@/tutor-chats/tutor-chats.module";
-import { UsersModule } from "@/users/users.module";
-import { SanitizationPipe } from "./shared/pipes";
+import {LoggerModule} from "@app/logger";
+import {PrismaModule} from "@app/prisma";
+import {RedisModule} from "@app/redis";
+import {BullModule} from "@nestjs/bullmq";
+import {type MiddlewareConsumer, Module, type NestModule} from "@nestjs/common";
+import {ConfigModule, ConfigService} from "@nestjs/config";
+import {APP_FILTER, APP_INTERCEPTOR, APP_PIPE} from "@nestjs/core";
+import {ScheduleModule} from "@nestjs/schedule";
+import {ThrottlerModule} from "@nestjs/throttler";
+import {SentryGlobalFilter, SentryModule} from "@sentry/nestjs/setup";
+import {CsrfFilter} from "ncsrf";
+import {ZodSerializerInterceptor, ZodValidationPipe} from "nestjs-zod";
+import {AuthModule} from "@/auth/auth.module";
+import {FilesModule} from "@/files/files.module";
+import {MessagesModule} from "@/messages/messages.module";
+import {type Env, envSchema} from "@/shared/config";
+import {RATE_LIMITS} from "@/shared/constants";
+import {ThrottlerExceptionFilter} from "@/shared/filters";
+import {LoggingInterceptor} from "@/shared/interceptors";
+import {SecurityHeadersMiddleware} from "@/shared/middlewares";
+import {TutorChatsModule} from "@/tutor-chats/tutor-chats.module";
+import {UsersModule} from "@/users/users.module";
+import {SanitizationPipe} from "./shared/pipes";
+import {ContextFilesModule} from "@/context-files/context-files.module";
 
 @Module({
 	imports: [
@@ -42,7 +43,7 @@ import { SanitizationPipe } from "./shared/pipes";
 					url: config.get("REDIS_URL")
 				}
 			})
-    }),
+		}),
 		ScheduleModule.forRoot(),
 		SentryModule.forRoot(),
 		LoggerModule,
@@ -52,7 +53,8 @@ import { SanitizationPipe } from "./shared/pipes";
 		UsersModule,
 		TutorChatsModule,
 		MessagesModule,
-		FilesModule
+		FilesModule,
+		ContextFilesModule
 	],
 	providers: [
 		{ provide: APP_PIPE, useClass: SanitizationPipe },

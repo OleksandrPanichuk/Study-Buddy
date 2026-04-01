@@ -2,12 +2,12 @@ import type {TTutorChat} from "@repo/schemas";
 import {Dialog, DialogContent} from "@repo/ui";
 import {MODALS, useModal} from "@/features/shared";
 
-export interface ITutorChatContextFilesModalData {
+export interface IContextFilesModalData {
 	data: TTutorChat;
 }
 
-export const TutorChatContextFilesModal = () => {
-	const { state, close, isOpen } = useModal(MODALS.TUTOR_CHAT_CONTEXT_FILES);
+export const ContextFilesModal = () => {
+	const { isOpen, state, close } = useModal(MODALS.CONTEXT_FILES);
 
 	if (!state) return null;
 

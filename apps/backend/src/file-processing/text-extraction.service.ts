@@ -1,12 +1,12 @@
 import path from "node:path";
-import { BadRequestException, Injectable, Logger } from "@nestjs/common";
+import {BadRequestException, Injectable, Logger} from "@nestjs/common";
 import mammoth from "mammoth";
-import { PDFParse } from "pdf-parse";
-import { CHUNK_MAX_CHARS, CHUNK_OVERLAP } from "./files.constants";
+import {PDFParse} from "pdf-parse";
+import {CHUNK_MAX_CHARS, CHUNK_OVERLAP} from "./file-processing.constants";
 
 @Injectable()
-export class FileProcessingService {
-	private readonly logger = new Logger(FileProcessingService.name);
+export class TextExtractionService {
+	private readonly logger = new Logger(TextExtractionService.name);
 
 	public async extractTextFromBuffer(buffer: Buffer, mimeType?: string, filename?: string): Promise<string> {
 		const lowerMime = (mimeType || "").toLowerCase();

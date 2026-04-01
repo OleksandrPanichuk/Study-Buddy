@@ -1,4 +1,4 @@
-import { FileStatus } from "@app/prisma";
+import {FileStatus} from "@app/prisma";
 
 export interface ICreateFileAssetData {
 	name: string;
@@ -16,9 +16,3 @@ export interface ICreateFileChunkData {
 	tokenCount: number;
 	embedding: number[];
 }
-
-export interface IFileProcessingJobData {
-	fileAssetId: string;
-	storageKey: string;
-}
-

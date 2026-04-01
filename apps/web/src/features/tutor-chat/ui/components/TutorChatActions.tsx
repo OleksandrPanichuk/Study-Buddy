@@ -11,7 +11,7 @@ import {useMutation} from "@tanstack/react-query";
 import {FilesIcon, MoreHorizontalIcon, PencilIcon, Trash2Icon} from "lucide-react";
 import {toast} from "sonner";
 import {MODALS, useConfirm, useModal} from "@/features/shared";
-import {getDeleteTutorChatMutationOptions} from "@/features/tutor-chats";
+import {getDeleteTutorChatMutationOptions} from "@/features/tutor-chat";
 
 interface ITutorChatActionsProps {
 	data: TTutorChat;
@@ -20,7 +20,7 @@ interface ITutorChatActionsProps {
 export const TutorChatActions = ({ data }: ITutorChatActionsProps) => {
 	const [ConfirmationModal, confirm] = useConfirm();
 	const { open: openEdit } = useModal(MODALS.UPDATE_TUTOR_CHAT);
-	const { open: openFiles } = useModal(MODALS.TUTOR_CHAT_CONTEXT_FILES);
+	const { open: openFiles } = useModal(MODALS.CONTEXT_FILES);
 
 	const { mutate: deleteTutorChat } = useMutation(getDeleteTutorChatMutationOptions());
 

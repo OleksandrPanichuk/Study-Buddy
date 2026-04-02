@@ -38,6 +38,7 @@
 	},
 	"dependencies": {
 		"@repo/constants": "workspace:*",
-		"zod": "^4.3.4"
+		"zod": "^4.3.4",
+		"zod-form-data": "^3.0.1"
 	}
 }

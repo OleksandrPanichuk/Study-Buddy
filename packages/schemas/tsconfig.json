@@ -11,13 +11,12 @@
 		"resolveJsonModule": true,
 		"target": "ES2022",
 		"sourceMap": true,
-		"baseUrl": "./",
 		"skipLibCheck": true,
 		"strict": true,
 		"forceConsistentCasingInFileNames": true,
 		"noImplicitReturns": true,
 		"noFallthroughCasesInSwitch": true,
-		"useUnknownInCatchVariables": true,
+		"useUnknownInCatchVariables": true
 	},
 	"exclude": ["node_modules", "dist"]
 }

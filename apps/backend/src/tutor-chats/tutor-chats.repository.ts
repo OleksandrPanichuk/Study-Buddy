@@ -1,6 +1,6 @@
-import { PrismaService } from "@app/prisma";
-import { Injectable } from "@nestjs/common";
-import type { ICreateTutorCharInput, IFindAllTutorChatsInput, IUpdateTutorChatInput } from "./tutor-chats.interfaces";
+import {PrismaService} from "@app/prisma";
+import {Injectable} from "@nestjs/common";
+import type {ICreateTutorCharInput, IFindAllTutorChatsInput, IUpdateTutorChatInput} from "./tutor-chats.interfaces";
 
 @Injectable()
 export class TutorChatsRepository {
@@ -15,6 +15,15 @@ export class TutorChatsRepository {
 			cursor: data.cursor ? { id: data.cursor } : undefined,
 			orderBy: {
 				createdAt: "desc"
+			}
+		});
+	}
+
+	public findByIdAndUserId(id: string, userId: string) {
+		return this.db.tutorChat.findUnique({
+			where: {
+				id,
+				userId
 			}
 		});
 	}

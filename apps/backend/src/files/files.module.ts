@@ -9,6 +9,7 @@ import {FileProcessingModule} from "@/file-processing/file-processing.module";
 @Module({
 	imports: [TutorChatsModule, S3Module, FileProcessingModule],
 	controllers: [FilesController],
-	providers: [FilesService, FilesRepository]
+	providers: [FilesService, FilesRepository],
+	exports: [FilesService]
 })
 export class FilesModule {}

@@ -18,13 +18,13 @@ export class FilesService {
 	) {}
 
 	public async uploadTutorChat(files: Express.Multer.File[], tutorChatId: string, userId: string) {
-		const tutorChat = await this.tutorChatsRepository.findById(tutorChatId);
+		const tutorChat = await this.tutorChatsRepository.findByIdAndUserId(tutorChatId, userId);
 
 		if (!tutorChat) {
 			throw new NotFoundException(`Tutor chat with ID ${tutorChatId} not found`);
 		}
 
-		return await this.upload(files, `tutor-chats/${tutorChatId}`, userId);
+		return await this.upload(files, `tutor-chats/messages/${tutorChatId}`, userId);
 	}
 
 	public async delete(fileAssetId: string, userId: string) {
@@ -45,7 +45,7 @@ export class FilesService {
 		await this.filesRepository.deleteFileAsset(fileAssetId);
 	}
 
-	private async upload(files: Express.Multer.File[], folder: string, userId: string): Promise<UploadFilesResponse> {
+	public async upload(files: Express.Multer.File[], folder: string, userId: string): Promise<UploadFilesResponse> {
 		const uploadedFiles = await this.s3Service.uploadFiles(files, {
 			maxSize: MAX_FILE_SIZE,
 			folder

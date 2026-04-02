@@ -1,15 +1,12 @@
 import z from "zod";
-import {fileAssetSchema} from "../models";
+import { zfd } from "zod-form-data";
+import { fileAssetSchema } from "../models";
 
-export const uploadFilesInputSchema = z.instanceof(FormData).refine(
-	(data) => {
-		const files = data.getAll("files");
-		return files.length > 0 && files.every((file) => file instanceof File);
-	},
-	{
-		message: "Expected at least one file",
-	},
-)
+export const uploadFilesInputSchema = zfd.formData({
+	files: zfd.repeatable(
+		z.array(zfd.file(z.instanceof(File))).min(1, "Expected at least one file"),
+	),
+});
 
 export type TUploadFilesInput = z.infer<typeof uploadFilesInputSchema>;
 

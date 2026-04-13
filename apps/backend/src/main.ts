@@ -1,21 +1,21 @@
 import "./instrument";
 
-import { getLoggerConfig } from "@app/logger";
-import { ConfigService } from "@nestjs/config";
-import { NestFactory } from "@nestjs/core";
-import { SwaggerModule } from "@nestjs/swagger";
+import {getLoggerConfig} from "@app/logger";
+import {ConfigService} from "@nestjs/config";
+import {NestFactory} from "@nestjs/core";
+import {SwaggerModule} from "@nestjs/swagger";
 import compression from "compression";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 import helmet from "helmet";
-import { nestCsrf } from "ncsrf/dist";
-import { WinstonModule } from "nest-winston";
-import { cleanupOpenApiDoc } from "nestjs-zod";
+import {nestCsrf} from "ncsrf/dist";
+import {WinstonModule} from "nest-winston";
+import {cleanupOpenApiDoc} from "nestjs-zod";
 import passport from "passport";
-import { createLogger } from "winston";
-import type { Env } from "@/shared/config";
-import { getCorsConfig, getHelmetConfig, getSessionConfig, getSwaggerConfig } from "@/shared/config";
-import { AppModule } from "./app.module";
+import {createLogger} from "winston";
+import type {Env} from "@/config";
+import {getCorsConfig, getHelmetConfig, getSessionConfig, getSwaggerConfig} from "@/config";
+import {AppModule} from "./app.module";
 
 async function bootstrap() {
 	const logger = createLogger(getLoggerConfig());
@@ -49,7 +49,7 @@ async function bootstrap() {
 
 	app.setGlobalPrefix("api");
 
-	await app.listen(PORT, () => {
+	await app.listen(PORT, "0.0.0.0", () => {
 		console.log(`Listening on port ${PORT}`);
 	});
 }

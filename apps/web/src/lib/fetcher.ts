@@ -125,8 +125,18 @@ async function handleErrorResponse(response: Response): Promise<void> {
 	throw new Error(message);
 }
 
+function getApiUrl(): string {
+	if (!import.meta.env.SSR) return import.meta.env.VITE_API_URL;
+
+	return (
+		process.env.INTERNAL_API_URL ??
+		process.env.VITE_API_URL ??
+		import.meta.env.VITE_API_URL
+	);
+}
+
 export const fetcher = ky.create({
-	prefixUrl: `${import.meta.env.VITE_API_URL}/api`,
+	prefixUrl: `${getApiUrl()}/api`,
 	credentials: "include",
 	hooks: {
 		beforeRequest: [

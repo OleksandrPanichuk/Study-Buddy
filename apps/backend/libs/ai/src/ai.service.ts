@@ -4,7 +4,7 @@ import {HttpException, Injectable, InternalServerErrorException, Logger} from "@
 import {ConfigService} from "@nestjs/config";
 import {AI_DEFAULT_MODEL, AI_EMBEDDINGS_MODEL} from "@repo/constants";
 import {embedMany, generateText, streamText} from "ai";
-import type {Env} from "@/shared/config";
+import type {Env} from "@/config";
 
 @Injectable()
 export class AIService {

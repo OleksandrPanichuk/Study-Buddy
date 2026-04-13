@@ -32,7 +32,7 @@ import {
 } from "@nestjs/common";
 import {ConfigService} from "@nestjs/config";
 import {v4 as uuid} from "uuid";
-import type {Env} from "@/shared/config";
+import type {Env} from "@/config";
 
 @Injectable()
 export class S3Service implements OnModuleInit {

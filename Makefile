@@ -37,7 +37,7 @@ install: ## Install all dependencies
 # Development
 # -----------------------------------------------------------------------------
 up:
-	bun run dev
+	docker compose up
 
 down:
 	docker compose down
@@ -47,6 +47,18 @@ dev-web: ## Start frontend only
 
 dev-api: ## Start backend only
 	bun run turbo dev --filter=backend
+
+# -----------------------------------------------------------------------------
+# Access specific services
+# -----------------------------------------------------------------------------
+db: ## Access Postgres database shell
+	docker compose exec postgres psql -U study_buddy_user -d study_buddy_db
+
+redis: ## Access Redis CLI
+	docker compose exec redis redis-cli
+
+api: ## Access backend container shell
+	docker compose exec api sh
 
 
 # -----------------------------------------------------------------------------

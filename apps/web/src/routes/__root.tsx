@@ -1,10 +1,13 @@
+import { ModalsRoot } from "@/features/shared";
+import type { TRouterContext } from "@/router";
 import appCss from "@repo/ui/globals.css?url";
-import {QueryClientProvider} from "@tanstack/react-query";
-import {createRootRouteWithContext, HeadContent, Outlet, Scripts, useRouter} from "@tanstack/react-router";
-import type {PropsWithChildren} from "react";
-import {Toaster} from "sonner";
-import {ModalsRoot} from "@/features/shared";
-import type {TRouterContext} from "@/router";
+import { TanStackDevtools } from "@tanstack/react-devtools";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtoolsPanel as TanStackReactQueryDevtoolsPanel } from "@tanstack/react-query-devtools";
+import { createRootRouteWithContext, HeadContent, Outlet, Scripts, useRouter } from "@tanstack/react-router";
+import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
+import type { PropsWithChildren } from "react";
+import { Toaster } from "sonner";
 
 export const Route = createRootRouteWithContext<TRouterContext>()({
 	head: () => ({
@@ -52,21 +55,21 @@ function RootDocument({ children }: PropsWithChildren) {
 			<body>
 				{children}
 				<Toaster richColors />
-				{/*<TanStackDevtools*/}
-				{/*	config={{*/}
-				{/*		position: "bottom-left"*/}
-				{/*	}}*/}
-				{/*	plugins={[*/}
-				{/*		{*/}
-				{/*			name: "Tanstack Router",*/}
-				{/*			render: <TanStackRouterDevtoolsPanel />*/}
-				{/*		},*/}
-				{/*		{*/}
-				{/*			name: "Tanstack Query",*/}
-				{/*			render: <ReactQueryDevtoolsPanel />*/}
-				{/*		}*/}
-				{/*	]}*/}
-				{/*/>*/}
+				<TanStackDevtools
+					config={{
+						position: "bottom-left"
+					}}
+					plugins={[
+						{
+							name: "Tanstack Router",
+							render: <TanStackRouterDevtoolsPanel />
+						},
+						{
+							name: "Tanstack Query",
+							render: <TanStackReactQueryDevtoolsPanel />
+						}
+					]}
+				/>
 				<Scripts />
 			</body>
 		</html>

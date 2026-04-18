@@ -1,4 +1,5 @@
 export * from "./auth";
+export * from "./context-files";
 export * from "./files";
 export * from "./messages";
 export * from "./models";

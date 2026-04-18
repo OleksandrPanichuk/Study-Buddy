@@ -17,7 +17,8 @@
     "forceConsistentCasingInFileNames": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "useUnknownInCatchVariables": true
+    "useUnknownInCatchVariables": true,
+    "ignoreDeprecations": "6.0"
   },
   "exclude": ["node_modules", "dist"]
 }

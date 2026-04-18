@@ -7,7 +7,7 @@ export const Route = createFileRoute("/api/tutor-chat/$tutorChatId/messages/$mes
 			GET: async ({ request: _request, params }) => {
 				const { tutorChatId, messageId } = params;
 
-				const apiUrl = process.env.VITE_API_URL;
+				const apiUrl = process.env.INTERNAL_API_URL ?? process.env.VITE_API_URL;
 				if (!apiUrl) {
 					return new Response("API URL not configured", { status: 500 });
 				}

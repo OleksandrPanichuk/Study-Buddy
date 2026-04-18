@@ -10,16 +10,19 @@ import { ThrottlerModule } from "@nestjs/throttler";
 import { SentryGlobalFilter, SentryModule } from "@sentry/nestjs/setup";
 import { CsrfFilter } from "ncsrf";
 import { ZodSerializerInterceptor, ZodValidationPipe } from "nestjs-zod";
-import { AuthModule } from "@/auth/auth.module";
-import { FilesModule } from "@/files/files.module";
-import { MessagesModule } from "@/messages/messages.module";
-import { type Env, envSchema } from "@/shared/config";
-import { RATE_LIMITS } from "@/shared/constants";
+import { type Env, envSchema } from "@/config";
+import { RATE_LIMITS } from "@/constants";
+import { AuthModule } from "@/modules/auth/auth.module";
+import { ContextFilesModule } from "@/modules/context-files/context-files.module";
+import { EmailVerificationModule } from "@/modules/email-verification/email-verification.module";
+import { FilesModule } from "@/modules/files/files.module";
+import { MessagesModule } from "@/modules/messages/messages.module";
+import { PasswordModule } from "@/modules/password/password.module";
+import { TutorChatsModule } from "@/modules/tutor-chats/tutor-chats.module";
+import { UsersModule } from "@/modules/users/users.module";
 import { ThrottlerExceptionFilter } from "@/shared/filters";
 import { LoggingInterceptor } from "@/shared/interceptors";
 import { SecurityHeadersMiddleware } from "@/shared/middlewares";
-import { TutorChatsModule } from "@/tutor-chats/tutor-chats.module";
-import { UsersModule } from "@/users/users.module";
 import { SanitizationPipe } from "./shared/pipes";
 
 @Module({
@@ -42,17 +45,20 @@ import { SanitizationPipe } from "./shared/pipes";
 					url: config.get("REDIS_URL")
 				}
 			})
-    }),
+		}),
 		ScheduleModule.forRoot(),
 		SentryModule.forRoot(),
 		LoggerModule,
 		PrismaModule,
 		RedisModule,
 		AuthModule,
+		PasswordModule,
+		EmailVerificationModule,
 		UsersModule,
 		TutorChatsModule,
 		MessagesModule,
-		FilesModule
+		FilesModule,
+		ContextFilesModule
 	],
 	providers: [
 		{ provide: APP_PIPE, useClass: SanitizationPipe },

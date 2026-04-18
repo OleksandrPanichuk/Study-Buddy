@@ -4,7 +4,7 @@ import {Link} from "@tanstack/react-router";
 import {formatDistanceToNow} from "date-fns";
 import {MessageSquareIcon} from "lucide-react";
 import randomColor from "randomcolor";
-import {TutorChatActions} from "@/features/tutor-chats";
+import {TutorChatActions} from "@/features/tutor-chat";
 
 interface ITutorChatCardProps {
 	data: TTutorChat;

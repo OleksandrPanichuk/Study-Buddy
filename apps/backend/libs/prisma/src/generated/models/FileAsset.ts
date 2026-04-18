@@ -268,7 +268,7 @@ export type FileAssetWhereInput = {
   storageKey?: Prisma.StringNullableFilter<"FileAsset"> | string | null
   status?: Prisma.EnumFileStatusFilter<"FileAsset"> | $Enums.FileStatus
   textHash?: Prisma.StringNullableFilter<"FileAsset"> | string | null
-  jobId?: Prisma.UuidNullableFilter<"FileAsset"> | string | null
+  jobId?: Prisma.StringNullableFilter<"FileAsset"> | string | null
   userId?: Prisma.UuidFilter<"FileAsset"> | string
   createdAt?: Prisma.DateTimeFilter<"FileAsset"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"FileAsset"> | Date | string
@@ -311,7 +311,7 @@ export type FileAssetWhereUniqueInput = Prisma.AtLeast<{
   storageKey?: Prisma.StringNullableFilter<"FileAsset"> | string | null
   status?: Prisma.EnumFileStatusFilter<"FileAsset"> | $Enums.FileStatus
   textHash?: Prisma.StringNullableFilter<"FileAsset"> | string | null
-  jobId?: Prisma.UuidNullableFilter<"FileAsset"> | string | null
+  jobId?: Prisma.StringNullableFilter<"FileAsset"> | string | null
   userId?: Prisma.UuidFilter<"FileAsset"> | string
   createdAt?: Prisma.DateTimeFilter<"FileAsset"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"FileAsset"> | Date | string
@@ -354,7 +354,7 @@ export type FileAssetScalarWhereWithAggregatesInput = {
   storageKey?: Prisma.StringNullableWithAggregatesFilter<"FileAsset"> | string | null
   status?: Prisma.EnumFileStatusWithAggregatesFilter<"FileAsset"> | $Enums.FileStatus
   textHash?: Prisma.StringNullableWithAggregatesFilter<"FileAsset"> | string | null
-  jobId?: Prisma.UuidNullableWithAggregatesFilter<"FileAsset"> | string | null
+  jobId?: Prisma.StringNullableWithAggregatesFilter<"FileAsset"> | string | null
   userId?: Prisma.UuidWithAggregatesFilter<"FileAsset"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"FileAsset"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"FileAsset"> | Date | string
@@ -731,7 +731,7 @@ export type FileAssetScalarWhereInput = {
   storageKey?: Prisma.StringNullableFilter<"FileAsset"> | string | null
   status?: Prisma.EnumFileStatusFilter<"FileAsset"> | $Enums.FileStatus
   textHash?: Prisma.StringNullableFilter<"FileAsset"> | string | null
-  jobId?: Prisma.UuidNullableFilter<"FileAsset"> | string | null
+  jobId?: Prisma.StringNullableFilter<"FileAsset"> | string | null
   userId?: Prisma.UuidFilter<"FileAsset"> | string
   createdAt?: Prisma.DateTimeFilter<"FileAsset"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"FileAsset"> | Date | string

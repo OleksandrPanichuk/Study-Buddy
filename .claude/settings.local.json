@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xargs grep *)",
+      "Bash(xargs cat *)",
+      "Bash(bunx lucide-react *)"
+    ]
+  }
+}

@@ -1,32 +1,32 @@
-import { Injectable, Logger, OnModuleDestroy } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
+import {Injectable, Logger, OnModuleDestroy} from "@nestjs/common";
+import {ConfigService} from "@nestjs/config";
 import Redis from "ioredis";
-import type { Env } from "@/shared/config";
+import type {Env} from "@/config";
 
 @Injectable()
 export class RedisService extends Redis implements OnModuleDestroy {
-  private readonly logger = new Logger(RedisService.name);
+	private readonly logger = new Logger(RedisService.name);
 
-  constructor(readonly configService: ConfigService<Env>) {
-    const redisUrl = configService.get<string>("REDIS_URL")!;
+	constructor(readonly configService: ConfigService<Env>) {
+		const redisUrl = configService.get<string>("REDIS_URL")!;
 
-    super(redisUrl);
+		super(redisUrl);
 
-    this.on("connect", () => {
-      this.logger.log("Redis connected");
-    });
+		this.on("connect", () => {
+			this.logger.log("Redis connected");
+		});
 
-    this.on("error", (err) => {
-      this.logger.error("Redis error", err);
-    });
+		this.on("error", (err) => {
+			this.logger.error("Redis error", err);
+		});
 
-    this.on("close", () => {
-      this.logger.warn("Redis connection closed");
-    });
-  }
+		this.on("close", () => {
+			this.logger.warn("Redis connection closed");
+		});
+	}
 
-  async onModuleDestroy() {
-    await this.quit();
-    this.logger.log("Redis disconnected");
-  }
+	async onModuleDestroy() {
+		await this.quit();
+		this.logger.log("Redis disconnected");
+	}
 }

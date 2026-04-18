@@ -39,6 +39,9 @@ install: ## Install all dependencies
 up:
 	docker compose up
 
+up-light:
+	docker compose up postgres redis minio
+
 down:
 	docker compose down
 

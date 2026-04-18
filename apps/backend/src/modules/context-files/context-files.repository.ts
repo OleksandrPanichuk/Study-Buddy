@@ -1,6 +1,6 @@
 import { PrismaService } from "@app/prisma";
 import { Injectable } from "@nestjs/common";
-import type { ICreateContextFileData } from "@/modules/context-files/context-files.interfaces";
+import type { ICreateContextFileData, IUpdateContextFileData } from "@/modules/context-files/context-files.interfaces";
 
 @Injectable()
 export class ContextFilesRepository {
@@ -61,12 +61,25 @@ export class ContextFilesRepository {
 
 	public updateContextFilePriority(id: string, priority: number) {
 		return this.db.contextFile.update({
-			where: {
-				id
-			},
+			where: { id },
+			data: { priority }
+		});
+	}
+
+	public updateContextFile(id: string, data: IUpdateContextFileData) {
+		return this.db.contextFile.update({
+			where: { id },
 			data: {
-				priority
+				...(data.note !== undefined && { note: data.note }),
+				...(data.priority !== undefined && { priority: data.priority })
 			}
+		});
+	}
+
+	public findContextFileWithTutorChat(id: string) {
+		return this.db.contextFile.findUnique({
+			where: { id },
+			include: { tutorChat: true }
 		});
 	}
 }

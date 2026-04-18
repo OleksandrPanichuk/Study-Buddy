@@ -4,3 +4,8 @@ export interface ICreateContextFileData {
 	priority?: number;
 	note?: string;
 }
+
+export interface IUpdateContextFileData {
+	note?: string | null;
+	priority?: number;
+}

@@ -69,6 +69,13 @@ export interface IFindAttachmentsForContextData {
 	chunkLimit?: number;
 }
 
+export interface IFindContextFilesForContextData {
+	tutorChatId: string;
+	userId: string;
+	fileLimit?: number;
+	chunkLimit?: number;
+}
+
 export interface IContextMessage {
 	id: string;
 	role: MessageRole;
@@ -85,7 +92,19 @@ export interface IContextAttachment {
 	chunks: string[];
 }
 
+export interface IContextTutorFile {
+	id: string;
+	priority: number;
+	note?: string | null;
+	name: string;
+	mimeType: string;
+	sizeBytes: number;
+	status: string;
+	chunks: string[];
+}
+
 export interface IBuildContextReturn {
 	recentMessages: IContextMessage[];
 	attachments: IContextAttachment[];
+	contextFiles: IContextTutorFile[];
 }

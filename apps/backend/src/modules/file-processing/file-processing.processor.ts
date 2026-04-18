@@ -1,15 +1,15 @@
-import { createHash } from "node:crypto";
-import { AIService } from "@app/ai";
-import { FileStatus } from "@app/prisma";
-import { S3Service } from "@app/s3";
-import { Processor, WorkerHost } from "@nestjs/bullmq";
-import { Logger } from "@nestjs/common";
-import { Job } from "bullmq";
-import { FILE_PROCESSING_QUEUE } from "@/modules/file-processing/file-processing.constants";
-import type { IFileProcessingJobData } from "@/modules/file-processing/file-processing.interfaces";
-import { TextExtractionService } from "@/modules/file-processing/text-extraction.service";
-import type { ICreateFileChunkData } from "@/modules/files/files.interfaces";
-import { FilesRepository } from "@/modules/files/files.repository";
+import {createHash} from "node:crypto";
+import {AIService} from "@app/ai";
+import {FileStatus} from "@app/prisma";
+import {S3Service} from "@app/s3";
+import {Processor, WorkerHost} from "@nestjs/bullmq";
+import {Logger} from "@nestjs/common";
+import {Job} from "bullmq";
+import {FILE_PROCESSING_QUEUE} from "@/modules/file-processing/file-processing.constants";
+import type {IFileProcessingJobData} from "@/modules/file-processing/file-processing.interfaces";
+import {TextExtractionService} from "@/modules/file-processing/text-extraction.service";
+import type {ICreateFileChunkData} from "@/modules/files/files.interfaces";
+import {FilesRepository} from "@/modules/files/files.repository";
 
 @Processor(FILE_PROCESSING_QUEUE)
 export class FileProcessingProcessor extends WorkerHost {
@@ -41,6 +41,7 @@ export class FileProcessingProcessor extends WorkerHost {
 			const buffer = await this.s3Service.downloadFile(storageKey);
 
 			let text = await this.textExtractionService.extractTextFromBuffer(buffer, fileAsset.mimeType, fileAsset.name);
+
 			text = (text || "").replace(/\s+/g, " ").trim();
 
 			if (!text) {

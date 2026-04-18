@@ -1,12 +1,12 @@
-import { FileStatus } from "@app/prisma";
-import { S3Service } from "@app/s3";
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { MAX_FILE_SIZE } from "@repo/constants";
-import { FileProcessingQueueService } from "@/modules/file-processing/file-processing-queue.service";
-import type { IFileProcessingJobData } from "@/modules/file-processing/file-processing.interfaces";
-import { FilesRepository } from "@/modules/files/files.repository";
-import { TutorChatsRepository } from "@/modules/tutor-chats/tutor-chats.repository";
-import { UploadFilesResponse } from "./files.dto";
+import {FileStatus} from "@app/prisma";
+import {S3Service} from "@app/s3";
+import {Injectable, NotFoundException} from "@nestjs/common";
+import {MAX_FILE_SIZE} from "@repo/constants";
+import type {IFileProcessingJobData} from "@/modules/file-processing/file-processing.interfaces";
+import {FileProcessingQueueService} from "@/modules/file-processing/file-processing-queue.service";
+import {FilesRepository} from "@/modules/files/files.repository";
+import {TutorChatsRepository} from "@/modules/tutor-chats/tutor-chats.repository";
+import {UploadFilesResponse} from "./files.dto";
 
 @Injectable()
 export class FilesService {

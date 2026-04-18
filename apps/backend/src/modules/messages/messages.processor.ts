@@ -10,6 +10,7 @@ import {MESSAGE_GENERATING_QUEUE, MessagesSSEEvents, MessageStreamStatus} from "
 import type {
 	IBuildContextReturn,
 	IContextAttachment,
+	IContextTutorFile,
 	IContextMessage,
 	IGenerateResponseJobData,
 	IGenerateWithStreamingData,
@@ -26,6 +27,8 @@ export class MessagesProcessor extends WorkerHost {
 	private readonly recentMessagesLimit = 8;
 	private readonly recentMessageCharLimit = 1200;
 	private readonly attachmentChunkCharLimit = 1000;
+	private readonly contextFilesLimit = 5;
+	private readonly contextFileChunkLimit = 3;
 
 	constructor(
 		private readonly fileProcessingQueue: FileProcessingQueueService,
@@ -66,7 +69,7 @@ export class MessagesProcessor extends WorkerHost {
 			}
 
 			this.logger.log("Building model context with recent messages and current message attachments");
-			const { recentMessages, attachments } = await this.getContext({
+			const { recentMessages, attachments, contextFiles } = await this.getContext({
 				tutorChatId,
 				userId,
 				userMessageId,
@@ -77,7 +80,8 @@ export class MessagesProcessor extends WorkerHost {
 				tutorChatPrompt: tutorChat.prompt,
 				chatTopic: tutorChat.topic,
 				recentMessages,
-				attachments
+				attachments,
+				contextFiles
 			});
 
 			const result = await this.generateWithStreaming({
@@ -134,7 +138,7 @@ export class MessagesProcessor extends WorkerHost {
 		userMessageId: string;
 		assistantMessageId: string;
 	}): Promise<IBuildContextReturn> {
-		const [recentMessages, attachments] = await Promise.all([
+		const [recentMessages, attachments, contextFiles] = await Promise.all([
 			this.messagesRepository.findRecentForContext({
 				tutorChatId: data.tutorChatId,
 				userId: data.userId,
@@ -145,12 +149,19 @@ export class MessagesProcessor extends WorkerHost {
 				messageId: data.userMessageId,
 				userId: data.userId,
 				chunkLimit: 2
+			}),
+			this.messagesRepository.findContextFilesForContext({
+				tutorChatId: data.tutorChatId,
+				userId: data.userId,
+				fileLimit: this.contextFilesLimit,
+				chunkLimit: this.contextFileChunkLimit
 			})
 		]);
 
 		return {
 			recentMessages,
-			attachments
+			attachments,
+			contextFiles
 		};
 	}
 
@@ -159,6 +170,7 @@ export class MessagesProcessor extends WorkerHost {
 		chatTopic?: string;
 		recentMessages: IContextMessage[];
 		attachments: IContextAttachment[];
+		contextFiles: IContextTutorFile[];
 	}): string {
 		let systemPrompt = SYSTEM_PROMPT;
 
@@ -170,7 +182,7 @@ export class MessagesProcessor extends WorkerHost {
 			systemPrompt += `\n\nCurrent topic: ${data.chatTopic}`;
 		}
 
-		const modelContext = this.buildModelContext(data.recentMessages, data.attachments);
+		const modelContext = this.buildModelContext(data.recentMessages, data.attachments, data.contextFiles);
 		if (modelContext) {
 			systemPrompt += `\n\n${modelContext}`;
 		}
@@ -178,7 +190,11 @@ export class MessagesProcessor extends WorkerHost {
 		return systemPrompt;
 	}
 
-	private buildModelContext(recentMessages: IContextMessage[], attachments: IContextAttachment[]): string {
+	private buildModelContext(
+		recentMessages: IContextMessage[],
+		attachments: IContextAttachment[],
+		contextFiles: IContextTutorFile[]
+	): string {
 		const sections: string[] = [];
 
 		const recentMessagesSection = this.formatRecentMessagesForContext(recentMessages);
@@ -189,6 +205,11 @@ export class MessagesProcessor extends WorkerHost {
 		const attachmentsSection = this.formatAttachmentsForContext(attachments);
 		if (attachmentsSection) {
 			sections.push(`Current user message attachments:\n${attachmentsSection}`);
+		}
+
+		const contextFilesSection = this.formatContextFilesForContext(contextFiles);
+		if (contextFilesSection) {
+			sections.push(`Tutor chat context files:\n${contextFilesSection}`);
 		}
 
 		if (!sections.length) return "";
@@ -225,6 +246,30 @@ export class MessagesProcessor extends WorkerHost {
 				}
 
 				const chunkLines = attachment.chunks
+					.map((chunk, chunkIndex) => {
+						const preview = this.limitText(chunk, this.attachmentChunkCharLimit);
+						return `Chunk ${chunkIndex + 1}: ${preview}`;
+					})
+					.join("\n");
+
+				return `${metadata}\n${chunkLines}`;
+			})
+			.join("\n\n");
+	}
+
+	private formatContextFilesForContext(contextFiles: IContextTutorFile[]): string {
+		if (!contextFiles.length) return "";
+
+		return contextFiles
+			.map((contextFile, index) => {
+				const noteSuffix = contextFile.note ? `, note: ${contextFile.note}` : "";
+				const metadata = `Context file ${index + 1}: ${contextFile.name} (${contextFile.mimeType}, ${contextFile.sizeBytes} bytes, priority: ${contextFile.priority}, status: ${contextFile.status}${noteSuffix})`;
+
+				if (!contextFile.chunks.length) {
+					return `${metadata}\nNo extracted text available.`;
+				}
+
+				const chunkLines = contextFile.chunks
 					.map((chunk, chunkIndex) => {
 						const preview = this.limitText(chunk, this.attachmentChunkCharLimit);
 						return `Chunk ${chunkIndex + 1}: ${preview}`;

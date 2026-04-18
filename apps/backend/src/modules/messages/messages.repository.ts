@@ -1,9 +1,10 @@
-import {AttachmentScope, MessageStatus, PrismaService} from "@app/prisma";
+import {AttachmentScope, FileStatus, MessageStatus, PrismaService} from "@app/prisma";
 import {Injectable} from "@nestjs/common";
 import type {
 	ICreateMessageData,
 	IFindAllMessagesData,
 	IFindAttachmentsForContextData,
+	IFindContextFilesForContextData,
 	IFindRecentMessagesForContextData,
 	IUpdateMessageData
 } from "./messages.interfaces";
@@ -114,6 +115,56 @@ export class MessagesRepository {
 			sizeBytes: file.sizeBytes,
 			status: file.status,
 			chunks: file.chunks.map((chunk) => chunk.content)
+		}));
+	}
+
+	public async findContextFilesForContext(data: IFindContextFilesForContextData) {
+		const contextFiles = await this.db.contextFile.findMany({
+			where: {
+				tutorChatId: data.tutorChatId,
+				tutorChat: {
+					userId: data.userId
+				},
+				file: {
+					status: FileStatus.READY
+				}
+			},
+			select: {
+				id: true,
+				priority: true,
+				note: true,
+				file: {
+					select: {
+						id: true,
+						name: true,
+						mimeType: true,
+						sizeBytes: true,
+						status: true,
+						chunks: {
+							select: {
+								content: true
+							},
+							orderBy: {
+								index: "asc"
+							},
+							take: data.chunkLimit ?? 3
+						}
+					}
+				}
+			},
+			take: data.fileLimit ?? 5,
+			orderBy: [{priority: "desc"}, {createdAt: "desc"}]
+		});
+
+		return contextFiles.map((contextFile) => ({
+			id: contextFile.id,
+			priority: contextFile.priority,
+			note: contextFile.note,
+			name: contextFile.file.name,
+			mimeType: contextFile.file.mimeType,
+			sizeBytes: contextFile.file.sizeBytes,
+			status: contextFile.file.status,
+			chunks: contextFile.file.chunks.map((chunk) => chunk.content)
 		}));
 	}
 

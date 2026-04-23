@@ -18,7 +18,7 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "useUnknownInCatchVariables": true,
-    "ignoreDeprecations": "6.0"
+    "ignoreDeprecations": "5.0"
   },
   "exclude": ["node_modules", "dist"]
 }

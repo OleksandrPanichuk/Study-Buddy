@@ -1,7 +1,9 @@
 import { LoggerModule } from "@app/logger";
 import { PrismaModule } from "@app/prisma";
 import { RedisModule } from "@app/redis";
+import KeyvRedis from "@keyv/redis";
 import { BullModule } from "@nestjs/bullmq";
+import { CacheModule } from "@nestjs/cache-manager";
 import { type MiddlewareConsumer, Module, type NestModule } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from "@nestjs/core";
@@ -44,6 +46,14 @@ import { SanitizationPipe } from "./shared/pipes";
 				connection: {
 					url: config.get("REDIS_URL")
 				}
+			})
+		}),
+		CacheModule.registerAsync({
+			isGlobal: true,
+			inject: [ConfigService],
+			useFactory: (config: ConfigService<Env>) => ({
+				stores: [new KeyvRedis(config.get("REDIS_URL")!)],
+				ttl: 30 * 60 * 1000
 			})
 		}),
 		ScheduleModule.forRoot(),

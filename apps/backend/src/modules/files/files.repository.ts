@@ -114,6 +114,32 @@ export class FilesRepository {
           `;
 	}
 
+	public findSimilarChunksByFileIds(
+		embedding: number[],
+		fileIds: string[],
+		limit = 10,
+		threshold = 0.5
+	): Promise<Array<{id: string; fileId: string; content: string; index: number; similarity: number}>> {
+		if (!fileIds.length) return Promise.resolve([]);
+
+		const vectorStr = `[${embedding.join(",")}]`;
+
+		return this.db.$queryRaw`
+			SELECT
+				id,
+				"file_id" AS "fileId",
+				content,
+				index,
+				1 - (embedding <=> ${vectorStr}::vector) AS similarity
+			FROM "file_chunks"
+			WHERE
+				"file_id" = ANY(${fileIds}::uuid[])
+				AND 1 - (embedding <=> ${vectorStr}::vector) > ${threshold}
+			ORDER BY embedding <=> ${vectorStr}::vector
+			LIMIT ${limit}
+		`;
+	}
+
 	public async createChunks(fileAssetId: string, data: ICreateFileChunkData[]) {
 		await this.db.$transaction(
 			data.map((chunk) => {

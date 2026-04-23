@@ -1,4 +1,6 @@
-import {Injectable, NotFoundException} from "@nestjs/common";
+import {CACHE_MANAGER} from "@nestjs/cache-manager";
+import {Inject, Injectable, NotFoundException} from "@nestjs/common";
+import type {Cache} from "cache-manager";
 import {
 	UpdateContextFileInput,
 	UploadContextFileInput,
@@ -13,8 +15,13 @@ export class ContextFilesService {
 	constructor(
 		private readonly filesService: FilesService,
 		private readonly contextFilesRepository: ContextFilesRepository,
-		private readonly tutorChatRepository: TutorChatsRepository
+		private readonly tutorChatRepository: TutorChatsRepository,
+		@Inject(CACHE_MANAGER) private readonly cache: Cache
 	) {}
+
+	private cacheKey(tutorChatId: string) {
+		return `context_files_meta:${tutorChatId}`;
+	}
 
 	public async upload(
 		file: Express.Multer.File,
@@ -37,6 +44,8 @@ export class ContextFilesService {
 			note: dto.note,
 			priority: dto.priority
 		});
+
+		await this.cache.del(this.cacheKey(dto.tutorChatId));
 
 		return {
 			...contextFile,
@@ -62,9 +71,13 @@ export class ContextFilesService {
 			throw new NotFoundException(`Context file with ID ${contextFileId} not found`);
 		}
 
-		return this.contextFilesRepository.updateContextFile(contextFileId, {
+		const updated = await this.contextFilesRepository.updateContextFile(contextFileId, {
 			note: dto.note,
 			priority: dto.priority
 		});
+
+		await this.cache.del(this.cacheKey(contextFile.tutorChatId));
+
+		return updated;
 	}
 }

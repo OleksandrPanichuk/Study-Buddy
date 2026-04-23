@@ -34,7 +34,8 @@
 			"@app/s3": ["libs/s3/src"],
 			"@app/s3/*": ["libs/s3/src/*"],
 			"@prisma/generated/*": ["libs/prisma/src/generated/*"],
-			"@repo/constants": ["../../packages/constants/src"]
+			"@repo/constants": ["../../packages/constants/src/index.ts"],
+			"@repo/schemas": ["../../packages/schemas/src/index.ts"]
 		}
 	},
 	"include": ["src/**/*", "libs/**/*"],

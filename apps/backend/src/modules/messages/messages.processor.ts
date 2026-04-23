@@ -1,6 +1,8 @@
 import {AIService} from "@app/ai";
 import {Processor, WorkerHost} from "@nestjs/bullmq";
-import {Logger} from "@nestjs/common";
+import {Inject, Logger} from "@nestjs/common";
+import {CACHE_MANAGER} from "@nestjs/cache-manager";
+import type {Cache} from "cache-manager";
 import {EventEmitter2} from "@nestjs/event-emitter";
 import {Message} from "@prisma/generated/client";
 import {MessageStatus} from "@prisma/generated/enums";
@@ -10,6 +12,7 @@ import {MESSAGE_GENERATING_QUEUE, MessagesSSEEvents, MessageStreamStatus} from "
 import type {
 	IBuildContextReturn,
 	IContextAttachment,
+	IContextFileMeta,
 	IContextTutorFile,
 	IContextMessage,
 	IGenerateResponseJobData,
@@ -17,6 +20,7 @@ import type {
 	IMessageStreamEventData
 } from "@/modules/messages/messages.interfaces";
 import {MessagesRepository} from "@/modules/messages/messages.repository";
+import {FilesRepository} from "@/modules/files/files.repository";
 import {SYSTEM_PROMPT} from "@/prompts";
 import {TutorChatsRepository} from "@/modules/tutor-chats/tutor-chats.repository";
 import {FileProcessingQueueService} from "@/modules/file-processing/file-processing-queue.service";
@@ -28,14 +32,18 @@ export class MessagesProcessor extends WorkerHost {
 	private readonly recentMessageCharLimit = 1200;
 	private readonly attachmentChunkCharLimit = 1000;
 	private readonly contextFilesLimit = 5;
-	private readonly contextFileChunkLimit = 3;
+	private readonly semanticChunkLimit = 10;
+	private readonly semanticSimilarityThreshold = 0.5;
+	private readonly CONTEXT_META_TTL = 30 * 60 * 1000;
 
 	constructor(
 		private readonly fileProcessingQueue: FileProcessingQueueService,
 		private readonly eventEmitter: EventEmitter2,
 		private readonly messagesRepository: MessagesRepository,
 		private readonly tutorChatsRepository: TutorChatsRepository,
-		private readonly aiService: AIService
+		private readonly aiService: AIService,
+		private readonly filesRepository: FilesRepository,
+		@Inject(CACHE_MANAGER) private readonly cache: Cache
 	) {
 		super();
 	}
@@ -73,7 +81,8 @@ export class MessagesProcessor extends WorkerHost {
 				tutorChatId,
 				userId,
 				userMessageId,
-				assistantMessageId
+				assistantMessageId,
+				userMessageContent: userMessage!.content
 			});
 
 			const enhancedSystemPrompt = this.buildSystemPrompt({
@@ -137,8 +146,28 @@ export class MessagesProcessor extends WorkerHost {
 		userId: string;
 		userMessageId: string;
 		assistantMessageId: string;
+		userMessageContent: string;
 	}): Promise<IBuildContextReturn> {
-		const [recentMessages, attachments, contextFiles] = await Promise.all([
+		const cacheKey = `context_files_meta:${data.tutorChatId}`;
+
+		const [meta, embeddings] = await Promise.all([
+			this.cache.get<IContextFileMeta[]>(cacheKey).then(async (cached) => {
+				if (cached) return cached;
+				const fresh = await this.messagesRepository.findContextFilesMetaForContext({
+					tutorChatId: data.tutorChatId,
+					userId: data.userId,
+					fileLimit: this.contextFilesLimit
+				});
+				await this.cache.set(cacheKey, fresh, this.CONTEXT_META_TTL);
+				return fresh;
+			}),
+			this.aiService.createEmbeddings([data.userMessageContent])
+		]);
+
+		const fileIds = meta.map((m) => m.fileId);
+		const [queryEmbedding] = embeddings;
+
+		const [recentMessages, attachments, similarChunks] = await Promise.all([
 			this.messagesRepository.findRecentForContext({
 				tutorChatId: data.tutorChatId,
 				userId: data.userId,
@@ -150,19 +179,42 @@ export class MessagesProcessor extends WorkerHost {
 				userId: data.userId,
 				chunkLimit: 2
 			}),
-			this.messagesRepository.findContextFilesForContext({
-				tutorChatId: data.tutorChatId,
-				userId: data.userId,
-				fileLimit: this.contextFilesLimit,
-				chunkLimit: this.contextFileChunkLimit
-			})
+			this.filesRepository.findSimilarChunksByFileIds(
+				queryEmbedding,
+				fileIds,
+				this.semanticChunkLimit,
+				this.semanticSimilarityThreshold
+			)
 		]);
 
 		return {
 			recentMessages,
 			attachments,
-			contextFiles
+			contextFiles: this.regroupChunksIntoFiles(meta, similarChunks)
 		};
+	}
+
+	private regroupChunksIntoFiles(
+		meta: IContextFileMeta[],
+		chunks: Array<{fileId: string; content: string; index: number; similarity: number}>
+	): IContextTutorFile[] {
+		const chunksByFileId = new Map<string, string[]>();
+		for (const chunk of chunks) {
+			if (!chunksByFileId.has(chunk.fileId)) chunksByFileId.set(chunk.fileId, []);
+			chunksByFileId.get(chunk.fileId)!.push(chunk.content);
+		}
+		return meta
+			.filter((m) => chunksByFileId.has(m.fileId))
+			.map((m) => ({
+				id: m.id,
+				priority: m.priority,
+				note: m.note,
+				name: m.name,
+				mimeType: m.mimeType,
+				sizeBytes: m.sizeBytes,
+				status: m.status,
+				chunks: chunksByFileId.get(m.fileId) ?? []
+			}));
 	}
 
 	private buildSystemPrompt(data: {

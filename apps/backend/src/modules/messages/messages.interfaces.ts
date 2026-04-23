@@ -108,3 +108,20 @@ export interface IBuildContextReturn {
 	attachments: IContextAttachment[];
 	contextFiles: IContextTutorFile[];
 }
+
+export interface IContextFileMeta {
+	id: string;
+	fileId: string;
+	priority: number;
+	note?: string | null;
+	name: string;
+	mimeType: string;
+	sizeBytes: number;
+	status: string;
+}
+
+export interface IFindContextFilesMetaForContextData {
+	tutorChatId: string;
+	userId: string;
+	fileLimit?: number;
+}

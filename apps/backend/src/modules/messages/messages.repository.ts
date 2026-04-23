@@ -1,10 +1,12 @@
 import {AttachmentScope, FileStatus, MessageStatus, PrismaService} from "@app/prisma";
 import {Injectable} from "@nestjs/common";
 import type {
+	IContextFileMeta,
 	ICreateMessageData,
 	IFindAllMessagesData,
 	IFindAttachmentsForContextData,
 	IFindContextFilesForContextData,
+	IFindContextFilesMetaForContextData,
 	IFindRecentMessagesForContextData,
 	IUpdateMessageData
 } from "./messages.interfaces";
@@ -165,6 +167,37 @@ export class MessagesRepository {
 			sizeBytes: contextFile.file.sizeBytes,
 			status: contextFile.file.status,
 			chunks: contextFile.file.chunks.map((chunk) => chunk.content)
+		}));
+	}
+
+	public async findContextFilesMetaForContext(data: IFindContextFilesMetaForContextData): Promise<IContextFileMeta[]> {
+		const contextFiles = await this.db.contextFile.findMany({
+			where: {
+				tutorChatId: data.tutorChatId,
+				tutorChat: {userId: data.userId},
+				file: {status: FileStatus.READY}
+			},
+			select: {
+				id: true,
+				priority: true,
+				note: true,
+				file: {
+					select: {id: true, name: true, mimeType: true, sizeBytes: true, status: true}
+				}
+			},
+			take: data.fileLimit ?? 5,
+			orderBy: [{priority: "desc"}, {createdAt: "desc"}]
+		});
+
+		return contextFiles.map((cf) => ({
+			id: cf.id,
+			fileId: cf.file.id,
+			priority: cf.priority,
+			note: cf.note,
+			name: cf.file.name,
+			mimeType: cf.file.mimeType,
+			sizeBytes: cf.file.sizeBytes,
+			status: cf.file.status
 		}));
 	}
 

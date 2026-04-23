@@ -10,6 +10,6 @@ import {FileProcessingModule} from "@/modules/file-processing/file-processing.mo
 	imports: [TutorChatsModule, S3Module, FileProcessingModule],
 	controllers: [FilesController],
 	providers: [FilesService, FilesRepository],
-	exports: [FilesService]
+	exports: [FilesService, FilesRepository]
 })
 export class FilesModule {}
